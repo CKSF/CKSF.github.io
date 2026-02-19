@@ -5,43 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>冯天宁 (Tianning Feng) 的个人网站</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; margin: 2em; }
-        .lang-switch { margin-bottom: 1em; }
-        .lang-switch button { padding: 0.5em 1em; cursor: pointer; }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2em auto;
+            padding: 2em;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 1em;
+            margin-bottom: 2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+        .lang-switch button {
+            padding: 0.6em 1.2em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .lang-switch button:hover {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
         .content-en { display: none; } /* Hide English by default */
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2em;
+            padding-top: 1em;
+            border-top: 1px solid #eaeaea;
+            font-size: 0.9em;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
-    <div class="lang-switch">
-        <button onclick="showLang('zh')">中文</button>
-        <button onclick="showLang('en')">English</button>
-    </div>
+    <div class="container">
+        <header>
+            <h1 id="header-title">冯天宁</h1>
+            <div class="lang-switch">
+                <button onclick="showLang('zh')">中文</button>
+                <button onclick="showLang('en')">English</button>
+            </div>
+        </header>
 
-    <!-- Chinese Content -->
-    <div id="zh" class="content-zh">
-        <h1>欢迎来到我的网站</h1>
-        <p>你好，我是冯天宁 (Tianning Feng)。</p>
-        <p>你可以在这里下载我的简历：</p>
-        <a href="FTN简历.pdf" target="_blank">下载中文简历 (PDF)</a>
-    </div>
+        <main>
+            <!-- Chinese Content -->
+            <div id="zh" class="content-zh">
+                <h2>欢迎</h2>
+                <p>你好，我是冯天宁 (Tianning Feng)，一名软件工程师。</p>
+                <p>你可以在这里下载我的简历：</p>
+                <a href="FTN简历.pdf" target="_blank">下载中文简历 (PDF)</a>
+            </div>
 
-    <!-- English Content -->
-    <div id="en" class="content-en">
-        <h1>Welcome to My Website</h1>
-        <p>Hello, I'm Tianning Feng (冯天宁).</p>
-        <p>You can download my resume here:</p>
-        <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download English Resume (PDF)</a>
+            <!-- English Content -->
+            <div id="en" class="content-en">
+                <h2>Welcome</h2>
+                <p>Hello, I'm Tianning Feng (冯天宁), a Software Engineer.</p>
+                <p>You can download my resume here:</p>
+                <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download English Resume (PDF)</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Tianning Feng</p>
+        </footer>
     </div>
 
     <script>
+        const headerTitle = document.getElementById('header-title');
+        const contentZh = { title: "冯天宁" };
+        const contentEn = { title: "Tianning Feng" };
+
         function showLang(lang) {
             if (lang === 'zh') {
                 document.getElementById('zh').style.display = 'block';
                 document.getElementById('en').style.display = 'none';
+                headerTitle.textContent = contentZh.title;
             } else {
                 document.getElementById('zh').style.display = 'none';
                 document.getElementById('en').style.display = 'block';
+                headerTitle.textContent = contentEn.title;
             }
         }
     </script>
