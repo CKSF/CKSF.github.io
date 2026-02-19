@@ -1,11 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人网站</title>
+    <title>冯天宁 (Tianning Feng) 的个人网站</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; margin: 2em; }
+        .lang-switch { margin-bottom: 1em; }
+        .lang-switch button { padding: 0.5em 1em; cursor: pointer; }
+        .content-en { display: none; } /* Hide English by default */
+    </style>
 </head>
 <body>
-    <h1>欢迎来到我的网站</h1>
+
+    <div class="lang-switch">
+        <button onclick="showLang('zh')">中文</button>
+        <button onclick="showLang('en')">English</button>
+    </div>
+
+    <!-- Chinese Content -->
+    <div id="zh" class="content-zh">
+        <h1>欢迎来到我的网站</h1>
+        <p>你好，我是冯天宁 (Tianning Feng)。</p>
+        <p>你可以在这里下载我的简历：</p>
+        <a href="FTN简历.pdf" target="_blank">下载中文简历 (PDF)</a>
+    </div>
+
+    <!-- English Content -->
+    <div id="en" class="content-en">
+        <h1>Welcome to My Website</h1>
+        <p>Hello, I'm Tianning Feng (冯天宁).</p>
+        <p>You can download my resume here:</p>
+        <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download English Resume (PDF)</a>
+    </div>
+
+    <script>
+        function showLang(lang) {
+            if (lang === 'zh') {
+                document.getElementById('zh').style.display = 'block';
+                document.getElementById('en').style.display = 'none';
+            } else {
+                document.getElementById('zh').style.display = 'none';
+                document.getElementById('en').style.display = 'block';
+            }
+        }
+    </script>
+
 </body>
 </html>
