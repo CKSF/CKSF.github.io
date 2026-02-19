@@ -40,12 +40,12 @@
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
-        .lang-switch button:hover {
+        .lang-switch button:hover, .lang-switch button.active {
             background-color: #007bff;
             color: #fff;
             border-color: #007bff;
         }
-        .content-en { display: none; } /* Hide English by default */
+        .content-en { display: none; }
         a {
             color: #007bff;
             text-decoration: none;
@@ -61,6 +61,53 @@
             font-size: 0.9em;
             color: #777;
         }
+        .section {
+            margin-bottom: 2.5em;
+        }
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 0.8em;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.3em;
+            color: #007bff;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            padding: 1.5em;
+            margin-bottom: 1.5em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5em;
+        }
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0;
+        }
+        .card-subtitle {
+            font-size: 1em;
+            color: #555;
+            margin: 0;
+        }
+        .card-date {
+            font-size: 0.9em;
+            color: #777;
+            white-space: nowrap;
+            margin-left: 1em;
+        }
+        .card-body ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .card-body li {
+            margin-bottom: 0.5em;
+        }
     </style>
 </head>
 <body>
@@ -69,26 +116,286 @@
         <header>
             <h1 id="header-title">冯天宁</h1>
             <div class="lang-switch">
-                <button onclick="showLang('zh')">中文</button>
-                <button onclick="showLang('en')">English</button>
+                <button id="btn-zh" onclick="showLang('zh')" class="active">中文</button>
+                <button id="btn-en" onclick="showLang('en')">English</button>
             </div>
         </header>
 
         <main>
             <!-- Chinese Content -->
             <div id="zh" class="content-zh">
-                <h2>欢迎</h2>
-                <p>你好，我是冯天宁 (Tianning Feng)，一名软件工程师。</p>
-                <p>你可以在这里下载我的简历：</p>
-                <a href="FTN简历.pdf" target="_blank">下载中文简历 (PDF)</a>
+                
+                <div class="section">
+                    <h2 class="section-title">个人简介</h2>
+                    <p>宾夕法尼亚大学计算机硕士，主攻机器深度学习与系统工程。具备 Transformer 与图神经网络工程化、分布式与低延迟系统、嵌入式实时开发经验。持有 Google 产品管理认证，具备跨领域的产品视角与技术实现能力。</p>
+                    <a href="FTN简历.pdf" target="_blank">下载完整简历 (PDF)</a>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">工作经历</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">全栈开发实习</h3>
+                                <p class="card-subtitle">Liba Space (美国 · 圣何塞)</p>
+                            </div>
+                            <span class="card-date">2025.09 - 2025.12</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>基于React与Node.js，主导开发简历分析与重写功能，通过集成LLM与优化异步任务调度，保障了系统的低延迟与高稳定性。</li>
+                                <li>通过主导Scrum迭代与A/B测试，成功推动功能上线，使平台月活跃用户（MAU）提升了50%。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">产品技术负责人</h3>
+                                <p class="card-subtitle">思政智能体项目 (中国 · 北京)</p>
+                            </div>
+                            <span class="card-date">2025.05 - 2025.08</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>设计并实现了一套RAG教案生成平台，通过融合多源检索与向量语义匹配，显著提升了内容匹配的准确率与系统的响应效率。</li>
+                                <li>独立开发了PDF解析与知识结构化模块，将教师的备课效率提升了70%。</li>
+                            </ul>
+                        </div>
+                    </div>
+                     <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">产品实习生</h3>
+                                <p class="card-subtitle">神通科技集团有限公司 (中国 · 宁波)</p>
+                            </div>
+                            <span class="card-date">2021.06 - 2021.08</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>基于用户研究与行为数据分析，优化了数据看板的交互设计，使系统整体可用性提升了30%。</li>
+                                <li>成功协调设计、工程与运营团队，推动了2项核心业务流程的优化方案落地。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">实验室科研经历</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">深度学习研究员</h3>
+                                <p class="card-subtitle">Melody Lab (埃默里大学)</p>
+                            </div>
+                            <span class="card-date">2023.09 - 2025.05</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>提出并研发了以Transformer为核心架构的SeizureFormer模型，在真实的RNS数据上实现了1–14天的癫痫风险预测，性能达到领域前沿（SOTA）。</li>
+                                <li>作为第一作者，论文发表于PSB 2026，并受邀进行口头报告（录取率Top 10%）。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">科研助理</h3>
+                                <p class="card-subtitle">Lang-Biomarker Lab (埃默里大学)</p>
+                            </div>
+                            <span class="card-date">2022.09 - 2024.11</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>构建了支持文本、音频、图像的多模态数据ETL流水线，基于Hugging Face与PyTorch处理超过100GB的数据，将人工处理成本降低了80%。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">个人项目</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">PhillyHome Insight - 房产与社区分析平台</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>主导一个4人团队，开发了一个地理空间数据分析平台，通过优化PostgreSQL查询，实现了复杂空间查询延迟低于200ms。</li>
+                                <li>项目吸引了超过200名早期用户，并被宾夕法尼亚大学某课程选为系统设计示范项目。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">OpenAPS Simulation - 嵌入式血糖调节系统</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>在FreeRTOS上使用C++实现实时PID控制算法，系统响应延迟低于100ms，满足了医疗级的实时性要求。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">智能家居助手</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>利用MongoDB的Change Streams技术与Swift，实现了支持超过15种设备的多设备实时同步，端到端延迟低于200ms。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- English Content -->
             <div id="en" class="content-en">
-                <h2>Welcome</h2>
-                <p>Hello, I'm Tianning Feng (冯天宁), a Software Engineer.</p>
-                <p>You can download my resume here:</p>
-                <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download English Resume (PDF)</a>
+
+                <div class="section">
+                    <h2 class="section-title">Summary</h2>
+                    <p>UPenn CIS Master’s student specializing in Machine Learning and Full-stack Engineering. Experienced in architecting scalable AI applications (Transformers, GNNs) and real-time embedded systems. Proven track record of deploying SOTA research models into production and optimizing distributed system performance for low-latency environments.</p>
+                    <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download Full Resume (PDF)</a>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Professional Experience</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Full-stack Engineer Intern</h3>
+                                <p class="card-subtitle">Liba Space (San Jose, CA)</p>
+                            </div>
+                            <span class="card-date">Sep 2025 - Dec 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Owned and led the 0-1 development of a "Resume Analysis & Rewrite" feature, seamlessly integrating it into the user flow and driving a 50% increase in MAU.</li>
+                                <li>Translated user needs into technical specifications, leading the full development lifecycle from coding to production deployment.</li>
+                                <li>Optimized backend API workflows to reduce LLM token consumption and improve response quality based on user feedback.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Contract Product Leader</h3>
+                                <p class="card-subtitle">Government-Sponsored AI Education Initiative (Beijing, China)</p>
+                            </div>
+                            <span class="card-date">May 2025 – Aug 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Led the technical execution of a 0-1 RAG platform for automated lesson planning, managing the full development lifecycle.</li>
+                                <li>Enhanced system response quality by refactoring the retrieval layer with a hybrid BM25 + Vector approach, boosting the relevance of retrieved academic contexts.</li>
+                                <li>Automated content generation by building a parsing engine that transformed raw PDFs into structured formats, reducing manual preparation time by 70%.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Product Intern</h3>
+                                <p class="card-subtitle">Shen Tong Technology Group Co., Ltd (Ningbo, China)</p>
+                            </div>
+                            <span class="card-date">Jun 2021 – Aug 2021</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Improved usability scores by ~30% by analyzing user interaction logs and delivering technical specifications to resolve dashboard navigation bottlenecks.</li>
+                                <li>Accelerated design sign-off by 20% by establishing a standardized feedback loop between Design and Engineering stakeholders.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Research Experience</h2>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Deep Learning Researcher</h3>
+                                <p class="card-subtitle">Melody Lab (Emory University)</p>
+                            </div>
+                            <span class="card-date">Sep 2023 – May 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Developed "SeizureFormer," a novel Transformer model in PyTorch to predict seizure risks from RNS data, achieving SOTA performance in 1–14 day horizons.</li>
+                                <li>Engineered a Dynamic Hypergraph Neural Network (EpiDHGNN) for epidemic modeling, achieving 30% faster convergence and 7–12% higher accuracy.</li>
+                                <li>Authored 2 papers accepted for Oral Presentation (Top 15%) at PSB 2026.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Research Assistant</h3>
+                                <p class="card-subtitle">Language Biomarker Lab (Emory University)</p>
+                            </div>
+                            <span class="card-date">Sep 2022 – Sep 2023</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Reduced manual data processing by 80% by architecting automated ETL pipelines using Hugging Face and PyTorch for multi-modal data (100+ GB).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2 class="section-title">Projects</h2>
+                     <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">PhillyHome Insight — Housing & Community Analytics Platform</h3>
+                            </div>
+                            <span class="card-date">Sep 2025 – Dec 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Gained 200+ early subscriptions by leading the full-stack engineering of an analytics platform integrating heterogeneous datasets.</li>
+                                <li>Achieved sub-200ms latency for complex geospatial queries by designing composite database indexes and optimizing RESTful APIs.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Closed-Loop Glucose Regulation System (OpenAPS Simulation)</h3>
+                            </div>
+                            <span class="card-date">Sep 2025 – Dec 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Achieved sub-100ms response latency in a safety-critical environment by optimizing C++ task scheduling and memory management on FreeRTOS.</li>
+                                <li>Engineered a reliable PID control loop to regulate insulin delivery based on real-time CGM sensor data.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Smart Home Assistant Development</h3>
+                            </div>
+                            <span class="card-date">Jan 2024 – Jan 2025</span>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Enabled concurrent control of 15+ smart devices by architecting a scalable backend using MongoDB and Swift with real-time synchronization.</li>
+                                <li>Reduced data sync latency to <200ms by implementing real-time database observers (Change Streams).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
 
@@ -99,18 +406,24 @@
 
     <script>
         const headerTitle = document.getElementById('header-title');
-        const contentZh = { title: "冯天宁" };
-        const contentEn = { title: "Tianning Feng" };
+        const btnZh = document.getElementById('btn-zh');
+        const btnEn = document.getElementById('btn-en');
+        const contentZhData = { title: "冯天宁" };
+        const contentEnData = { title: "Tianning Feng" };
 
         function showLang(lang) {
             if (lang === 'zh') {
                 document.getElementById('zh').style.display = 'block';
                 document.getElementById('en').style.display = 'none';
-                headerTitle.textContent = contentZh.title;
+                headerTitle.textContent = contentZhData.title;
+                btnZh.classList.add('active');
+                btnEn.classList.remove('active');
             } else {
                 document.getElementById('zh').style.display = 'none';
                 document.getElementById('en').style.display = 'block';
-                headerTitle.textContent = contentEn.title;
+                headerTitle.textContent = contentEnData.title;
+                btnEn.classList.add('active');
+                btnZh.classList.remove('active');
             }
         }
     </script>
