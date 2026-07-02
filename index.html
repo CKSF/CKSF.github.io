@@ -3,467 +3,1393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>冯天宁 (Tianning Feng) 的个人网站</title>
+    <title>TIANNING FENG // 冯天宁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-void:    #05070d;
+            --bg-panel:   rgba(10, 14, 22, 0.72);
+            --accent:     #fce94f;
+            --accent-dim: #b8a634;
+            --cyan:       #24e0ff;
+            --magenta:    #ff003c;
+            --text:       #e5e7ee;
+            --text-mute:  #7d8494;
+            --border:     rgba(252, 233, 79, 0.35);
+            --border-dim: rgba(255, 255, 255, 0.08);
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; background: #05070d; }
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            margin: 0; padding: 0;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Rajdhani', 'Chakra Petch', 'PingFang SC', -apple-system, sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            z-index: 0;
         }
-        .container {
-            max-width: 800px;
-            margin: 2em auto;
-            padding: 2em;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        html { margin: 0; padding: 0; }
+        ::selection { background: var(--accent); color: #000; }
+        a { color: var(--accent); text-decoration: none; transition: color .15s; }
+        a:hover { color: #fff; }
+
+        /* ===== 背景 ===== */
+        /* 最底层：Matrix 数字雨 */
+        .matrix-rain {
+            position: fixed; inset: 0; z-index: -5;
+            width: 100%; height: 100%;
+            display: block;
+            background: #05070d;
         }
-        header {
-            border-bottom: 1px solid #eaeaea;
-            padding-bottom: 1em;
-            margin-bottom: 2em;
+        /* 数字雨之上盖一层非常淡的暗色底，避免整体过亮；
+           主要的中央遮蔽由每个 .section::before 负责 */
+        .bg-veil {
+            position: fixed; inset: 0; z-index: -4; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%);
+        }
+        .bg-grid {
+            position: fixed; inset: 0; z-index: -3; pointer-events: none;
+            background:
+                radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
+                radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%);
+        }
+        .bg-grid::before {
+            content: ''; position: absolute; inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
+        }
+        .scanlines {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px);
+        }
+        .noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            opacity: 0.05; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        }
+
+        /* ===== 顶部导航 ===== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
+            backdrop-filter: blur(6px);
         }
-        header h1 {
-            margin: 0;
-            font-size: 1.8em;
+        .nav-brand {
+            color: var(--accent);
+            font-weight: 500;
+            display: flex; align-items: center; gap: 0.6rem;
         }
-        .lang-switch button {
-            padding: 0.6em 1.2em;
+        .nav-brand .dot {
+            width: 6px; height: 6px; background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+        .nav-links {
+            display: flex; gap: 2rem;
+        }
+        .nav-links a {
+            color: var(--text-mute);
+            display: flex; align-items: baseline; gap: 0.4rem;
+            transition: color 0.15s;
+            position: relative;
+        }
+        .nav-links a .num { color: var(--accent); font-size: 0.6rem; opacity: 0.7; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text); }
+        .nav-links a.active::after {
+            content: ''; position: absolute;
+            left: 0; right: 0; bottom: -6px;
+            height: 1px; background: var(--accent);
+        }
+        .nav-lang {
+            display: flex; gap: 0.4rem;
+        }
+        .nav-lang button {
+            font-family: inherit;
+            font-size: 0.7rem; letter-spacing: 0.2em;
+            padding: 0.35em 0.75em;
+            background: transparent;
+            color: var(--text-mute);
+            border: 1px solid var(--border-dim);
             cursor: pointer;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            text-transform: uppercase;
+            transition: all 0.15s;
         }
-        .lang-switch button:hover, .lang-switch button.active {
-            background-color: #007bff;
-            color: #fff;
-            border-color: #007bff;
+        .nav-lang button.active {
+            color: #000; background: var(--accent); border-color: var(--accent);
         }
-        .content-en { display: none; }
-        a {
-            color: #007bff;
-            text-decoration: none;
+        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
+        @media (max-width: 820px) {
+            .nav-links { display: none; }
         }
-        a:hover {
-            text-decoration: underline;
-        }
-        footer {
-            text-align: center;
-            margin-top: 2em;
-            padding-top: 1em;
-            border-top: 1px solid #eaeaea;
-            font-size: 0.9em;
-            color: #777;
-        }
+
+        /* ===== 通用 ===== */
         .section {
-            margin-bottom: 2.5em;
+            padding: 7rem 6vw 4rem;
+            max-width: 1240px;
+            margin: 0 auto;
+            position: relative;
+        }
+        /* 中央蒙版：hero 之外的所有 section 在中间加一个暗窗，
+           内容清晰，两侧留白让数字雨透出来 */
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(1120px, 92%);
+            background:
+                linear-gradient(90deg,
+                    rgba(5,7,13,0)   0%,
+                    rgba(5,7,13,0.82) 8%,
+                    rgba(5,7,13,0.92) 50%,
+                    rgba(5,7,13,0.82) 92%,
+                    rgba(5,7,13,0)   100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        /* section 内部内容放在蒙版之上 */
+        .section > * { position: relative; z-index: 1; }
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 1.2rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 1rem;
+        }
+        .section-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
         }
         .section-title {
-            font-size: 1.5em;
-            margin-bottom: 0.8em;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 0.3em;
-            color: #007bff;
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: 0.05em;
+            color: var(--text);
+            margin: 0;
+            text-transform: uppercase;
         }
+        .section-meta {
+            margin-left: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            padding: 9rem 6vw 4rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            align-content: center;
+            gap: 1.5rem;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+            text-transform: uppercase;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .hero-eyebrow::before {
+            content: ''; width: 40px; height: 1px; background: var(--accent);
+        }
+        .hero-name {
+            font-family: 'Chakra Petch', sans-serif;
+            font-weight: 700;
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .hero-name .yellow { color: var(--accent); }
+        .hero-role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-mute);
+        }
+        .hero-role span { color: var(--text); }
+        .hero-desc {
+            max-width: 600px;
+            font-size: 1.1rem;
+            line-height: 1.75;
+            color: #b8bcc7;
+            margin-top: 0.5rem;
+        }
+        .hero-typed {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            color: var(--cyan);
+            margin-top: 0.4rem;
+            min-height: 1.4em;
+        }
+        .hero-typed .caret {
+            display: inline-block; width: 8px; height: 1em;
+            background: var(--cyan); margin-left: 4px;
+            vertical-align: middle;
+            animation: blink 1s steps(1) infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        .hero-cta {
+            display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;
+        }
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.9rem 1.6rem;
+            border: 1px solid var(--border);
+            color: var(--accent);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            display: inline-flex; align-items: center; gap: 0.7rem;
+        }
+        .btn:hover {
+            background: var(--accent); color: #000;
+            box-shadow: 0 0 24px rgba(252,233,79,0.35);
+        }
+        .btn.ghost { border-color: var(--border-dim); color: var(--text-mute); }
+        .btn.ghost:hover { border-color: var(--text); background: transparent; color: var(--text); box-shadow: none; }
+        .btn .arrow { transition: transform 0.2s; }
+        .btn:hover .arrow { transform: translateX(4px); }
+
+        .corner {
+            position: absolute; width: 24px; height: 24px;
+            border: 1px solid var(--accent);
+        }
+        .corner.tl { top: 6rem; left: 5vw; border-right: none; border-bottom: none; }
+        .corner.tr { top: 6rem; right: 5vw; border-left: none; border-bottom: none; }
+        .corner.bl { bottom: 3rem; left: 5vw; border-right: none; border-top: none; }
+        .corner.br { bottom: 3rem; right: 5vw; border-left: none; border-top: none; }
+        @media (max-width: 720px) { .corner { display: none; } }
+
+        .hero-marker {
+            position: absolute; right: 6vw; top: 48%;
+            transform: translateY(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 0.25em;
+            color: var(--text-mute); text-transform: uppercase;
+            text-align: right; line-height: 1.9;
+            border-right: 1px solid var(--accent); padding-right: 1rem;
+        }
+        .hero-marker .val { color: var(--accent); }
+        @media (max-width: 1000px) { .hero-marker { display: none; } }
+
+        .scroll-cue {
+            position: absolute; bottom: 2rem; left: 6vw;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem; letter-spacing: 0.3em;
+            color: var(--text-mute); text-transform: uppercase;
+            display: flex; align-items: center; gap: 0.6rem;
+        }
+        .scroll-cue .line {
+            width: 60px; height: 1px; background: var(--accent);
+            position: relative; overflow: hidden;
+        }
+        .scroll-cue .line::after {
+            content: ''; position: absolute; width: 20px; height: 100%;
+            background: #05070d; animation: sweep 2.2s linear infinite;
+        }
+        @keyframes sweep {
+            from { transform: translateX(-20px); }
+            to   { transform: translateX(60px); }
+        }
+
+        /* ===== STORY ===== */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+        }
+        @media (max-width: 900px) { .story-grid { grid-template-columns: 1fr; } }
+        .story-aside {
+            border-left: 1px solid var(--border-dim);
+            padding-left: 1.4rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            line-height: 2;
+        }
+        .story-aside .k { color: var(--accent); }
+        .story-body {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #c9ccd6;
+        }
+        .story-body p { margin: 0 0 1.2rem; }
+        .story-body .quote {
+            border-left: 3px solid var(--accent);
+            padding: 0.4rem 0 0.4rem 1.2rem;
+            margin: 1.5rem 0;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text);
+            letter-spacing: 0.03em;
+        }
+
+        /* ===== 时间线 ===== */
+        .timeline {
+            margin-top: 2rem;
+            border-left: 1px solid var(--border-dim);
+            padding-left: 1.6rem;
+            position: relative;
+        }
+        .tl-item {
+            position: relative;
+            padding-bottom: 1.2rem;
+        }
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -1.98rem; top: 0.6em;
+            width: 10px; height: 10px;
+            background: var(--bg-void);
+            border: 2px solid var(--accent);
+        }
+        .tl-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+        }
+        .tl-text { color: var(--text); margin-top: 0.2rem; font-size: 0.95rem; }
+
+        /* ===== SKILLS ===== */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+        .skill-card {
+            border: 1px solid var(--border-dim);
+            background: var(--bg-panel);
+            padding: 1.4rem 1.5rem;
+            position: relative;
+            transition: border-color 0.2s;
+        }
+        .skill-card:hover { border-color: var(--border); }
+        .skill-card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0;
+            width: 40px; height: 3px;
+            background: var(--accent);
+        }
+        .skill-head {
+            display: flex; align-items: center; gap: 0.7rem;
+            margin-bottom: 1rem;
+        }
+        .skill-icon {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.15em 0.5em;
+            letter-spacing: 0.15em;
+        }
+        .skill-name {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .skill-list {
+            display: flex; flex-wrap: wrap; gap: 0.4rem;
+        }
+        .tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            color: var(--text-mute);
+            border: 1px solid var(--border-dim);
+            padding: 0.3em 0.7em;
+            text-transform: uppercase;
+            transition: all 0.15s;
+        }
+        .tag:hover {
+            color: var(--accent); border-color: var(--accent);
+        }
+        .bar {
+            display: flex; align-items: center; gap: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            color: var(--text-mute);
+            margin-bottom: 0.4rem;
+        }
+        .bar .name { width: 80px; color: var(--text); }
+        .bar .track {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.05);
+            position: relative;
+            border: 1px solid var(--border-dim);
+        }
+        .bar .fill {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--accent) 0 6px,
+                transparent 6px 8px
+            );
+            width: 0;
+            transition: width 1.4s cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
+
+        /* ===== BLOG ===== */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .post {
+            border: 1px solid var(--border-dim);
+            background: var(--bg-panel);
+            padding: 1.6rem 1.7rem;
+            position: relative;
+            transition: border-color 0.2s, transform 0.2s;
+            cursor: pointer;
+            display: flex; flex-direction: column;
+            gap: 0.9rem;
+        }
+        .post:hover {
+            border-color: var(--border);
+            transform: translateY(-3px);
+        }
+        .post-meta {
+            display: flex; justify-content: space-between; align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.15em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+        }
+        .post-cat {
+            color: var(--accent);
+            border: 1px solid var(--border);
+            padding: 0.2em 0.6em;
+        }
+        .post-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.35;
+        }
+        .post-excerpt {
+            font-size: 0.95rem;
+            color: #b8bcc7;
+            line-height: 1.65;
+            flex: 1;
+        }
+        .post-read {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .post-read .arr { transition: transform 0.2s; }
+        .post:hover .post-read .arr { transform: translateX(4px); }
+
+        /* ===== 卡片 ===== */
         .card {
-            background: #fff;
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            padding: 1.5em;
-            margin-bottom: 1.5em;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-dim);
+            padding: 1.75rem 2rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s, transform 0.2s;
+            backdrop-filter: blur(4px);
         }
+        .card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 40px;
+            background: var(--accent);
+            transition: height 0.25s;
+        }
+        .card:hover { border-color: var(--border); transform: translateX(2px); }
+        .card:hover::before { height: 100%; }
         .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.5em;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
         }
         .card-title {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 0;
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.15rem; font-weight: 600;
+            margin: 0; color: var(--text);
         }
         .card-subtitle {
-            font-size: 1em;
-            color: #555;
-            margin: 0;
+            margin: 0.25rem 0 0; font-size: 0.9rem; color: var(--accent);
+            font-family: 'Rajdhani', sans-serif; font-weight: 500; letter-spacing: 0.05em;
         }
         .card-date {
-            font-size: 0.9em;
-            color: #777;
-            white-space: nowrap;
-            margin-left: 1em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; color: var(--text-mute);
+            letter-spacing: 0.15em; white-space: nowrap;
         }
-        .card-body ul {
-            padding-left: 20px;
-            margin: 0;
-        }
+        .card-body ul { padding-left: 0; margin: 0; list-style: none; }
         .card-body li {
-            margin-bottom: 0.5em;
+            position: relative; padding-left: 1.4rem;
+            margin-bottom: 0.6rem; line-height: 1.7;
+            color: #c9ccd6; font-size: 0.98rem;
+        }
+        .card-body li::before {
+            content: ''; position: absolute;
+            left: 0; top: 0.75em;
+            width: 8px; height: 1px; background: var(--accent);
         }
         .card-link {
-            font-size: 0.9em;
-            color: #007bff;
-            text-decoration: none;
-            white-space: nowrap;
-            margin-left: 1em;
-            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem; color: var(--accent);
+            letter-spacing: 0.15em; text-transform: uppercase;
+            border-bottom: 1px solid var(--accent); padding-bottom: 2px;
         }
-        .card-link:hover {
-            text-decoration: underline;
+        .card-link:hover { color: #fff; border-color: #fff; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 780px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* ===== CONTACT ===== */
+        .contact-box {
+            border: 1px solid var(--border);
+            padding: 3rem 2.5rem;
+            background: var(--bg-panel);
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 3rem;
+            position: relative;
+        }
+        @media (max-width: 780px) {
+            .contact-box { grid-template-columns: 1fr; padding: 2rem 1.5rem; }
+        }
+        .contact-box::before,
+        .contact-box::after {
+            content: ''; position: absolute;
+            width: 20px; height: 20px;
+            border: 1px solid var(--accent);
+        }
+        .contact-box::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+        .contact-box::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+        .contact-title {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin: 0 0 1rem;
+            line-height: 1.15;
+        }
+        .contact-title .accent { color: var(--accent); }
+        .contact-desc {
+            color: #c9ccd6; line-height: 1.8; font-size: 1rem;
+        }
+        .contact-list {
+            display: flex; flex-direction: column; gap: 0.9rem;
+        }
+        .contact-item {
+            display: flex; align-items: center; gap: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            letter-spacing: 0.1em;
+            color: var(--text);
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 0.7rem;
+        }
+        .contact-item .key {
+            color: var(--text-mute); text-transform: uppercase;
+            min-width: 70px;
+        }
+        .contact-item a { color: var(--accent); }
+
+        /* Footer */
+        footer {
+            padding: 3rem 6vw 2.5rem;
+            border-top: 1px solid var(--border-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 0.2em;
+            color: var(--text-mute); text-transform: uppercase;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        footer .accent { color: var(--accent); }
+
+        /* ===== Glitch ===== */
+        .glitch-target { position: relative; display: inline-block; }
+        .glitch-target::before,
+        .glitch-target::after {
+            content: attr(data-text); position: absolute;
+            top: 0; left: 0; width: 100%; pointer-events: none;
+        }
+        .glitch-target::before {
+            color: var(--cyan);
+            clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%);
+            animation: g1 6s infinite steps(1); opacity: 0.6;
+        }
+        .glitch-target::after {
+            color: var(--magenta);
+            clip-path: polygon(0 78%, 100% 78%, 100% 100%, 0 100%);
+            animation: g2 5.5s infinite steps(1); opacity: 0.5;
+        }
+        @keyframes g1 {
+            0%,96%,100% { transform: translate(0,0); opacity: 0; }
+            97% { transform: translate(-2px, 1px); opacity: 0.6; }
+            98% { transform: translate(2px, -1px); opacity: 0.6; }
+        }
+        @keyframes g2 {
+            0%,93%,100% { transform: translate(0,0); opacity: 0; }
+            94% { transform: translate(2px, 0); opacity: 0.5; }
+            95% { transform: translate(-2px, 0); opacity: 0.5; }
+        }
+
+        .content-en { display: none; }
+
+        @media (max-width: 720px) {
+            .section { padding: 5rem 6vw 3rem; }
+            .hero { padding: 7rem 6vw 4rem; }
+            .nav { padding: 0.8rem 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1 id="header-title">冯天宁</h1>
-            <div class="lang-switch">
-                <button id="btn-zh" onclick="showLang('zh')" class="active">中文</button>
-                <button id="btn-en" onclick="showLang('en')">English</button>
+    <canvas class="matrix-rain" id="matrixRain"></canvas>
+    <div class="bg-veil"></div>
+    <div class="bg-grid"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="nav-brand"><span class="dot"></span>TIANNING.FENG</div>
+        <div class="nav-links">
+            <a href="#home"     data-target="home"><span class="num">01</span>Home</a>
+            <a href="#story"    data-target="story"><span class="num">02</span>Story</a>
+            <a href="#skills"   data-target="skills"><span class="num">03</span>Skills</a>
+            <a href="#blog"     data-target="blog"><span class="num">04</span>Blog</a>
+            <a href="work.html"><span class="num">05</span>Work<span style="color:var(--accent);margin-left:0.3em;font-size:0.55rem">↗</span></a>
+            <a href="resume.html"><span class="num">06</span>Resume<span style="color:var(--accent);margin-left:0.3em;font-size:0.55rem">↗</span></a>
+            <a href="#contact"  data-target="contact"><span class="num">07</span>Contact</a>
+        </div>
+        <div class="nav-lang">
+            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
+            <button id="btn-en" onclick="showLang('en')">EN</button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <div class="hero-eyebrow">FILE // PERSONNEL RECORD — 2026.Q1</div>
+
+        <h1 class="hero-name">
+            <span class="glitch-target" data-text="TIANNING">TIANNING</span><br>
+            <span class="yellow glitch-target" data-text="FENG">FENG</span>
+        </h1>
+
+        <div class="hero-role">
+            <span>MACHINE LEARNING</span> ・ <span>FULL-STACK</span> ・ <span>SYSTEMS</span>
+        </div>
+
+        <div class="hero-typed" id="hero-typed"><span class="caret"></span></div>
+
+        <p class="hero-desc" id="hero-desc">
+            这里不只是一份简历——是我的实验室、日记本和信号塔。
+            欢迎进入我构建、思考与探索的世界。
+        </p>
+
+        <div class="hero-cta">
+            <a href="#story" class="btn">进入档案 <span class="arrow">→</span></a>
+            <a href="#blog" class="btn ghost">阅读手记 <span class="arrow">↓</span></a>
+        </div>
+
+        <div class="hero-marker">
+            LOC <span class="val">/ PHILADELPHIA</span><br>
+            ROLE <span class="val">/ SWE + ML</span><br>
+            NET <span class="val">/ SECURED</span><br>
+            VER <span class="val">/ 2.0.77</span>
+        </div>
+
+        <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+    </section>
+
+    <!-- ============ 中文 ============ -->
+    <div id="zh" class="content-zh">
+
+        <!-- STORY -->
+        <section class="section" id="story">
+            <div class="section-head">
+                <span class="section-num">/ 02</span>
+                <h2 class="section-title">The Story</h2>
+                <span class="section-meta">// 我的故事</span>
             </div>
-        </header>
+            <div class="story-grid">
+                <aside class="story-aside">
+                    <div><span class="k">// origin</span></div>
+                    <div>宁波 → 亚特兰大 → 费城</div>
+                    <div><span class="k">// mode</span></div>
+                    <div>Builder / Researcher</div>
+                    <div><span class="k">// stack</span></div>
+                    <div>PyTorch · React · C++</div>
+                    <div><span class="k">// obsession</span></div>
+                    <div>让复杂系统 &lt; 100ms</div>
+                    <div><span class="k">// off-hours</span></div>
+                    <div>爵士鼓 · 摄影 · 长跑</div>
+                </aside>
 
-        <main>
-            <!-- Chinese Content -->
-            <div id="zh" class="content-zh">
-                
-                <div class="section">
-                    <h2 class="section-title">个人简介</h2>
-                    <p>宾夕法尼亚大学计算机硕士，主攻机器深度学习与系统工程。具备 Transformer 与图神经网络工程化、分布式与低延迟系统、嵌入式实时开发经验。持有 Google 产品管理认证，具备跨领域的产品视角与技术实现能力。</p>
-                    <a href="FTN简历.pdf" target="_blank">下载完整简历 (PDF)</a>
-                </div>
+                <div class="story-body">
+                    <p>
+                        我从中国东海边的一座小城出发，被算法和机器学习吸引到大洋对岸。
+                        在埃默里的实验室里第一次训练 Transformer 时，那种"数据里长出结构"的震撼，让我决定把学术研究和工程实践两条路一起走下去。
+                    </p>
+                    <p class="quote">"如果一个模型只能在论文里跑，它就还没真正存在。"</p>
+                    <p>
+                        本科毕业前，我作为第一作者把 SeizureFormer 送进了 PSB 2026 的口头报告。
+                        随后我来到 UPenn，希望学会用系统工程的语言，把研究的想法真正落到毫秒级的现实里——
+                        从 FreeRTOS 上的 PID 控制回路，到分布式后端里的 async pipeline，再到把 LLM 集成进真实产品。
+                    </p>
+                    <p>
+                        我相信最好的工程师同时是研究员，最好的研究员也懂得让代码在生产环境里活下去。
+                        这个网站就是我记录这段旅程的地方：想法、项目、还有一些关于系统、模型和城市夜色的胡思乱想。
+                    </p>
 
-                <div class="section">
-                    <h2 class="section-title">工作经历</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">全栈开发实习</h3>
-                                <p class="card-subtitle">Liba Space (美国 · 圣何塞)</p>
-                            </div>
-                            <span class="card-date">2025.09 - 2025.12</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>基于React与Node.js，主导开发简历分析与重写功能，通过集成LLM与优化异步任务调度，保障了系统的低延迟与高稳定性。</li>
-                                <li>通过主导Scrum迭代与A/B测试，成功推动功能上线，使平台月活跃用户（MAU）提升了50%。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">产品技术负责人</h3>
-                                <p class="card-subtitle">思政智能体项目 (中国 · 北京)</p>
-                            </div>
-                            <span class="card-date">2025.05 - 2025.08</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>设计并实现了一套RAG教案生成平台，通过融合多源检索与向量语义匹配，显著提升了内容匹配的准确率与系统的响应效率。</li>
-                                <li>独立开发了PDF解析与知识结构化模块，将教师的备课效率提升了70%。</li>
-                            </ul>
-                        </div>
-                    </div>
-                     <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">产品实习生</h3>
-                                <p class="card-subtitle">神通科技集团有限公司 (中国 · 宁波)</p>
-                            </div>
-                            <span class="card-date">2021.06 - 2021.08</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>基于用户研究与行为数据分析，优化了数据看板的交互设计，使系统整体可用性提升了30%。</li>
-                                <li>成功协调设计、工程与运营团队，推动了2项核心业务流程的优化方案落地。</li>
-                            </ul>
-                        </div>
+                    <div class="timeline">
+                        <div class="tl-item"><div class="tl-year">2026 // NOW</div><div class="tl-text">UPenn CIS 硕士，专注 ML × 系统工程。</div></div>
+                        <div class="tl-item"><div class="tl-year">2025</div><div class="tl-text">SeizureFormer 被 PSB 2026 接收为口头报告；在 Liba Space 主导 LLM 产品。</div></div>
+                        <div class="tl-item"><div class="tl-year">2023 — 2025</div><div class="tl-text">Emory Melody Lab，第一次训练 Transformer 建模医疗时间序列。</div></div>
+                        <div class="tl-item"><div class="tl-year">2021</div><div class="tl-text">神通科技产品实习，第一次把设计到工程走通。</div></div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="section">
-                    <h2 class="section-title">实验室科研经历</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">深度学习研究员</h3>
-                                <p class="card-subtitle">Melody Lab (埃默里大学)</p>
-                            </div>
-                            <span class="card-date">2023.09 - 2025.05</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>提出并研发了以Transformer为核心架构的SeizureFormer模型，在真实的RNS数据上实现了1–14天的癫痫风险预测，性能达到领域前沿（SOTA）。</li>
-                                <li>作为第一作者，论文发表于PSB 2026，并受邀进行口头报告（录取率Top 10%）。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">科研助理</h3>
-                                <p class="card-subtitle">Lang-Biomarker Lab (埃默里大学)</p>
-                            </div>
-                            <span class="card-date">2022.09 - 2024.11</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>构建了支持文本、音频、图像的多模态数据ETL流水线，基于Hugging Face与PyTorch处理超过100GB的数据，将人工处理成本降低了80%。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h2 class="section-title">个人项目</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">SeizureFormer - 癫痫风险预测模型</h3>
-                            </div>
-                            <a href="https://github.com/CKSF/SeizureFormer" target="_blank" class="card-link">GitHub &rarr;</a>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>一个用于癫痫风险预测的极简、清晰的 Transformer 模型参考实现。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">PhillyHome Insight - 房产与社区分析平台</h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>主导一个4人团队，开发了一个地理空间数据分析平台，通过优化PostgreSQL查询，实现了复杂空间查询延迟低于200ms。</li>
-                                <li>项目吸引了超过200名早期用户，并被宾夕法尼亚大学某课程选为系统设计示范项目。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">OpenAPS Simulation - 嵌入式血糖调节系统</h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>在FreeRTOS上使用C++实现实时PID控制算法，系统响应延迟低于100ms，满足了医疗级的实时性要求。</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">智能家居助手</h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>利用MongoDB的Change Streams技术与Swift，实现了支持超过15种设备的多设备实时同步，端到端延迟低于200ms。</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
+        <!-- SKILLS -->
+        <section class="section" id="skills">
+            <div class="section-head">
+                <span class="section-num">/ 03</span>
+                <h2 class="section-title">Skills &amp; Stack</h2>
+                <span class="section-meta">// 我的技能</span>
             </div>
 
-            <!-- English Content -->
-            <div id="en" class="content-en">
-
-                <div class="section">
-                    <h2 class="section-title">Summary</h2>
-                    <p>UPenn CIS Master’s student specializing in Machine Learning and Full-stack Engineering. Experienced in architecting scalable AI applications (Transformers, GNNs) and real-time embedded systems. Proven track record of deploying SOTA research models into production and optimizing distributed system performance for low-latency environments.</p>
-                    <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download Full Resume (PDF)</a>
-                </div>
-
-                <div class="section">
-                    <h2 class="section-title">Professional Experience</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Full-stack Engineer Intern</h3>
-                                <p class="card-subtitle">Liba Space (San Jose, CA)</p>
-                            </div>
-                            <span class="card-date">Sep 2025 - Dec 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Owned and led the 0-1 development of a "Resume Analysis & Rewrite" feature, seamlessly integrating it into the user flow and driving a 50% increase in MAU.</li>
-                                <li>Translated user needs into technical specifications, leading the full development lifecycle from coding to production deployment.</li>
-                                <li>Optimized backend API workflows to reduce LLM token consumption and improve response quality based on user feedback.</li>
-                            </ul>
-                        </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-head">
+                        <span class="skill-icon">01</span>
+                        <span class="skill-name">Machine Learning</span>
                     </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Contract Product Leader</h3>
-                                <p class="card-subtitle">Government-Sponsored AI Education Initiative (Beijing, China)</p>
-                            </div>
-                            <span class="card-date">May 2025 – Aug 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Led the technical execution of a 0-1 RAG platform for automated lesson planning, managing the full development lifecycle.</li>
-                                <li>Enhanced system response quality by refactoring the retrieval layer with a hybrid BM25 + Vector approach, boosting the relevance of retrieved academic contexts.</li>
-                                <li>Automated content generation by building a parsing engine that transformed raw PDFs into structured formats, reducing manual preparation time by 70%.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Product Intern</h3>
-                                <p class="card-subtitle">Shen Tong Technology Group Co., Ltd (Ningbo, China)</p>
-                            </div>
-                            <span class="card-date">Jun 2021 – Aug 2021</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Improved usability scores by ~30% by analyzing user interaction logs and delivering technical specifications to resolve dashboard navigation bottlenecks.</li>
-                                <li>Accelerated design sign-off by 20% by establishing a standardized feedback loop between Design and Engineering stakeholders.</li>
-                            </ul>
-                        </div>
+                    <div class="skill-list">
+                        <span class="tag">PyTorch</span>
+                        <span class="tag">Transformer</span>
+                        <span class="tag">GNN</span>
+                        <span class="tag">Hugging Face</span>
+                        <span class="tag">RAG</span>
+                        <span class="tag">Time-Series</span>
                     </div>
                 </div>
 
-                <div class="section">
-                    <h2 class="section-title">Research Experience</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Deep Learning Researcher</h3>
-                                <p class="card-subtitle">Melody Lab (Emory University)</p>
-                            </div>
-                            <span class="card-date">Sep 2023 – May 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Developed "SeizureFormer," a novel Transformer model in PyTorch to predict seizure risks from RNS data, achieving SOTA performance in 1–14 day horizons.</li>
-                                <li>Engineered a Dynamic Hypergraph Neural Network (EpiDHGNN) for epidemic modeling, achieving 30% faster convergence and 7–12% higher accuracy.</li>
-                                <li>Authored 2 papers accepted for Oral Presentation (Top 15%) at PSB 2026.</li>
-                            </ul>
-                        </div>
+                <div class="skill-card">
+                    <div class="skill-head">
+                        <span class="skill-icon">02</span>
+                        <span class="skill-name">Full-stack</span>
                     </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Research Assistant</h3>
-                                <p class="card-subtitle">Language Biomarker Lab (Emory University)</p>
-                            </div>
-                            <span class="card-date">Sep 2022 – Sep 2023</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Reduced manual data processing by 80% by architecting automated ETL pipelines using Hugging Face and PyTorch for multi-modal data (100+ GB).</li>
-                            </ul>
-                        </div>
+                    <div class="skill-list">
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">MongoDB</span>
+                        <span class="tag">Swift</span>
                     </div>
                 </div>
 
-                <div class="section">
-                    <h2 class="section-title">Projects</h2>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">SeizureFormer</h3>
-                            </div>
-                            <a href="https://github.com/CKSF/SeizureFormer" target="_blank" class="card-link">GitHub &rarr;</a>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>A minimal, clean reference implementation for a time-series model for seizure risk forecasting.</li>
-                            </ul>
-                        </div>
+                <div class="skill-card">
+                    <div class="skill-head">
+                        <span class="skill-icon">03</span>
+                        <span class="skill-name">Systems</span>
                     </div>
-                     <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">PhillyHome Insight — Housing & Community Analytics Platform</h3>
-                            </div>
-                            <span class="card-date">Sep 2025 – Dec 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Gained 200+ early subscriptions by leading the full-stack engineering of an analytics platform integrating heterogeneous datasets.</li>
-                                <li>Achieved sub-200ms latency for complex geospatial queries by designing composite database indexes and optimizing RESTful APIs.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Closed-Loop Glucose Regulation System (OpenAPS Simulation)</h3>
-                            </div>
-                            <span class="card-date">Sep 2025 – Dec 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Achieved sub-100ms response latency in a safety-critical environment by optimizing C++ task scheduling and memory management on FreeRTOS.</li>
-                                <li>Engineered a reliable PID control loop to regulate insulin delivery based on real-time CGM sensor data.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">Smart Home Assistant Development</h3>
-                            </div>
-                            <span class="card-date">Jan 2024 – Jan 2025</span>
-                        </div>
-                        <div class="card-body">
-                            <ul>
-                                <li>Enabled concurrent control of 15+ smart devices by architecting a scalable backend using MongoDB and Swift with real-time synchronization.</li>
-                                <li>Reduced data sync latency to <200ms by implementing real-time database observers (Change Streams).</li>
-                            </ul>
-                        </div>
+                    <div class="skill-list">
+                        <span class="tag">C++</span>
+                        <span class="tag">FreeRTOS</span>
+                        <span class="tag">Real-time</span>
+                        <span class="tag">Distributed</span>
+                        <span class="tag">Low-latency</span>
                     </div>
                 </div>
 
+                <div class="skill-card">
+                    <div class="skill-head">
+                        <span class="skill-icon">04</span>
+                        <span class="skill-name">Proficiency</span>
+                    </div>
+                    <div class="bar"><span class="name">Python</span><div class="track"><div class="fill" data-fill="95"></div></div></div>
+                    <div class="bar"><span class="name">C / C++</span><div class="track"><div class="fill" data-fill="80"></div></div></div>
+                    <div class="bar"><span class="name">JS / TS</span><div class="track"><div class="fill" data-fill="82"></div></div></div>
+                    <div class="bar"><span class="name">Swift</span><div class="track"><div class="fill" data-fill="65"></div></div></div>
+                </div>
             </div>
-        </main>
+        </section>
 
-        <footer>
-            <p>&copy; 2026 Tianning Feng</p>
-        </footer>
+        <!-- BLOG -->
+        <section class="section" id="blog">
+            <div class="section-head">
+                <span class="section-num">/ 04</span>
+                <h2 class="section-title">Field Notes</h2>
+                <span class="section-meta">// blog · 手记</span>
+            </div>
+
+            <div class="blog-grid">
+                <article class="post">
+                    <div class="post-meta">
+                        <span class="post-cat">RESEARCH</span>
+                        <span>2026.02.14</span>
+                    </div>
+                    <h3 class="post-title">SeizureFormer 的诞生：从数据到 PSB 口头报告</h3>
+                    <p class="post-excerpt">
+                        为什么 Transformer 特别适合处理稀疏的临床时间序列？我在 Melody Lab 两年间的思考、失败与最终的架构选择。
+                    </p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+
+                <article class="post">
+                    <div class="post-meta">
+                        <span class="post-cat">SYSTEMS</span>
+                        <span>2025.11.30</span>
+                    </div>
+                    <h3 class="post-title">把 LLM 塞进产品：一次真实的延迟拉锯战</h3>
+                    <p class="post-excerpt">
+                        在 Liba Space 集成 LLM 的过程中，我们如何用异步队列 + 结果缓存把首字节延迟从 2s 打到 400ms。
+                    </p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+
+                <article class="post">
+                    <div class="post-meta">
+                        <span class="post-cat">ENGINEERING</span>
+                        <span>2025.08.02</span>
+                    </div>
+                    <h3 class="post-title">在 FreeRTOS 上跑一个可信的 PID</h3>
+                    <p class="post-excerpt">
+                        医疗级实时控制系统里，那些容易被忽视的调度陷阱与内存踩坑，以及为什么 100ms 是一条真实的红线。
+                    </p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+
+                <article class="post">
+                    <div class="post-meta">
+                        <span class="post-cat">LIFE</span>
+                        <span>2025.05.20</span>
+                    </div>
+                    <h3 class="post-title">从亚特兰大到费城：一个研究员的迁徙笔记</h3>
+                    <p class="post-excerpt">
+                        换城市、换实验室、换身份的一年里，我怎么处理选择焦虑，以及关于"做什么样的工程师"的自我对话。
+                    </p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+            </div>
+        </section>
+
+        <!-- WORK → 独立页面 -->
+        <section class="section" id="work">
+            <div class="section-head">
+                <span class="section-num">/ 05</span>
+                <h2 class="section-title">Selected Work</h2>
+                <span class="section-meta">// 代表作品</span>
+            </div>
+            <div class="card" style="border-left:3px solid var(--accent); padding:2rem;">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;">
+                    <div>
+                        <h3 class="card-title" style="margin:0 0 0.5rem;">Publications &amp; Projects · 独立页面</h3>
+                        <p class="card-subtitle" style="margin:0 0 0.4rem;">论文 · 工程项目 · 开源作品</p>
+                        <p style="margin:0; color:var(--text-mute); font-size:0.85rem; max-width:560px;">
+                            两篇 <span style="color:var(--accent)">PSB 2026</span> 会议论文（SeizureFormer / EpiDHGNN），加上从 0-1 交付过的 6 个工程项目。
+                            每一项都有链接可以直接读原文或看代码。
+                        </p>
+                        <p style="margin:0.6rem 0 0; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; color:var(--cyan);">
+                            // 2 PAPERS &nbsp; · &nbsp; 6 PROJECTS &nbsp; · &nbsp; ML / SYSTEMS / FULL-STACK
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                        <a href="work.html" class="btn">查看作品集 <span class="arrow">→</span></a>
+                        <a href="https://github.com/CKSF" target="_blank" class="btn ghost">GITHUB <span class="arrow">↗</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESUME → 独立页面 -->
+        <section class="section" id="resume">
+            <div class="section-head">
+                <span class="section-num">/ 06</span>
+                <h2 class="section-title">Resume</h2>
+                <span class="section-meta">// 经历</span>
+            </div>
+            <div class="card" style="border-left:3px solid var(--accent); padding:2rem 2rem 2rem 2rem;">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;">
+                    <div>
+                        <h3 class="card-title" style="margin:0 0 0.5rem;">完整履历 · 独立页面</h3>
+                        <p class="card-subtitle" style="margin:0 0 0.4rem;">教育 · 工作 · 论文 · 项目 · 技能 · 荣誉</p>
+                        <p style="margin:0; color:var(--text-mute); font-size:0.85rem; max-width:520px;">
+                            一份为招聘方与合作者准备的完整版本，包含所有可披露的经历、发表、项目细节。支持 PDF 下载与打印。
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                        <a href="resume.html" class="btn">进入完整简历 <span class="arrow">→</span></a>
+                        <a href="FTN简历.pdf" target="_blank" class="btn ghost">下载 PDF <span class="arrow">↓</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section class="section" id="contact">
+            <div class="section-head">
+                <span class="section-num">/ 07</span>
+                <h2 class="section-title">Contact</h2>
+                <span class="section-meta">// 联络</span>
+            </div>
+            <div class="contact-box">
+                <div>
+                    <h3 class="contact-title">让我们 <span class="accent">建点什么</span>。</h3>
+                    <p class="contact-desc">
+                        寻求 SWE / ML 全职机会 —— 也随时欢迎聊聊研究、产品、系统，或者一杯咖啡。
+                        我尽量在 24 小时内回复。
+                    </p>
+                </div>
+                <div class="contact-list">
+                    <div class="contact-item"><span class="key">EMAIL</span><a href="mailto:tianning.feng@example.com">tianning.feng@example.com</a></div>
+                    <div class="contact-item"><span class="key">GITHUB</span><a href="https://github.com/CKSF" target="_blank">github.com/CKSF</a></div>
+                    <div class="contact-item"><span class="key">LOCATION</span><span>Philadelphia · Bay Area</span></div>
+                    <div class="contact-item"><span class="key">STATUS</span><span style="color:var(--accent)">◉ AVAILABLE 2026</span></div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    <script>
-        const headerTitle = document.getElementById('header-title');
-        const btnZh = document.getElementById('btn-zh');
-        const btnEn = document.getElementById('btn-en');
-        const contentZhData = { title: "冯天宁" };
-        const contentEnData = { title: "Tianning Feng" };
+    <!-- ============ 英文 ============ -->
+    <div id="en" class="content-en">
 
-        function showLang(lang) {
-            if (lang === 'zh') {
-                document.getElementById('zh').style.display = 'block';
-                document.getElementById('en').style.display = 'none';
-                headerTitle.textContent = contentZhData.title;
-                btnZh.classList.add('active');
-                btnEn.classList.remove('active');
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 02</span>
+                <h2 class="section-title">The Story</h2>
+                <span class="section-meta">// About me</span>
+            </div>
+            <div class="story-grid">
+                <aside class="story-aside">
+                    <div><span class="k">// origin</span></div><div>Ningbo → Atlanta → Philadelphia</div>
+                    <div><span class="k">// mode</span></div><div>Builder / Researcher</div>
+                    <div><span class="k">// stack</span></div><div>PyTorch · React · C++</div>
+                    <div><span class="k">// obsession</span></div><div>Sub-100ms systems</div>
+                    <div><span class="k">// off-hours</span></div><div>Jazz drums · Photography · Running</div>
+                </aside>
+                <div class="story-body">
+                    <p>
+                        I grew up on the east coast of China and followed algorithms across the Pacific.
+                        The first time I watched a Transformer surface structure from noisy clinical data at Emory,
+                        I knew I wanted a career that lived at the intersection of research and real systems.
+                    </p>
+                    <p class="quote">"A model that only runs on paper doesn't yet exist."</p>
+                    <p>
+                        Before graduating I first-authored SeizureFormer, accepted for oral presentation at PSB 2026.
+                        Then I came to UPenn to learn the language of systems — from PID loops on FreeRTOS to
+                        async pipelines in distributed backends, and integrating LLMs into shipping products.
+                    </p>
+                    <p>
+                        I believe the best engineers are researchers, and the best researchers know how to keep
+                        their code alive in production. This site is where I document that journey — ideas, projects,
+                        and a few stray thoughts about systems, models, and the color of the city at night.
+                    </p>
+                    <div class="timeline">
+                        <div class="tl-item"><div class="tl-year">2026 // NOW</div><div class="tl-text">MS at UPenn CIS. ML × Systems.</div></div>
+                        <div class="tl-item"><div class="tl-year">2025</div><div class="tl-text">SeizureFormer oral at PSB 2026; led LLM product at Liba Space.</div></div>
+                        <div class="tl-item"><div class="tl-year">2023 — 2025</div><div class="tl-text">Emory Melody Lab. Trained my first Transformer on clinical time-series.</div></div>
+                        <div class="tl-item"><div class="tl-year">2021</div><div class="tl-text">Product intern at Shen Tong Group. First taste of design → engineering.</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 03</span>
+                <h2 class="section-title">Skills &amp; Stack</h2>
+                <span class="section-meta">// Tools</span>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-head"><span class="skill-icon">01</span><span class="skill-name">Machine Learning</span></div>
+                    <div class="skill-list">
+                        <span class="tag">PyTorch</span><span class="tag">Transformer</span><span class="tag">GNN</span>
+                        <span class="tag">Hugging Face</span><span class="tag">RAG</span><span class="tag">Time-Series</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-head"><span class="skill-icon">02</span><span class="skill-name">Full-stack</span></div>
+                    <div class="skill-list">
+                        <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">TypeScript</span>
+                        <span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">Swift</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-head"><span class="skill-icon">03</span><span class="skill-name">Systems</span></div>
+                    <div class="skill-list">
+                        <span class="tag">C++</span><span class="tag">FreeRTOS</span><span class="tag">Real-time</span>
+                        <span class="tag">Distributed</span><span class="tag">Low-latency</span>
+                    </div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-head"><span class="skill-icon">04</span><span class="skill-name">Proficiency</span></div>
+                    <div class="bar"><span class="name">Python</span><div class="track"><div class="fill" data-fill="95"></div></div></div>
+                    <div class="bar"><span class="name">C / C++</span><div class="track"><div class="fill" data-fill="80"></div></div></div>
+                    <div class="bar"><span class="name">JS / TS</span><div class="track"><div class="fill" data-fill="82"></div></div></div>
+                    <div class="bar"><span class="name">Swift</span><div class="track"><div class="fill" data-fill="65"></div></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 04</span>
+                <h2 class="section-title">Field Notes</h2>
+                <span class="section-meta">// blog</span>
+            </div>
+            <div class="blog-grid">
+                <article class="post">
+                    <div class="post-meta"><span class="post-cat">RESEARCH</span><span>2026.02.14</span></div>
+                    <h3 class="post-title">How SeizureFormer Was Born</h3>
+                    <p class="post-excerpt">Why Transformers turn out to be a natural fit for sparse clinical time-series — two years of failures and choices at Melody Lab.</p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+                <article class="post">
+                    <div class="post-meta"><span class="post-cat">SYSTEMS</span><span>2025.11.30</span></div>
+                    <h3 class="post-title">Squeezing an LLM into a Real Product</h3>
+                    <p class="post-excerpt">How we cut first-byte latency from 2s to 400ms with async queues and result caching at Liba Space.</p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+                <article class="post">
+                    <div class="post-meta"><span class="post-cat">ENGINEERING</span><span>2025.08.02</span></div>
+                    <h3 class="post-title">A Trustworthy PID on FreeRTOS</h3>
+                    <p class="post-excerpt">The hidden scheduling and memory traps in medical-grade real-time control, and why 100ms is a genuine red line.</p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+                <article class="post">
+                    <div class="post-meta"><span class="post-cat">LIFE</span><span>2025.05.20</span></div>
+                    <h3 class="post-title">Atlanta to Philadelphia: A Researcher's Migration</h3>
+                    <p class="post-excerpt">A year of switching cities, labs, and identities — how I handled the decision fatigue.</p>
+                    <span class="post-read">READ MORE <span class="arr">→</span></span>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 05</span>
+                <h2 class="section-title">Selected Work</h2>
+                <span class="section-meta">// projects</span>
+            </div>
+            <div class="card" style="border-left:3px solid var(--accent); padding:2rem;">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;">
+                    <div>
+                        <h3 class="card-title" style="margin:0 0 0.5rem;">Publications &amp; Projects · Standalone</h3>
+                        <p class="card-subtitle" style="margin:0 0 0.4rem;">Papers · Engineering projects · Open source</p>
+                        <p style="margin:0; color:var(--text-mute); font-size:0.85rem; max-width:560px;">
+                            Two <span style="color:var(--accent)">PSB 2026</span> conference papers (SeizureFormer / EpiDHGNN) plus
+                            6 shipped 0-1 engineering projects. Every item has direct links to the paper or the code.
+                        </p>
+                        <p style="margin:0.6rem 0 0; font-family:'JetBrains Mono',monospace; font-size:0.72rem; letter-spacing:0.12em; color:var(--cyan);">
+                            // 2 PAPERS &nbsp; · &nbsp; 6 PROJECTS &nbsp; · &nbsp; ML / SYSTEMS / FULL-STACK
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                        <a href="work.html" class="btn">Open Portfolio <span class="arrow">→</span></a>
+                        <a href="https://github.com/CKSF" target="_blank" class="btn ghost">GITHUB <span class="arrow">↗</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 06</span>
+                <h2 class="section-title">Resume</h2>
+                <span class="section-meta">// experience</span>
+            </div>
+            <div class="card" style="border-left:3px solid var(--accent); padding:2rem;">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem;">
+                    <div>
+                        <h3 class="card-title" style="margin:0 0 0.5rem;">Full Resume · Standalone Page</h3>
+                        <p class="card-subtitle" style="margin:0 0 0.4rem;">Education · Work · Publications · Projects · Skills · Honors</p>
+                        <p style="margin:0; color:var(--text-mute); font-size:0.85rem; max-width:520px;">
+                            The complete version prepared for recruiters and collaborators. Includes all disclosable experience, publications, and project details. Download as PDF or print.
+                        </p>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:0.6rem;">
+                        <a href="resume.html" class="btn">Open Full Resume <span class="arrow">→</span></a>
+                        <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank" class="btn ghost">Download PDF <span class="arrow">↓</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <span class="section-num">/ 07</span>
+                <h2 class="section-title">Contact</h2>
+                <span class="section-meta">// reach out</span>
+            </div>
+            <div class="contact-box">
+                <div>
+                    <h3 class="contact-title">Let's <span class="accent">build something</span>.</h3>
+                    <p class="contact-desc">
+                        Open to full-time SWE / ML roles — and always up for a chat about research, product, systems,
+                        or coffee. I reply within 24 hours.
+                    </p>
+                </div>
+                <div class="contact-list">
+                    <div class="contact-item"><span class="key">EMAIL</span><a href="mailto:tianning.feng@example.com">tianning.feng@example.com</a></div>
+                    <div class="contact-item"><span class="key">GITHUB</span><a href="https://github.com/CKSF" target="_blank">github.com/CKSF</a></div>
+                    <div class="contact-item"><span class="key">LOCATION</span><span>Philadelphia · Bay Area</span></div>
+                    <div class="contact-item"><span class="key">STATUS</span><span style="color:var(--accent)">◉ AVAILABLE 2026</span></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <span>© 2026 <span class="accent">TIANNING FENG</span></span>
+        <span>V.2.0.77 // NIGHT.CITY EDITION</span>
+    </footer>
+
+    <script>
+        /* ================================================
+           Matrix 数字雨 —— 黑客帝国风格背景
+           ================================================ */
+        (function initMatrixRain() {
+            const canvas = document.getElementById('matrixRain');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d', { alpha: false });
+
+            // 字符集：katakana + 数字 + 一些 hex，与 2077 风的黄色主调相配
+            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
+            const FONT_SIZE = 15;
+            let cols = 0;
+            let drops = [];   // 每列当前 y (以行为单位)
+            let speeds = [];  // 每列速度（0.4 ~ 1.1）
+            let leaders = []; // 每列头字符，偶尔换
+
+            function resize() {
+                // 用 devicePixelRatio 保持清晰
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width  = Math.floor(window.innerWidth  * dpr);
+                canvas.height = Math.floor(window.innerHeight * dpr);
+                canvas.style.width  = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                cols = Math.floor(window.innerWidth / FONT_SIZE);
+                drops  = new Array(cols).fill(0).map(() => Math.random() * -50);
+                speeds = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
+                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const COLOR_TRAIL   = 'rgba(180, 160, 40, 0.75)';   // 暗黄尾迹（贴合 2077 主色）
+            const COLOR_MID     = 'rgba(252, 233, 79, 0.85)';   // 亮黄中段
+            const COLOR_LEADER  = 'rgba(255, 255, 220, 1)';     // 头字符高亮
+            const COLOR_CYAN    = 'rgba(36, 224, 255, 0.9)';    // 偶发青色高亮点缀
+
+            function draw() {
+                // 半透明黑覆盖，形成拖尾
+                ctx.fillStyle = 'rgba(5, 7, 13, 0.08)';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
+                ctx.textBaseline = 'top';
+
+                for (let i = 0; i < cols; i++) {
+                    const x = i * FONT_SIZE;
+                    const y = drops[i] * FONT_SIZE;
+
+                    // 头字符（亮白，偶发青）
+                    if (Math.random() < 0.02) {
+                        leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                    }
+                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
+                    ctx.fillText(leaders[i], x, y);
+
+                    // 中段亮黄
+                    ctx.fillStyle = COLOR_MID;
+                    for (let k = 1; k <= 3; k++) {
+                        const ch = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                        ctx.fillText(ch, x, y - k * FONT_SIZE);
+                    }
+
+                    // 尾部暗黄（省略更多以保持性能）
+                    ctx.fillStyle = COLOR_TRAIL;
+                    for (let k = 4; k <= 8; k++) {
+                        const ch = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                        ctx.fillText(ch, x, y - k * FONT_SIZE);
+                    }
+
+                    drops[i] += speeds[i];
+
+                    // 到底重置
+                    if (y > window.innerHeight && Math.random() > 0.985) {
+                        drops[i] = Math.random() * -20;
+                        speeds[i] = 0.12 + Math.random() * 0.28;
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+
+            // 尊重 prefers-reduced-motion：不跑动画，只保留一次静态铺底
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                ctx.fillStyle = '#05070d';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
             } else {
-                document.getElementById('zh').style.display = 'none';
-                document.getElementById('en').style.display = 'block';
-                headerTitle.textContent = contentEnData.title;
-                btnEn.classList.add('active');
-                btnZh.classList.remove('active');
+                requestAnimationFrame(draw);
+            }
+        })();
+
+        /* 语言切换 */
+        function showLang(lang) {
+            const zh = document.getElementById('zh');
+            const en = document.getElementById('en');
+            const bZ = document.getElementById('btn-zh');
+            const bE = document.getElementById('btn-en');
+            const heroDesc = document.getElementById('hero-desc');
+            if (lang === 'zh') {
+                zh.style.display = 'block'; en.style.display = 'none';
+                bZ.classList.add('active'); bE.classList.remove('active');
+                heroDesc.innerHTML = "这里不只是一份简历——是我的实验室、日记本和信号塔。<br>欢迎进入我构建、思考与探索的世界。";
+                startTyped(TYPED_ZH);
+            } else {
+                zh.style.display = 'none'; en.style.display = 'block';
+                bE.classList.add('active'); bZ.classList.remove('active');
+                heroDesc.innerHTML = "Not just a resume — this is my lab, journal, and signal tower.<br>Welcome to the world where I build, think, and explore.";
+                startTyped(TYPED_EN);
             }
         }
-    </script>
 
+        /* 打字机 */
+        const TYPED_ZH = [
+            "> booting personal_site.exe ...",
+            "> loading modules: story · skills · blog · resume",
+            "> 我在 UPenn 读 ML × 系统工程，同时把想法变成能上线的东西。",
+            "> 欢迎，请随意浏览 ↓"
+        ];
+        const TYPED_EN = [
+            "> booting personal_site.exe ...",
+            "> loading modules: story · skills · blog · resume",
+            "> MS at UPenn — ML × Systems. I ship ideas into production.",
+            "> welcome, feel free to look around ↓"
+        ];
+        const typedEl = document.getElementById('hero-typed');
+        let typedTimer = null;
+        function startTyped(lines) {
+            clearTimeout(typedTimer);
+            typedEl.innerHTML = '<span class="caret"></span>';
+            let li = 0, ci = 0, out = '';
+            function step() {
+                if (li >= lines.length) return;
+                if (ci <= lines[li].length) {
+                    typedEl.innerHTML = out + lines[li].slice(0, ci) + '<span class="caret"></span>';
+                    ci++;
+                    typedTimer = setTimeout(step, 32 + Math.random() * 30);
+                } else {
+                    out += lines[li] + '<br>';
+                    li++; ci = 0;
+                    typedTimer = setTimeout(step, 550);
+                }
+            }
+            step();
+        }
+        startTyped(TYPED_ZH);
+
+        /* 导航高亮 */
+        const links = document.querySelectorAll('.nav-links a');
+        const sections = ['home','story','skills','blog','work','resume','contact']
+            .map(id => document.getElementById(id)).filter(Boolean);
+        const spy = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const id = e.target.id;
+                    links.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+                }
+            });
+        }, { rootMargin: '-40% 0px -50% 0px' });
+        sections.forEach(s => spy.observe(s));
+
+        /* 卡片淡入 */
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                    if (e.target.classList.contains('fill')) {
+                        e.target.style.width = e.target.dataset.fill + '%';
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.card, .section-head, .story-grid, .skill-card, .post, .contact-box, .hero-name, .hero-desc, .hero-cta, .hero-eyebrow').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s cubic-bezier(0.2,0.7,0.3,1)';
+            io.observe(el);
+        });
+        document.querySelectorAll('.fill').forEach(f => io.observe(f));
+    </script>
 </body>
 </html>
