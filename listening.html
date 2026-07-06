@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening · 音乐 &amp; 播客 // 冯天宁 Tianning Feng</title>
+    <meta name="description" content="What Tianning Feng listens to — playlists, albums on repeat, and podcasts worth your time." />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-void:#05070d; --accent:#fce94f; --accent-dim:#b8a634; --cyan:#24e0ff; --magenta:#ff003c;
+            --text:#e5e7ee; --text-mute:#7d8494; --border:rgba(252,233,79,0.35); --border-dim:rgba(255,255,255,0.08); }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; background: #05070d; margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; background: transparent; color: var(--text);
+            font-family:'Rajdhani','Chakra Petch','PingFang SC',-apple-system,sans-serif;
+            font-weight:400; letter-spacing:0.02em; overflow-x:hidden;
+            -webkit-font-smoothing:antialiased; position:relative; z-index:0; }
+        ::selection { background: var(--accent); color: #000; }
+        a { color: var(--accent); text-decoration: none; transition: color .15s; }
+        a:hover { color: #fff; }
+
+        .matrix-rain { position: fixed; inset: 0; z-index: -5; width: 100%; height: 100%; display: block; background: #05070d; }
+        .bg-veil { position: fixed; inset: 0; z-index: -4; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%); }
+        .bg-grid { position: fixed; inset: 0; z-index: -3; pointer-events: none;
+            background: radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
+                        radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%); }
+        .bg-grid::before { content: ''; position: absolute; inset: 0;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%); }
+        .scanlines { position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px); }
+        .noise { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+
+        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 2rem; font-family:'JetBrains Mono',monospace;
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
+            backdrop-filter: blur(6px); }
+        .nav-brand { color: var(--accent); font-weight: 500; display: flex; align-items: center; gap: 0.6rem; }
+        .nav-brand .dot { width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .nav-back { color: var(--text-mute); display: flex; align-items: center; gap: 0.5rem; transition: color 0.15s; }
+        .nav-back:hover { color: var(--text); }
+        .nav-lang { display: flex; gap: 0.4rem; }
+        .nav-lang button { font-family: inherit; font-size: 0.7rem; letter-spacing: 0.2em;
+            padding: 0.35em 0.75em; background: transparent; color: var(--text-mute);
+            border: 1px solid var(--border-dim); cursor: pointer;
+            text-transform: uppercase; transition: all 0.15s; }
+        .nav-lang button.active { color: var(--accent); border-color: var(--accent); }
+        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
+
+        .page { max-width: 1080px; margin: 0 auto; padding: 7rem 6vw 4rem; position: relative; }
+        .page::before { content: ''; position: fixed; top: 0; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: min(1080px, 92%);
+            background: linear-gradient(90deg,
+                rgba(5,7,13,0) 0%, rgba(5,7,13,0.85) 8%, rgba(5,7,13,0.93) 50%,
+                rgba(5,7,13,0.85) 92%, rgba(5,7,13,0) 100%);
+            z-index: -1; pointer-events: none; }
+
+        .page-header { padding-bottom: 2.5rem; border-bottom: 1px solid var(--border-dim); margin-bottom: 3rem; }
+        .page-eyebrow { font-family:'JetBrains Mono',monospace; font-size: 0.7rem; letter-spacing: 0.3em;
+            color: var(--accent); text-transform: uppercase; display: inline-block;
+            padding: 0.35em 0.9em; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+        .page-title { font-family:'Chakra Petch',sans-serif; font-size: clamp(2.5rem,6vw,4rem);
+            font-weight: 700; letter-spacing: 0.02em; margin: 0 0 0.6rem; text-transform: uppercase; line-height: 1; }
+        .page-lede { font-size: 1.05rem; line-height: 1.75; color: #c8ccd6; max-width: 780px; margin: 0; }
+        .page-lede .accent { color: var(--accent); }
+
+        .stack { margin-bottom: 3rem; }
+        .stack-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.4rem;
+            padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-dim); }
+        .stack-num { font-family:'JetBrains Mono',monospace; font-size: 0.75rem; color: var(--accent); letter-spacing: 0.2em; }
+        .stack-title { font-family:'Chakra Petch',sans-serif; font-weight: 600; font-size: 1.35rem;
+            letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+        .stack-meta { margin-left: auto; font-family:'JetBrains Mono',monospace;
+            font-size: 0.65rem; letter-spacing: 0.18em; color: var(--text-mute); text-transform: uppercase; }
+
+        /* Track / Album 卡 */
+        .track-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+        .track { padding: 1.1rem 1.2rem; background: rgba(15,18,26,0.55);
+            border: 1px solid var(--border-dim); border-left: 3px solid var(--accent);
+            transition: background 0.2s, transform 0.2s;
+            display: flex; flex-direction: column; gap: 0.3rem; }
+        .track:hover { background: rgba(20,24,34,0.7); transform: translateX(3px); }
+        .track-num {
+            font-family:'JetBrains Mono',monospace;
+            font-size: 0.6rem; letter-spacing: 0.2em;
+            color: var(--text-mute); text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        .track-title { font-family:'Chakra Petch',sans-serif; font-weight: 600;
+            font-size: 1rem; margin: 0; color: var(--text); letter-spacing: 0.01em; line-height: 1.35; }
+        .track-artist { font-family:'JetBrains Mono',monospace; font-size: 0.7rem;
+            letter-spacing: 0.1em; color: var(--cyan); margin: 0 0 0.4rem; text-transform: uppercase; }
+        .track-note { font-size: 0.85rem; line-height: 1.55; color: #b8bcc7; margin: 0; }
+        .track-note .accent { color: var(--accent); }
+        .track-links { margin-top: 0.6rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .track-link {
+            font-family:'JetBrains Mono',monospace;
+            font-size: 0.62rem; letter-spacing: 0.15em;
+            padding: 0.25em 0.6em;
+            border: 1px solid var(--border-dim);
+            color: var(--text-mute);
+            text-transform: uppercase; transition: all 0.15s;
+        }
+        .track-link:hover { color: var(--accent); border-color: var(--accent); }
+
+        .site-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-dim); }
+        .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: baseline; }
+        @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
+        .footer-label { font-family:'JetBrains Mono',monospace; font-size: 0.65rem; letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.6rem; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-family:'JetBrains Mono',monospace; font-size: 0.78rem; letter-spacing: 0.05em; }
+        .footer-links a { color: var(--text); border-bottom: 1px dashed transparent; transition: color .15s, border-color .15s; }
+        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+        .footer-links .sep { color: var(--text-mute); }
+        .footer-meta { font-family:'JetBrains Mono',monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text-mute); text-transform: uppercase; text-align: right; line-height: 1.8; }
+        @media (max-width: 640px) { .footer-meta { text-align: left; } }
+
+        .lang-block { display: none; }
+        .lang-block.active { display: block; }
+
+        @media (max-width: 820px) {
+            .nav { padding: 0.9rem 1.2rem; }
+            .nav-back span.hide-sm { display: none; }
+            .page { padding: 6rem 5vw 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas class="matrix-rain" id="matrixRain"></canvas>
+    <div class="bg-veil"></div>
+    <div class="bg-grid"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <nav class="nav">
+        <a href="index.html" class="nav-brand"><span class="dot"></span>TIANNING.FENG</a>
+        <a href="index.html" class="nav-back"><span>←</span><span class="hide-sm">Back to Home</span></a>
+        <div class="nav-lang">
+            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
+            <button id="btn-en" onclick="showLang('en')">EN</button>
+        </div>
+    </nav>
+
+    <main class="page">
+
+    <!-- ZH -->
+    <div class="lang-block active" id="zh">
+        <header class="page-header">
+            <span class="page-eyebrow">/ Listening · 音乐 &amp; 播客</span>
+            <h1 class="page-title">Listening</h1>
+            <p class="page-lede">
+                写代码时听的、开车时听的、鼓机练习时循环的、跑步时刺激多巴胺的。
+                <span class="accent">音乐是我的第二个大脑</span>——很多想法是在耳机里想出来的。
+            </p>
+        </header>
+
+        <section class="stack">
+            <div class="stack-head">
+                <span class="stack-num">/ 01</span>
+                <h2 class="stack-title">编码 Playlist</h2>
+                <span class="stack-meta">// deep-work loop</span>
+            </div>
+            <div class="track-grid">
+                <div class="track">
+                    <div class="track-num">// 01</div>
+                    <h3 class="track-title">Music Has the Right to Children</h3>
+                    <p class="track-artist">Boards of Canada</p>
+                    <p class="track-note">写代码 mode 的锚定专辑。低保真、模糊的合成器就是<span class="accent">大脑缓存降噪层</span>。</p>
+                </div>
+                <div class="track">
+                    <div class="track-num">// 02</div>
+                    <h3 class="track-title">Selected Ambient Works 85–92</h3>
+                    <p class="track-artist">Aphex Twin</p>
+                    <p class="track-note">凌晨 debug 系统 bug 的时候放。</p>
+                </div>
+                <div class="track">
+                    <div class="track-num">// 03</div>
+                    <h3 class="track-title">Untrue</h3>
+                    <p class="track-artist">Burial</p>
+                    <p class="track-note">费城的雨天、伦敦地下的味道。写产品文档的时候听。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stack">
+            <div class="stack-head">
+                <span class="stack-num">/ 02</span>
+                <h2 class="stack-title">最近循环</h2>
+                <span class="stack-meta">// on repeat</span>
+            </div>
+            <div class="track-grid">
+                <div class="track">
+                    <div class="track-num">// 01</div>
+                    <h3 class="track-title">Cracker Island</h3>
+                    <p class="track-artist">Gorillaz</p>
+                    <p class="track-note">开车通勤时的固定选项。</p>
+                </div>
+                <div class="track">
+                    <div class="track-num">// 02</div>
+                    <h3 class="track-title">Chromakopia</h3>
+                    <p class="track-artist">Tyler, The Creator</p>
+                    <p class="track-note">Tyler 的每张新专都会认真听一遍。</p>
+                </div>
+                <div class="track">
+                    <div class="track-num">// 03</div>
+                    <h3 class="track-title">Radical Optimism</h3>
+                    <p class="track-artist">Dua Lipa</p>
+                    <p class="track-note">跑步时的多巴胺补给。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stack">
+            <div class="stack-head">
+                <span class="stack-num">/ 03</span>
+                <h2 class="stack-title">Podcasts · 播客</h2>
+                <span class="stack-meta">// long-form audio</span>
+            </div>
+            <div class="track-grid">
+                <div class="track">
+                    <h3 class="track-title">Lenny's Podcast</h3>
+                    <p class="track-artist">Lenny Rachitsky</p>
+                    <p class="track-note">硅谷 PM 的实战对谈。<span class="accent">每周更新</span>，通勤必听。</p>
+                    <div class="track-links"><a class="track-link" href="https://www.lennysnewsletter.com/podcast" target="_blank">Site ↗</a></div>
+                </div>
+                <div class="track">
+                    <h3 class="track-title">Lex Fridman Podcast</h3>
+                    <p class="track-artist">Lex Fridman</p>
+                    <p class="track-note">AI 底层技术 + 硬核工程师的长对话。1x 速听不动，1.5x 刚好。</p>
+                    <div class="track-links"><a class="track-link" href="https://lexfridman.com/podcast" target="_blank">Site ↗</a></div>
+                </div>
+                <div class="track">
+                    <h3 class="track-title">忽左忽右</h3>
+                    <p class="track-artist">JustPod</p>
+                    <p class="track-note">中文播客第一档。回国探亲的时候必备。</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact · 联系我</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- EN -->
+    <div class="lang-block" id="en">
+        <header class="page-header">
+            <span class="page-eyebrow">/ Listening</span>
+            <h1 class="page-title">Listening</h1>
+            <p class="page-lede">
+                What I code to, drive to, loop while practicing drum machines, and run to for dopamine.
+                <span class="accent">Music is my second brain</span> — a lot of ideas were born in headphones.
+            </p>
+        </header>
+
+        <section class="stack">
+            <div class="stack-head"><span class="stack-num">/ 01</span><h2 class="stack-title">Coding Playlist</h2><span class="stack-meta">// deep-work loop</span></div>
+            <div class="track-grid">
+                <div class="track"><div class="track-num">// 01</div><h3 class="track-title">Music Has the Right to Children</h3><p class="track-artist">Boards of Canada</p><p class="track-note">The anchor album for coding mode. Lo-fi, hazy synths as a <span class="accent">cache-noise reducer</span> for the brain.</p></div>
+                <div class="track"><div class="track-num">// 02</div><h3 class="track-title">Selected Ambient Works 85–92</h3><p class="track-artist">Aphex Twin</p><p class="track-note">Late-night systems debugging.</p></div>
+                <div class="track"><div class="track-num">// 03</div><h3 class="track-title">Untrue</h3><p class="track-artist">Burial</p><p class="track-note">Philly rain, London underground vibes. For writing product docs.</p></div>
+            </div>
+        </section>
+
+        <section class="stack">
+            <div class="stack-head"><span class="stack-num">/ 02</span><h2 class="stack-title">On Repeat</h2><span class="stack-meta">// currently</span></div>
+            <div class="track-grid">
+                <div class="track"><div class="track-num">// 01</div><h3 class="track-title">Cracker Island</h3><p class="track-artist">Gorillaz</p><p class="track-note">Commute-default album.</p></div>
+                <div class="track"><div class="track-num">// 02</div><h3 class="track-title">Chromakopia</h3><p class="track-artist">Tyler, The Creator</p><p class="track-note">I listen to every new Tyler drop end-to-end.</p></div>
+                <div class="track"><div class="track-num">// 03</div><h3 class="track-title">Radical Optimism</h3><p class="track-artist">Dua Lipa</p><p class="track-note">Running-mode dopamine fuel.</p></div>
+            </div>
+        </section>
+
+        <section class="stack">
+            <div class="stack-head"><span class="stack-num">/ 03</span><h2 class="stack-title">Podcasts</h2><span class="stack-meta">// long-form audio</span></div>
+            <div class="track-grid">
+                <div class="track"><h3 class="track-title">Lenny's Podcast</h3><p class="track-artist">Lenny Rachitsky</p><p class="track-note">Silicon Valley PM tactics from insiders. <span class="accent">Weekly</span> commute staple.</p><div class="track-links"><a class="track-link" href="https://www.lennysnewsletter.com/podcast" target="_blank">Site ↗</a></div></div>
+                <div class="track"><h3 class="track-title">Lex Fridman Podcast</h3><p class="track-artist">Lex Fridman</p><p class="track-note">Deep AI + hardcore engineering conversations. 1x is unbearable, 1.5x is the sweet spot.</p><div class="track-links"><a class="track-link" href="https://lexfridman.com/podcast" target="_blank">Site ↗</a></div></div>
+                <div class="track"><h3 class="track-title">Left Right (忽左忽右)</h3><p class="track-artist">JustPod</p><p class="track-note">The top Chinese podcast. Standard companion when I fly home.</p></div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
+    </div>
+
+    </main>
+
+    <script>
+        (function initMatrixRain() {
+            const canvas = document.getElementById('matrixRain');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d', { alpha: false });
+            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
+            const FONT_SIZE = 15;
+            let cols = 0, drops = [], speeds = [], leaders = [];
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width  = Math.floor(window.innerWidth  * dpr);
+                canvas.height = Math.floor(window.innerHeight * dpr);
+                canvas.style.width  = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                cols = Math.floor(window.innerWidth / FONT_SIZE);
+                drops   = new Array(cols).fill(0).map(() => Math.random() * -50);
+                speeds  = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
+                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            const COLOR_TRAIL='rgba(180,160,40,0.75)', COLOR_MID='rgba(252,233,79,0.85)',
+                  COLOR_LEADER='rgba(255,255,220,1)', COLOR_CYAN='rgba(36,224,255,0.9)';
+            function draw() {
+                ctx.fillStyle = 'rgba(5,7,13,0.08)';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
+                ctx.textBaseline = 'top';
+                for (let i = 0; i < cols; i++) {
+                    const x = i * FONT_SIZE, y = drops[i] * FONT_SIZE;
+                    if (Math.random() < 0.02) leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
+                    ctx.fillText(leaders[i], x, y);
+                    ctx.fillStyle = COLOR_MID;
+                    for (let k = 1; k <= 3; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
+                    ctx.fillStyle = COLOR_TRAIL;
+                    for (let k = 4; k <= 8; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
+                    drops[i] += speeds[i];
+                    if (y > window.innerHeight && Math.random() > 0.985) {
+                        drops[i] = Math.random() * -20;
+                        speeds[i] = 0.12 + Math.random() * 0.28;
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                ctx.fillStyle = '#05070d';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            } else { requestAnimationFrame(draw); }
+        })();
+
+        function showLang(lang) {
+            const zh = document.getElementById('zh');
+            const en = document.getElementById('en');
+            const bZ = document.getElementById('btn-zh');
+            const bE = document.getElementById('btn-en');
+            if (lang === 'zh') { zh.classList.add('active'); en.classList.remove('active'); bZ.classList.add('active'); bE.classList.remove('active'); document.documentElement.lang = 'zh-CN'; }
+            else { en.classList.add('active'); zh.classList.remove('active'); bE.classList.add('active'); bZ.classList.remove('active'); document.documentElement.lang = 'en'; }
+            try { localStorage.setItem('lang', lang); } catch (e) {}
+        }
+        try { const saved = localStorage.getItem('lang'); if (saved === 'en') showLang('en'); } catch (e) {}
+    </script>
+</body>
+</html>

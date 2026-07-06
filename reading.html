@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading · 阅读收藏 // 冯天宁 Tianning Feng</title>
+    <meta name="description" content="Reading list — 冯天宁 (Tianning Feng) 在读、读完和想读的书。心理学、系统、产品思考、小说。" />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-void:#05070d; --accent:#fce94f; --accent-dim:#b8a634; --cyan:#24e0ff; --magenta:#ff003c;
+            --text:#e5e7ee; --text-mute:#7d8494; --border:rgba(252,233,79,0.35); --border-dim:rgba(255,255,255,0.08); }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; background: #05070d; margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; background: transparent; color: var(--text);
+            font-family:'Rajdhani','Chakra Petch','PingFang SC',-apple-system,sans-serif;
+            font-weight:400; letter-spacing:0.02em; overflow-x:hidden;
+            -webkit-font-smoothing:antialiased; position:relative; z-index:0; }
+        ::selection { background: var(--accent); color: #000; }
+        a { color: var(--accent); text-decoration: none; transition: color .15s; }
+        a:hover { color: #fff; }
+
+        .matrix-rain { position: fixed; inset: 0; z-index: -5; width: 100%; height: 100%; display: block; background: #05070d; }
+        .bg-veil { position: fixed; inset: 0; z-index: -4; pointer-events: none;
+            background: radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%); }
+        .bg-grid { position: fixed; inset: 0; z-index: -3; pointer-events: none;
+            background: radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
+                        radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%); }
+        .bg-grid::before { content: ''; position: absolute; inset: 0;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 64px 64px;
+            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
+            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%); }
+        .scanlines { position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px); }
+        .noise { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.05; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+
+        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 2rem; font-family:'JetBrains Mono',monospace;
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
+            backdrop-filter: blur(6px); }
+        .nav-brand { color: var(--accent); font-weight: 500; display: flex; align-items: center; gap: 0.6rem; }
+        .nav-brand .dot { width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .nav-back { color: var(--text-mute); display: flex; align-items: center; gap: 0.5rem; transition: color 0.15s; }
+        .nav-back:hover { color: var(--text); }
+        .nav-lang { display: flex; gap: 0.4rem; }
+        .nav-lang button { font-family: inherit; font-size: 0.7rem; letter-spacing: 0.2em;
+            padding: 0.35em 0.75em; background: transparent; color: var(--text-mute);
+            border: 1px solid var(--border-dim); cursor: pointer;
+            text-transform: uppercase; transition: all 0.15s; }
+        .nav-lang button.active { color: var(--accent); border-color: var(--accent); }
+        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
+
+        .page { max-width: 1080px; margin: 0 auto; padding: 7rem 6vw 4rem; position: relative; }
+        .page::before { content: ''; position: fixed; top: 0; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: min(1080px, 92%);
+            background: linear-gradient(90deg,
+                rgba(5,7,13,0) 0%, rgba(5,7,13,0.85) 8%, rgba(5,7,13,0.93) 50%,
+                rgba(5,7,13,0.85) 92%, rgba(5,7,13,0) 100%);
+            z-index: -1; pointer-events: none; }
+
+        .page-header { padding-bottom: 2.5rem; border-bottom: 1px solid var(--border-dim); margin-bottom: 3rem; }
+        .page-eyebrow { font-family:'JetBrains Mono',monospace; font-size: 0.7rem; letter-spacing: 0.3em;
+            color: var(--accent); text-transform: uppercase; display: inline-block;
+            padding: 0.35em 0.9em; border: 1px solid var(--border); margin-bottom: 1.2rem; }
+        .page-title { font-family:'Chakra Petch',sans-serif; font-size: clamp(2.5rem,6vw,4rem);
+            font-weight: 700; letter-spacing: 0.02em; margin: 0 0 0.6rem; text-transform: uppercase; line-height: 1; }
+        .page-lede { font-size: 1.05rem; line-height: 1.75; color: #c8ccd6; max-width: 780px; margin: 0; }
+        .page-lede .accent { color: var(--accent); }
+
+        .shelf { margin-bottom: 3rem; }
+        .shelf-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.4rem;
+            padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-dim); }
+        .shelf-num { font-family:'JetBrains Mono',monospace; font-size: 0.75rem;
+            color: var(--accent); letter-spacing: 0.2em; }
+        .shelf-title { font-family:'Chakra Petch',sans-serif; font-weight: 600; font-size: 1.35rem;
+            letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+        .shelf-count { margin-left: auto; font-family:'JetBrains Mono',monospace;
+            font-size: 0.65rem; letter-spacing: 0.18em; color: var(--text-mute); text-transform: uppercase; }
+
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+        .book { padding: 1.1rem 1.2rem; background: rgba(15,18,26,0.55);
+            border: 1px solid var(--border-dim); border-left: 3px solid var(--accent);
+            transition: background 0.2s, transform 0.2s; position: relative; }
+        .book:hover { background: rgba(20,24,34,0.7); transform: translateX(3px); }
+        .book.want { border-left-color: var(--accent-dim); }
+        .book.done { border-left-color: var(--cyan); }
+        .book-title { font-family:'Chakra Petch',sans-serif; font-weight: 600; font-size: 1.02rem;
+            margin: 0 0 0.3rem; color: var(--text); letter-spacing: 0.01em; line-height: 1.35; }
+        .book-author { font-family:'JetBrains Mono',monospace; font-size: 0.72rem; letter-spacing: 0.1em;
+            color: var(--text-mute); margin: 0 0 0.7rem; text-transform: uppercase; }
+        .book-note { font-size: 0.88rem; line-height: 1.6; color: #b8bcc7; margin: 0; }
+        .book-note .accent { color: var(--accent); }
+        .book-rating { position: absolute; top: 1rem; right: 1rem;
+            font-family:'JetBrains Mono',monospace; font-size: 0.65rem;
+            letter-spacing: 0.15em; color: var(--accent); }
+
+        .site-footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border-dim); }
+        .footer-grid { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: baseline; }
+        @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }
+        .footer-label { font-family:'JetBrains Mono',monospace; font-size: 0.65rem; letter-spacing: 0.25em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.6rem; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-family:'JetBrains Mono',monospace; font-size: 0.78rem; letter-spacing: 0.05em; }
+        .footer-links a { color: var(--text); border-bottom: 1px dashed transparent; transition: color .15s, border-color .15s; }
+        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+        .footer-links .sep { color: var(--text-mute); }
+        .footer-meta { font-family:'JetBrains Mono',monospace; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--text-mute); text-transform: uppercase; text-align: right; line-height: 1.8; }
+        @media (max-width: 640px) { .footer-meta { text-align: left; } }
+
+        .lang-block { display: none; }
+        .lang-block.active { display: block; }
+
+        @media (max-width: 820px) {
+            .nav { padding: 0.9rem 1.2rem; }
+            .nav-back span.hide-sm { display: none; }
+            .page { padding: 6rem 5vw 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas class="matrix-rain" id="matrixRain"></canvas>
+    <div class="bg-veil"></div>
+    <div class="bg-grid"></div>
+    <div class="scanlines"></div>
+    <div class="noise"></div>
+
+    <nav class="nav">
+        <a href="index.html" class="nav-brand"><span class="dot"></span>TIANNING.FENG</a>
+        <a href="index.html" class="nav-back"><span>←</span><span class="hide-sm">Back to Home</span></a>
+        <div class="nav-lang">
+            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
+            <button id="btn-en" onclick="showLang('en')">EN</button>
+        </div>
+    </nav>
+
+    <main class="page">
+
+    <!-- ZH -->
+    <div class="lang-block active" id="zh">
+
+        <header class="page-header">
+            <span class="page-eyebrow">/ Reading · 阅读收藏</span>
+            <h1 class="page-title">Reading</h1>
+            <p class="page-lede">
+                这里是我<span class="accent">在读、读完、想读</span>的书。心理学、系统工程、产品思考、一点点小说。
+                不追求书单的完整，只写下<span class="accent">当下有影响我的</span>那几本。
+            </p>
+        </header>
+
+        <section class="shelf">
+            <div class="shelf-head">
+                <span class="shelf-num">/ 01</span>
+                <h2 class="shelf-title">正在读</h2>
+                <span class="shelf-count">// currently</span>
+            </div>
+            <div class="book-grid">
+                <div class="book">
+                    <span class="book-rating">★★★★☆</span>
+                    <h3 class="book-title">思考，快与慢</h3>
+                    <p class="book-author">Daniel Kahneman</p>
+                    <p class="book-note">重读。第一遍是心理学材料，第二遍在做产品——才发现是<span class="accent">用户决策手册</span>。</p>
+                </div>
+                <div class="book">
+                    <h3 class="book-title">Designing Data-Intensive Applications</h3>
+                    <p class="book-author">Martin Kleppmann</p>
+                    <p class="book-note">系统设计的圣经。为 UPenn 分布式系统课准备的底座教材。</p>
+                </div>
+                <div class="book">
+                    <h3 class="book-title">Inspired</h3>
+                    <p class="book-author">Marty Cagan</p>
+                    <p class="book-note">硅谷 PM 的标配读物。真正让我理解<span class="accent">PM 不是项目经理</span>的一本书。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="shelf">
+            <div class="shelf-head">
+                <span class="shelf-num">/ 02</span>
+                <h2 class="shelf-title">读完 · 推荐</h2>
+                <span class="shelf-count">// finished · recommended</span>
+            </div>
+            <div class="book-grid">
+                <div class="book done">
+                    <span class="book-rating">★★★★★</span>
+                    <h3 class="book-title">Sapiens: A Brief History of Humankind</h3>
+                    <p class="book-author">Yuval Noah Harari</p>
+                    <p class="book-note">看待人类合作、货币、宗教的"操作系统"视角。至今影响我思考产品增长。</p>
+                </div>
+                <div class="book done">
+                    <span class="book-rating">★★★★★</span>
+                    <h3 class="book-title">Zero to One</h3>
+                    <p class="book-author">Peter Thiel</p>
+                    <p class="book-note">"从 0 到 1"和"从 1 到 n"的区分——这本书之后我才敢做独立项目。</p>
+                </div>
+                <div class="book done">
+                    <span class="book-rating">★★★★☆</span>
+                    <h3 class="book-title">The Design of Everyday Things</h3>
+                    <p class="book-author">Don Norman</p>
+                    <p class="book-note">Emory 心理系推荐读物。让"用户体验"这个词第一次有了骨架。</p>
+                </div>
+                <div class="book done">
+                    <span class="book-rating">★★★★☆</span>
+                    <h3 class="book-title">深度工作</h3>
+                    <p class="book-author">Cal Newport</p>
+                    <p class="book-note">大三那年我从"看起来很忙"转向"真的专注"的分水岭。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="shelf">
+            <div class="shelf-head">
+                <span class="shelf-num">/ 03</span>
+                <h2 class="shelf-title">想读</h2>
+                <span class="shelf-count">// on the queue</span>
+            </div>
+            <div class="book-grid">
+                <div class="book want">
+                    <h3 class="book-title">Working Backwards</h3>
+                    <p class="book-author">Colin Bryar &amp; Bill Carr</p>
+                    <p class="book-note">听说是理解 Amazon PR/FAQ 文化最好的一手材料。</p>
+                </div>
+                <div class="book want">
+                    <h3 class="book-title">The Making of a Manager</h3>
+                    <p class="book-author">Julie Zhuo</p>
+                    <p class="book-note">Facebook 设计 VP 的成长复盘。我下一步想读关于团队管理的书。</p>
+                </div>
+                <div class="book want">
+                    <h3 class="book-title">项目 Hail Mary</h3>
+                    <p class="book-author">Andy Weir</p>
+                    <p class="book-note">《火星救援》作者。学期间必须留一本硬科幻在床头。</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact · 联系我</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- EN -->
+    <div class="lang-block" id="en">
+        <header class="page-header">
+            <span class="page-eyebrow">/ Reading</span>
+            <h1 class="page-title">Reading</h1>
+            <p class="page-lede">
+                Books I'm <span class="accent">reading, have read, or want to read</span>. Psychology, systems, product, occasional fiction.
+                Not comprehensive — only the ones <span class="accent">actually shaping me right now</span>.
+            </p>
+        </header>
+
+        <section class="shelf">
+            <div class="shelf-head"><span class="shelf-num">/ 01</span><h2 class="shelf-title">Currently</h2><span class="shelf-count">// reading now</span></div>
+            <div class="book-grid">
+                <div class="book"><span class="book-rating">★★★★☆</span><h3 class="book-title">Thinking, Fast and Slow</h3><p class="book-author">Daniel Kahneman</p><p class="book-note">Re-read. Two years ago it was a textbook; now it reads like a <span class="accent">user-decision playbook</span>.</p></div>
+                <div class="book"><h3 class="book-title">Designing Data-Intensive Applications</h3><p class="book-author">Martin Kleppmann</p><p class="book-note">The systems-design bible. Prep for UPenn distributed systems.</p></div>
+                <div class="book"><h3 class="book-title">Inspired</h3><p class="book-author">Marty Cagan</p><p class="book-note">Silicon Valley PM canon. The one book that made me realize <span class="accent">PM ≠ project manager</span>.</p></div>
+            </div>
+        </section>
+
+        <section class="shelf">
+            <div class="shelf-head"><span class="shelf-num">/ 02</span><h2 class="shelf-title">Finished · Recommended</h2><span class="shelf-count">// finished</span></div>
+            <div class="book-grid">
+                <div class="book done"><span class="book-rating">★★★★★</span><h3 class="book-title">Sapiens</h3><p class="book-author">Yuval Noah Harari</p><p class="book-note">An "operating system" view of human cooperation, money, and religion. Still shapes how I think about growth.</p></div>
+                <div class="book done"><span class="book-rating">★★★★★</span><h3 class="book-title">Zero to One</h3><p class="book-author">Peter Thiel</p><p class="book-note">The 0→1 vs. 1→n distinction. I only started shipping side projects after reading this.</p></div>
+                <div class="book done"><span class="book-rating">★★★★☆</span><h3 class="book-title">The Design of Everyday Things</h3><p class="book-author">Don Norman</p><p class="book-note">Recommended reading from my Emory psych program. The first time "UX" had a real skeleton.</p></div>
+                <div class="book done"><span class="book-rating">★★★★☆</span><h3 class="book-title">Deep Work</h3><p class="book-author">Cal Newport</p><p class="book-note">Junior year — the watershed from "looking busy" to "actually focused".</p></div>
+            </div>
+        </section>
+
+        <section class="shelf">
+            <div class="shelf-head"><span class="shelf-num">/ 03</span><h2 class="shelf-title">On the Queue</h2><span class="shelf-count">// want to read</span></div>
+            <div class="book-grid">
+                <div class="book want"><h3 class="book-title">Working Backwards</h3><p class="book-author">Colin Bryar &amp; Bill Carr</p><p class="book-note">Reportedly the best primary source on Amazon's PR/FAQ culture.</p></div>
+                <div class="book want"><h3 class="book-title">The Making of a Manager</h3><p class="book-author">Julie Zhuo</p><p class="book-note">Facebook design VP's growth retro. Team management is my next horizon.</p></div>
+                <div class="book want"><h3 class="book-title">Project Hail Mary</h3><p class="book-author">Andy Weir</p><p class="book-note">By the Martian author. There's always one hard sci-fi on my nightstand mid-semester.</p></div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
+    </div>
+
+    </main>
+
+    <script>
+        (function initMatrixRain() {
+            const canvas = document.getElementById('matrixRain');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d', { alpha: false });
+            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
+            const FONT_SIZE = 15;
+            let cols = 0, drops = [], speeds = [], leaders = [];
+            function resize() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width  = Math.floor(window.innerWidth  * dpr);
+                canvas.height = Math.floor(window.innerHeight * dpr);
+                canvas.style.width  = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                cols = Math.floor(window.innerWidth / FONT_SIZE);
+                drops   = new Array(cols).fill(0).map(() => Math.random() * -50);
+                speeds  = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
+                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            const COLOR_TRAIL='rgba(180,160,40,0.75)', COLOR_MID='rgba(252,233,79,0.85)',
+                  COLOR_LEADER='rgba(255,255,220,1)', COLOR_CYAN='rgba(36,224,255,0.9)';
+            function draw() {
+                ctx.fillStyle = 'rgba(5,7,13,0.08)';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
+                ctx.textBaseline = 'top';
+                for (let i = 0; i < cols; i++) {
+                    const x = i * FONT_SIZE, y = drops[i] * FONT_SIZE;
+                    if (Math.random() < 0.02) leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
+                    ctx.fillText(leaders[i], x, y);
+                    ctx.fillStyle = COLOR_MID;
+                    for (let k = 1; k <= 3; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
+                    ctx.fillStyle = COLOR_TRAIL;
+                    for (let k = 4; k <= 8; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
+                    drops[i] += speeds[i];
+                    if (y > window.innerHeight && Math.random() > 0.985) {
+                        drops[i] = Math.random() * -20;
+                        speeds[i] = 0.12 + Math.random() * 0.28;
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                ctx.fillStyle = '#05070d';
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            } else { requestAnimationFrame(draw); }
+        })();
+
+        function showLang(lang) {
+            const zh = document.getElementById('zh');
+            const en = document.getElementById('en');
+            const bZ = document.getElementById('btn-zh');
+            const bE = document.getElementById('btn-en');
+            if (lang === 'zh') { zh.classList.add('active'); en.classList.remove('active'); bZ.classList.add('active'); bE.classList.remove('active'); document.documentElement.lang = 'zh-CN'; }
+            else { en.classList.add('active'); zh.classList.remove('active'); bE.classList.add('active'); bZ.classList.remove('active'); document.documentElement.lang = 'en'; }
+            try { localStorage.setItem('lang', lang); } catch (e) {}
+        }
+        try { const saved = localStorage.getItem('lang'); if (saved === 'en') showLang('en'); } catch (e) {}
+    </script>
+</body>
+</html>

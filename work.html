@@ -344,6 +344,54 @@
             display: flex; justify-content: space-between; align-items: center;
             flex-wrap: wrap; gap: 1rem;
         }
+        /* ===== Site Footer（全站统一）===== */
+        .site-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-dim);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: baseline;
+        }
+        @media (max-width: 640px) {
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+        .footer-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+        .footer-links {
+            display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+        }
+        .footer-links a {
+            color: var(--text);
+            border-bottom: 1px dashed transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+        .footer-links .sep { color: var(--text-mute); }
+        .footer-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            color: var(--text-mute);
+            text-transform: uppercase;
+            text-align: right;
+            line-height: 1.8;
+        }
+        @media (max-width: 640px) {
+            .footer-meta { text-align: left; }
+        }
         .btn {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
@@ -413,7 +461,7 @@
         </header>
 
         <!-- ============ Publications ============ -->
-        <section class="w-section">
+        <section class="w-section" id="publications">
             <div class="w-section-head">
                 <span class="w-section-num">/ 01</span>
                 <h2 class="w-section-title">Publications</h2>
@@ -468,7 +516,7 @@
         </section>
 
         <!-- ============ Projects ============ -->
-        <section class="w-section">
+        <section class="w-section" id="projects">
             <div class="w-section-head">
                 <span class="w-section-num">/ 02</span>
                 <h2 class="w-section-title">Selected Projects</h2>
@@ -582,6 +630,24 @@
             <a href="https://github.com/CKSF" target="_blank" class="btn">在 GitHub 查看更多 <span class="arrow">↗</span></a>
             <a href="index.html" class="btn ghost">返回主页 <span class="arrow">←</span></a>
         </div>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact · 联系我</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
     </div>
 
     <!-- ================ English ================ -->
@@ -746,6 +812,24 @@
             <a href="https://github.com/CKSF" target="_blank" class="btn">More on GitHub <span class="arrow">↗</span></a>
             <a href="index.html" class="btn ghost">Back to Home <span class="arrow">←</span></a>
         </div>
+
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-label">/ Contact</div>
+                    <div class="footer-links">
+                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
+                        <span class="sep">·</span>
+                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
+                        <span class="sep">·</span>
+                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
+                        <span class="sep">·</span>
+                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
+                    </div>
+                </div>
+                <div class="footer-meta">// TIANNING.FENG · 2025<br>// BUILT WITH CARE</div>
+            </div>
+        </footer>
     </div>
 
     </main>
