@@ -119,6 +119,48 @@
         .nav-lang button.active { color: var(--accent); border-color: var(--accent); }
         .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
 
+        /* Recruiter / For Hire 入口：明显但不喧宾夺主 */
+        .nav-hire {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.4em 0.9em;
+            color: #000;
+            background: var(--accent);
+            border: 1px solid var(--accent);
+            margin-right: 0.4rem;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            transition: filter 0.15s, transform 0.15s;
+        }
+        .nav-hire:hover { color: #000; filter: brightness(1.08); transform: translateY(-1px); }
+        .nav-hire .dot-red {
+            width: 6px; height: 6px; background: #000;
+            display: inline-block;
+        }
+
+        /* Recruiter 快捷通道：hero-tail 下方的一行小提示 */
+        .recruiter-hint {
+            margin-top: 1.4rem;
+            padding: 0.7rem 1rem;
+            border: 1px dashed var(--border);
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-mute);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .recruiter-hint:hover { color: var(--accent); border-color: var(--accent); }
+        .recruiter-hint b { color: var(--accent); font-weight: 500; }
+        .recruiter-hint .tag {
+            padding: 0.15em 0.55em;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+        }
+
         /* ===== 页面容器 + 中央蒙版 ===== */
         .page {
             max-width: 1180px;
@@ -402,6 +444,7 @@
             <span class="live"></span><span id="nav-status-text">SYSTEM ONLINE // HOME</span>
         </div>
         <div class="nav-lang">
+            <a href="hire.html" class="nav-hire" title="Recruiter mode · 正式求职版"><span class="dot-red"></span>For Hire</a>
             <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
             <button id="btn-en" onclick="showLang('en')">EN</button>
         </div>
@@ -424,6 +467,10 @@
                 学术上以共同一作提出 <span class="accent">SeizureFormer</span>（PSB 2026 口头报告），并合作发表 EpiDHGNN；工程上在 Liba Space 主导过 LLM 产品功能，在思政智能体做过 RAG 教案平台，在 Emory 语言实验室搭过百 GB 级 ETL 流水线。拿了 Google PM 认证，目前也在找产品经理机会——但比求职更重要的是，我希望这个网站是我<span class="accent">思考与构建这个世界的痕迹</span>。打鼓、拍照、写字，都在下面。
             </p>
             <p class="hero-tail"><span class="arrow">↓</span> 挑一个你感兴趣的入口 · pick a lane</p>
+            <a class="recruiter-hint" href="hire.html">
+                <span class="tag">Recruiter?</span>
+                <span>看 <b>正式求职版 →</b> 更聚焦 · 更快</span>
+            </a>
         </header>
 
         <!-- Launchpad -->
@@ -572,6 +619,10 @@
                 Academically I'm co-first author of <span class="accent">SeizureFormer</span> (PSB 2026 Oral) and a co-author on EpiDHGNN. In industry I led an LLM product feature at Liba Space, built a RAG-based lesson-planning platform for a gov-sponsored AI education project, and shipped a 100GB+ speech ETL pipeline for the Emory Language Biomarker Lab. Google PM certified and open to product roles — but more than that, I want this site to be the trace of <span class="accent">how I think and build in the world</span>. Drumming, photography, writing — they're all here.
             </p>
             <p class="hero-tail"><span class="arrow">↓</span> pick a lane · 挑一个感兴趣的入口</p>
+            <a class="recruiter-hint" href="hire.html">
+                <span class="tag">Recruiter?</span>
+                <span>Skip the tour — <b>go to the formal career page →</b></span>
+            </a>
         </header>
 
         <section>
