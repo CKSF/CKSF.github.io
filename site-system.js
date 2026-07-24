@@ -8,7 +8,7 @@
         { key: "now", href: "now.html", zh: "现在", en: "Now", hint: "Current focus" },
         { key: "reading", href: "reading.html", zh: "书架", en: "Library", hint: "Reading & listening" },
         { key: "photos", href: "photos.html", zh: "影像", en: "Photos", hint: "Visual notes" },
-        { key: "hire", href: "hire.html", zh: "职业档案", en: "Career", hint: "Experience & career" }
+        { key: "hire", href: "hire.html?entry=recruiter", zh: "招聘档案", en: "Recruiter", hint: "Resume, experience & contact" }
     ];
 
     const path = location.pathname.split("/").pop() || "index.html";
@@ -34,11 +34,11 @@
     if (roomPages.has(path)) {
         const roomStyles = document.createElement("link");
         roomStyles.rel = "stylesheet";
-        roomStyles.href = "room-system.css?v=20260725-room11";
+        roomStyles.href = "room-system.css?v=20260725-room13";
         document.head.append(roomStyles);
 
         const roomScript = document.createElement("script");
-        roomScript.src = "room-system.js?v=20260725-room11";
+        roomScript.src = "room-system.js?v=20260725-room13";
         document.head.append(roomScript);
     }
 
@@ -177,7 +177,7 @@
         nav.className = "global-nav";
         nav.setAttribute("aria-label", currentLang === "zh" ? "全站导航" : "Primary navigation");
 
-        const visibleRoutes = routes.filter((route) => route.key !== "home");
+        const visibleRoutes = routes.filter((route) => route.key !== "home" && route.key !== "hire");
         nav.innerHTML = `
             <div class="global-nav-inner">
                 <a class="global-brand" href="${themedHref("index.html")}" aria-label="${currentLang === "zh" ? "返回首页" : "Back home"}">
@@ -192,6 +192,13 @@
                     `).join("")}
                 </div>
                 <div class="global-actions">
+                    <a class="global-action hire"
+                       style="display: inline-grid"
+                       href="${themedHref("hire.html?entry=recruiter")}"
+                       aria-label="${currentLang === "zh" ? "招聘入口：查看简历与职业档案" : "Recruiter entry: view resume and career portfolio"}"
+                       ${pageKey === "hire" ? 'aria-current="page"' : ""}>
+                        ${currentLang === "zh" ? "招聘" : "Hire"}
+                    </a>
                     <button class="global-action" type="button" data-theme-toggle></button>
                     <button class="global-action" type="button" data-lang-toggle aria-label="${currentLang === "zh" ? "Switch to English" : "切换到中文"}">${currentLang === "zh" ? "EN" : "中"}</button>
                     <button class="global-action global-menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="global-links">${currentLang === "zh" ? "导航" : "Menu"}</button>

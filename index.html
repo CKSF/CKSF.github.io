@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="site-system.css">
-    <link rel="stylesheet" href="city.css?v=20260725-realism1">
-    <script src="site-system.js?v=20260725-system5"></script>
-    <script type="module" src="city.js?v=20260725-touch1"></script>
+    <link rel="stylesheet" href="city.css?v=20260725-recruiter1">
+    <script src="site-system.js?v=20260725-system6"></script>
+    <script type="module" src="city.js?v=20260725-recruiter1"></script>
 </head>
 <body class="city-home" data-home-mode="city">
     <main class="city-main" id="main-content">
@@ -34,11 +34,20 @@
                     我在字节跳动做 <strong>Agent 应用工程</strong>，在 UPenn 研究 ML 与系统。这座城市把工作、研究和生活放进同一个空间：每栋建筑都是一条真实路径。
                 </p>
                 <div class="city-actions">
-                    <button class="city-button primary" type="button" data-city-tour>
+                    <a class="city-button primary recruiter-entry" href="hire.html?entry=recruiter">
+                        <span data-copy-zh="招聘入口 · 查看简历" data-copy-en="Recruiter · View résumé">招聘入口 · 查看简历</span>
+                        <span class="city-button-key">HR →</span>
+                    </a>
+                    <button class="city-button" type="button" data-city-tour>
                         <span data-copy-zh="开始城市导览" data-copy-en="Start city tour">开始城市导览</span>
                         <span class="city-button-key">ENTER</span>
                     </button>
                 </div>
+                <p class="city-recruiter-note"
+                   data-copy-zh="面向招聘方：快速查看经历、项目、论文、联系方式与 PDF 简历。"
+                   data-copy-en="For recruiters: experience, projects, publications, contact details, and PDF résumé in one place.">
+                    面向招聘方：快速查看经历、项目、论文、联系方式与 PDF 简历。
+                </p>
                 <div class="city-status" aria-label="Current status">
                     <span><b data-copy-zh="北京 / 费城" data-copy-en="Beijing / Philly">北京 / 费城</b><span data-copy-zh="当前坐标" data-copy-en="Location">当前坐标</span></span>
                     <span><b data-copy-zh="Agent 工程" data-copy-en="Agent Eng.">Agent 工程</b><span data-copy-zh="当前工作" data-copy-en="Current work">当前工作</span></span>
@@ -179,11 +188,18 @@
         </section>
     </main>
 
-    <div class="city-tooltip" data-city-tooltip role="status">
-        <span class="city-tooltip-num"></span>
-        <strong></strong>
-        <span></span>
-    </div>
+    <aside class="city-tooltip" data-city-tooltip aria-live="polite">
+        <div class="city-tooltip-copy">
+            <span class="city-tooltip-num"></span>
+            <strong></strong>
+            <span class="city-tooltip-intro"></span>
+        </div>
+        <div class="city-tour-nav" aria-label="城市导览切换">
+            <button type="button" data-city-tour-prev aria-label="上一栋建筑">←</button>
+            <span data-city-tour-progress>01 / 08</span>
+            <button type="button" data-city-tour-next aria-label="下一栋建筑">→</button>
+        </div>
+    </aside>
 
     <footer class="home-footer">
         <span>© 2026 Tianning Feng · City OS</span>

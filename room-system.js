@@ -669,11 +669,18 @@
         const index = rooms.findIndex((item) => item.id === room.id);
         const prevIndex = (index - 1 + rooms.length) % rooms.length;
         const nextIndex = (index + 1) % rooms.length;
-        const fromCity = new URLSearchParams(location.search).get("from") === "city";
+        const params = new URLSearchParams(location.search);
+        const fromCity = params.get("from") === "city";
+        const recruiterEntry = room.id === "data" && params.get("entry") === "recruiter";
 
         document.body.classList.add("room-page");
         if (fromCity) document.body.classList.add("room-arriving");
         document.body.dataset.room = room.id;
+        if (recruiterEntry) {
+            document.body.classList.add("recruiter-entry");
+            main.id = "main-content";
+            return;
+        }
         main.id = "room-records";
 
         const arrival = document.createElement("section");

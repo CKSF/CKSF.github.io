@@ -10,8 +10,8 @@ const districts = [
         code: "DATA",
         zh: "数据塔",
         en: "Data Tower",
-        zhHint: "Agent 工程 · Skills / MCP · 上下文治理",
-        enHint: "Agent engineering · Skills / MCP · Context",
+        zhIntro: "Agent 与数据系统的控制中枢，记录我如何把复杂工作流做成真正可用的产品。",
+        enIntro: "The control center for agent and data systems, showing how complex workflows become usable products.",
         href: "hire.html",
         x: -8.5,
         z: -3.5,
@@ -26,8 +26,8 @@ const districts = [
         code: "LAB",
         zh: "研究实验室",
         en: "Research Lab",
-        zhHint: "SeizureFormer · 临床 AI · 论文",
-        enHint: "SeizureFormer · Clinical AI · Papers",
+        zhIntro: "从真实临床问题出发，在这里把数据、模型和研究判断连成一条完整路径。",
+        enIntro: "Research starts with real clinical questions, then connects data, models, and evidence into one path.",
         href: "work.html#publications",
         x: -2,
         z: -7.5,
@@ -42,8 +42,8 @@ const districts = [
         code: "BUILD",
         zh: "工程工坊",
         en: "Workshop",
-        zhHint: "产品 · 系统 · 独立项目",
-        enHint: "Products · Systems · Independent builds",
+        zhIntro: "把想法落成可以运行的产品，保留工程取舍、系统细节与真实交付过程。",
+        enIntro: "Ideas become working products here, with the engineering choices and delivery process left visible.",
         href: "work.html#projects",
         x: 5.2,
         z: -5.4,
@@ -58,8 +58,8 @@ const districts = [
         code: "WRITE",
         zh: "图书馆",
         en: "Library",
-        zhHint: "长文 · 产品 · 技术与心理",
-        enHint: "Essays · Product · Technology & psychology",
+        zhIntro: "写下技术、产品与人的交叉思考，让长期形成的判断有迹可循。",
+        enIntro: "A place for writing across technology, products, and people, preserving how longer-term judgments form.",
         href: "blog.html",
         x: 9,
         z: 1.8,
@@ -74,8 +74,8 @@ const districts = [
         code: "NOW",
         zh: "公寓",
         en: "Apartment",
-        zhHint: "现在 · 正在做 · 开放问题",
-        enHint: "Now · Current work · Open questions",
+        zhIntro: "一间关于当下的房间，记录正在推进的事情和仍然没有答案的问题。",
+        enIntro: "A room about the present, recording what is moving forward and which questions remain open.",
         href: "now.html",
         x: 4.2,
         z: 7.2,
@@ -90,8 +90,8 @@ const districts = [
         code: "READ",
         zh: "档案馆",
         en: "Archive",
-        zhHint: "在读 · 读完 · 判断方式",
-        enHint: "Reading · Finished · Ways of thinking",
+        zhIntro: "保存读过的书与形成的判断，更关心它们后来如何改变行动。",
+        enIntro: "An archive of books and the judgments they shaped, with attention to how they later changed action.",
         href: "reading.html",
         x: -2.4,
         z: 7.8,
@@ -106,8 +106,8 @@ const districts = [
         code: "AUDIO",
         zh: "电台",
         en: "Radio Station",
-        zhHint: "音乐 · 播客 · 鼓",
-        enHint: "Music · Podcasts · Drums",
+        zhIntro: "工作与生活之间的声音空间，收藏音乐、播客以及让我保持节奏的内容。",
+        enIntro: "A listening space between work and life, collecting the music, podcasts, and rhythms that keep me moving.",
         href: "listening.html",
         x: -8.8,
         z: 5.2,
@@ -122,8 +122,8 @@ const districts = [
         code: "IMAGE",
         zh: "暗房",
         en: "Photo Booth",
-        zhHint: "城市 · 剪影 · 视觉笔记",
-        enHint: "Cities · Silhouettes · Visual notes",
+        zhIntro: "用城市、光影与日常片段，保留那些很难只靠文字表达的观察。",
+        enIntro: "Cities, light, and everyday fragments preserve observations that words alone cannot quite hold.",
         href: "photos.html",
         x: -10.8,
         z: 11,
@@ -166,6 +166,21 @@ function applyCopy() {
         "aria-label",
         english ? "Close controls" : "关闭操作说明"
     );
+    document.querySelector("[data-city-tour-prev]")?.setAttribute(
+        "aria-label",
+        english ? "Previous building" : "上一栋建筑"
+    );
+    document.querySelector("[data-city-tour-next]")?.setAttribute(
+        "aria-label",
+        english ? "Next building" : "下一栋建筑"
+    );
+    const tourButtonLabel = document.querySelector("[data-city-tour] span:first-child");
+    if (tourButtonLabel) {
+        tourButtonLabel.textContent = state.touring
+            ? (english ? "Stop tour" : "停止导览")
+            : (english ? "Start city tour" : "开始城市导览");
+    }
+    window.dispatchEvent(new CustomEvent("site-language-change"));
 }
 
 function setHomeMode(mode) {
@@ -1502,7 +1517,7 @@ async function bootCity() {
         activePointerId = null;
         pointer.set(10, 10);
         pointerMoved = true;
-        tooltip.classList.remove("visible");
+        if (!state.touring) tooltip.classList.remove("visible");
     });
     viewport.addEventListener("click", (event) => {
         if (eventHitsInterface(event) || performance.now() - lastTouchNavigation < 600) return;
@@ -1520,25 +1535,54 @@ async function bootCity() {
         const district = group.userData.district;
         tooltip.querySelector(".city-tooltip-num").textContent = `${district.number} · ${district.code}`;
         tooltip.querySelector("strong").textContent = state.language === "en" ? district.en : district.zh;
-        tooltip.querySelector("span:last-child").textContent = state.language === "en" ? district.enHint : district.zhHint;
+        tooltip.querySelector(".city-tooltip-intro").textContent =
+            state.language === "en" ? district.enIntro : district.zhIntro;
         tooltip.classList.add("visible");
     }
 
     function focusDistrict(index) {
-        const group = districtGroups[index % districtGroups.length];
+        const normalizedIndex = (index + districtGroups.length) % districtGroups.length;
+        const group = districtGroups[normalizedIndex];
         if (!group) return;
-        const worldPosition = new THREE.Vector3();
-        group.getWorldPosition(worldPosition);
-        targetRotation = -Math.atan2(worldPosition.x, worldPosition.z) + 0.25;
+        const district = group.userData.district;
+        targetRotation = -Math.atan2(district.x, district.z) + 0.25;
         group.userData.tourPulse = performance.now();
+        hoveredGroup = group;
+        viewport.dataset.focusedDistrict = group.userData.district.id;
+        pointer.set(10, 10);
+        pointerMoved = false;
         updateTooltip(group);
+        const progress = document.querySelector("[data-city-tour-progress]");
+        if (progress) {
+            progress.textContent = `${String(normalizedIndex + 1).padStart(2, "0")} / ${String(districtGroups.length).padStart(2, "0")}`;
+        }
     }
 
     const tourButton = document.querySelector("[data-city-tour]");
+    const tourPrev = document.querySelector("[data-city-tour-prev]");
+    const tourNext = document.querySelector("[data-city-tour-next]");
+    let tourIndex = 0;
+    function scheduleTour() {
+        clearInterval(state.tourTimer);
+        state.tourTimer = null;
+        if (!state.touring || state.compact) return;
+        state.tourTimer = setInterval(() => {
+            tourIndex = (tourIndex + 1) % districts.length;
+            focusDistrict(tourIndex);
+        }, 2400);
+    }
+    function moveTour(direction) {
+        if (!state.touring) return;
+        tourIndex = (tourIndex + direction + districts.length) % districts.length;
+        focusDistrict(tourIndex);
+        scheduleTour();
+    }
     function stopTour() {
         state.touring = false;
         clearInterval(state.tourTimer);
         state.tourTimer = null;
+        viewport.classList.remove("touring");
+        tooltip.classList.remove("tour-mode");
         if (tourButton) {
             tourButton.querySelector("span:first-child").textContent =
                 state.language === "en" ? "Start city tour" : "开始城市导览";
@@ -1555,14 +1599,18 @@ async function bootCity() {
             tourButton.querySelector("span:first-child").textContent =
                 state.language === "en" ? "Stop tour" : "停止导览";
         }
-        let index = 0;
-        focusDistrict(index);
-        state.tourTimer = setInterval(() => {
-            index = (index + 1) % districts.length;
-            focusDistrict(index);
-        }, 2400);
+        tourIndex = 0;
+        viewport.classList.add("touring");
+        tooltip.classList.add("tour-mode");
+        focusDistrict(tourIndex);
+        scheduleTour();
     }
     tourButton?.addEventListener("click", startTour);
+    tourPrev?.addEventListener("click", () => moveTour(-1));
+    tourNext?.addEventListener("click", () => moveTour(1));
+    window.addEventListener("site-language-change", () => {
+        if (hoveredGroup) updateTooltip(hoveredGroup);
+    });
     viewport.addEventListener("pointerdown", stopTour);
     window.addEventListener("home-mode-change", (event) => {
         if (event.detail.mode === "index") stopTour();
@@ -1764,7 +1812,7 @@ async function bootCity() {
             });
         });
 
-        if (pointerMoved && !dragging) {
+        if (pointerMoved && !dragging && !state.touring) {
             raycaster.setFromCamera(pointer, camera);
             const hit = raycaster.intersectObjects(interactiveMeshes, false)[0];
             const nextGroup = hit?.object.userData.districtGroup || null;

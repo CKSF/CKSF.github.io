@@ -8,6 +8,10 @@ body.room-page {
     color: var(--site-ink) !important;
 }
 
+body.room-page .global-action {
+    color: var(--site-ink-soft);
+}
+
 body.room-page[data-room="data"] { --room-accent: #f6dd47; --room-secondary: #68d8e8; }
 body.room-page[data-room="lab"] { --room-accent: #68d8e8; --room-secondary: #d8ff70; }
 body.room-page[data-room="workshop"] { --room-accent: #ff9b4a; --room-secondary: #f6dd47; }
@@ -225,8 +229,25 @@ body.room-page .page .pub-tag.preprint {
 
 body.room-page .page .filter-btn.active {
     border-color: var(--room-accent);
-    background: color-mix(in srgb, var(--room-accent) 12%, var(--site-surface));
-    color: var(--room-accent) !important;
+    background: var(--room-accent);
+    color: var(--site-accent-ink) !important;
+}
+
+body.room-page .page .btn:not(.ghost) {
+    border-color: var(--room-accent) !important;
+    background: var(--room-accent) !important;
+    color: var(--site-accent-ink) !important;
+}
+
+body.room-page .page .btn:not(.ghost):hover {
+    color: var(--site-accent-ink) !important;
+    filter: brightness(1.06);
+}
+
+body.room-page .page .btn.ghost {
+    border-color: var(--site-line-strong) !important;
+    background: transparent !important;
+    color: var(--site-ink) !important;
 }
 
 body.room-page .page :is(.book-rating, .updated-stamp) {
@@ -341,10 +362,9 @@ body.room-page .page :is(.book-rating, .updated-stamp) {
 .room-action.primary {
     border-color: var(--room-accent);
     background: var(--room-accent);
-    color: #10110c !important;
+    color: var(--site-accent-ink) !important;
 }
 
-html[data-site-theme="paper"] .room-action.primary { color: #fff !important; }
 .room-action:hover { transform: translateY(-2px); border-color: var(--room-accent); }
 
 .room-copy-meta {
@@ -841,6 +861,10 @@ body[data-room="darkroom"] .room-structure-spine { left: 73%; height: 46%; botto
 
 .room-page > main.page {
     padding-top: 4.5rem !important;
+}
+
+body.recruiter-entry > main.page {
+    padding-top: calc(var(--site-nav-height) + 3.5rem) !important;
 }
 
 .room-page .page-header::after,
