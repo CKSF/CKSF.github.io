@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Hire · Tianning Feng 冯天宁 // Product · Agent · ML</title>
-    <meta name="description" content="Tianning Feng · 冯天宁 — Formal career page. ByteDance DataLeap Agent engineer · UPenn CIS · PSB 2026 co-first author · Google PM certified." />
+    <meta name="description" content="Tianning Feng · 冯天宁 — Agent application engineer at ByteDance, UPenn CIS graduate student, PSB 2026 co-first author, and technical product builder." />
     <meta property="og:title" content="Tianning Feng · For Hire" />
     <meta property="og:description" content="Formal career page — objective, education, experience, research, case studies, publications, contact." />
     <meta property="og:type" content="website" />
@@ -552,15 +552,128 @@
         .lang-block.active { display: block; }
 
         @media print {
-            .topbar, .cta-block, .site-footer { display: none !important; }
+            /* =========================================================
+               PRINT STYLES — 强制以 Classic 排版打印
+               不管当前查看的是 Signature 还是 Classic 主题，
+               打印出来永远是白底、衬线、深蓝 accent 的正式版本。
+            ========================================================== */
+            @page {
+                size: A4;
+                margin: 14mm 12mm 14mm 12mm;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                color: #000 !important;
+                font-family: 'Charter', 'Georgia', 'Songti SC', 'Source Han Serif SC', serif !important;
+                font-size: 10.5pt;
+                line-height: 1.5;
+                letter-spacing: 0;
+            }
             body::before, body::after { display: none !important; }
-            body { background: #fff; color: #000; }
-            .page { padding: 1.5cm; max-width: 100%; }
-            .entry, .case, .objective { background: transparent; border-color: #999; }
-            a { color: #000; }
-            .name, .sec-title, .entry-title, .case-title, .objective p { color: #000 !important; }
-            .accent, .em, .metric, .venue, .case-tag, .sec-num, .eyebrow { color: #000 !important; }
-            .metric-chip { color: #000; background: transparent; border-color: #999; }
+
+            /* 打印时隐藏交互 UI */
+            .topbar, .cta-block, .site-footer { display: none !important; }
+            .top-tools { display: none !important; }
+
+            .page { padding: 0 !important; max-width: 100% !important; }
+
+            /* 主标题 / 段落头 */
+            .letterhead {
+                border-bottom: 2px solid #000 !important;
+                padding-bottom: 8mm;
+                margin-bottom: 6mm;
+                page-break-after: avoid;
+            }
+            .name, .sec-title, .entry-title, .case-title, .objective h2, .cta-block h3 {
+                font-family: 'Charter', 'Georgia', 'Songti SC', 'Source Han Serif SC', serif !important;
+                text-transform: none !important;
+                letter-spacing: 0 !important;
+                color: #000 !important;
+                font-weight: 700 !important;
+            }
+            .name { font-size: 22pt !important; }
+            .name-zh {
+                font-family: 'Songti SC', 'Source Han Serif SC', serif !important;
+                font-size: 13pt !important;
+                color: #333 !important;
+                margin-top: 2mm !important;
+            }
+            .name .accent { color: #1f3a68 !important; }
+
+            .role, .status, .contact-block, .contact-block .k,
+            .eyebrow, .sec-num, .sec-meta, .entry-date, .case-tag,
+            .case-foot, .metric-chip, .tag, .skill-group-title,
+            .btn {
+                font-family: 'Charter', 'Georgia', serif !important;
+                text-transform: none !important;
+                letter-spacing: 0 !important;
+            }
+            .role .sep, .role, .status, .contact-block .k, .sec-meta,
+            .case-foot, .skill-group-title { color: #555 !important; }
+            .status .live-dot { display: none !important; }
+            .eyebrow, .sec-num, .case-tag,
+            .accent, .em, .metric, .venue,
+            .entry-sub .accent, .objective h2, .cta-block h3,
+            .objective .em, .case-thesis .em, .entry .metric, .pub-list .venue {
+                color: #1f3a68 !important;
+            }
+            .entry-sub .now-badge {
+                background: #1f3a68 !important;
+                color: #fff !important;
+                font-family: 'Charter', 'Georgia', serif !important;
+                letter-spacing: 0.05em !important;
+            }
+
+            /* 章节头 */
+            .sec-head {
+                border-bottom: 1px solid #000 !important;
+                padding-bottom: 3mm;
+                margin-bottom: 4mm;
+                page-break-after: avoid;
+            }
+
+            /* 卡片：白底 + 细边，不被拦腰截断 */
+            .entry, .case, .objective {
+                background: transparent !important;
+                border: 1px solid #d0d0d0 !important;
+                border-left: 3px solid #1f3a68 !important;
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin-bottom: 3mm !important;
+                padding: 3mm 4mm !important;
+            }
+            .case::before { display: none !important; }
+            .cases {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 3mm !important;
+            }
+
+            .metric-chip {
+                background: transparent !important;
+                border: 1px solid #999 !important;
+                color: #1f3a68 !important;
+            }
+            .tag, .tag.hot {
+                background: transparent !important;
+                border: 1px solid #999 !important;
+                color: #000 !important;
+                font-weight: 400 !important;
+            }
+            .tag.hot { border-color: #1f3a68 !important; color: #1f3a68 !important; font-weight: 700 !important; }
+
+            /* 段落链接：只保留颜色，去下划线 */
+            a { color: #1f3a68 !important; text-decoration: none !important; border: none !important; }
+            .contact-block a { color: #000 !important; }
+
+            /* 语言块：只打印当前激活的语言 */
+            .lang-block { display: none !important; }
+            .lang-block.active { display: block !important; }
+
+            /* 段落层级不要在最后一行孤立 */
+            section.card { page-break-inside: auto; }
+            .entry-head, .case-title { page-break-after: avoid; }
         }
 
         /* =========================================================
@@ -783,6 +896,8 @@
             border-color: var(--accent);
         }
     </style>
+    <link rel="stylesheet" href="site-system.css">
+    <script src="site-system.js"></script>
 </head>
 <body>
 
@@ -815,7 +930,7 @@
                 <p class="role">
                     Product Manager <span class="sep">·</span> Agent Engineer <span class="sep">·</span> UPenn CIS &#39;27
                 </p>
-                <div class="status"><span class="live-dot"></span>Open · 2026 Summer &amp; 2027 Full-time</div>
+                <div class="status"><span class="live-dot"></span>Exploring · 2027 Full-time</div>
             </div>
             <div class="contact-block">
                 <span class="row"><span class="k">Email</span><a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></span>
@@ -830,7 +945,7 @@
         <div class="objective">
             <h2>/ Objective · 求职意向</h2>
             <p>
-                在找 <span class="em">2026 暑期实习</span> 与 <span class="em">2027 全职</span> 机会——方向是<b>技术型产品经理 / Agent 应用工程师</b>。
+                关注 <span class="em">2027 全职</span> 机会——方向是<b>技术型产品经理 / Agent 应用工程师</b>。
                 感兴趣的行业：AI Agent 与开发者工具、企业级 SaaS、健康科技、教育科技。
                 既能写 PRD、跑用户访谈，也能自己动手把功能一路做到上线——把研究里的模型和真正能给用户用的产品之间那段距离补齐，是我一直在做的事。
             </p>
@@ -880,17 +995,17 @@
             <div class="entry">
                 <div class="entry-head">
                     <h3 class="entry-title">Agent 应用工程师</h3>
-                    <span class="entry-date">2026.05 → 至今</span>
+                    <span class="entry-date">2026.05.20 → 至今</span>
                 </div>
                 <p class="entry-sub">
                     字节跳动 <span class="accent">· 数据平台产品线（面向数据研发同学的一站式工具 + Agent）</span>
                     <span class="now-badge">在职</span>
                 </p>
                 <ul>
-                    <li>面向内部数据研发同学，做他们每天都要用的工作台，同时<b>独立负责</b>其中的 Agent 功能模块——让 Agent 帮工程师少写重复代码、少来回切工具。</li>
+                    <li>配合团队维护和治理内部数据研发工作台，同时<b>独立开发</b>其中的 Agent 功能模块——减少工程师的重复操作和工具切换。</li>
                     <li>产品定位是「数据研发专用 Agent × 一站式平台」：从写需求、写 SQL、搭数据管道，到查错、跑作业调度、看数据血缘、做质量治理，一整套下游服务都能在一个对话里串起来完成。</li>
-                    <li>基于真实用户反馈持续打磨 Agent。举例：新做的 <b>Skills / MCP 管理模块</b>，把 Agent 能调用的技能从"写死一批"变成"用得多的自动排到前面、用不上的自动淘汰"，用户不用手动配置。</li>
-                    <li>另一块是<b>「记忆管理」</b>：以前 Agent 干长任务越干越糊，本质是它塞进去的历史信息没边界。我们做了分层保留 + 按重要性打分 + 跨会话继承，让它连续跑几个小时也不会忘。</li>
+                    <li>根据真实用户反馈持续调优 Agent。当前在建设 <b>Skills / MCP 管理模块</b>：明确技能的开发、发布和管理入口，并探索根据使用习惯定期调整技能配置。</li>
+                    <li>另一块是<b>上下文管理</b>：通过分层组织、按重要性保留和跨会话状态管理，减少长任务中的信息丢失与前后矛盾。</li>
                 </ul>
             </div>
 
@@ -976,10 +1091,10 @@
                     <span class="case-tag">Agent · 技能管理</span>
                     <h3 class="case-title">Skills / MCP 管理模块</h3>
                     <p class="case-thesis">
-                        以前 Agent 能干哪些事是<span class="em">写死在配置里</span>的。我们做了个管理入口，让技能能被用户看见、能被用起来的排到前面、没人用的自动淘汰——<span class="em">越用越顺手</span>。
+                        将原本分散在配置中的技能能力做成<span class="em">明确的开发与管理入口</span>，并探索根据用户习惯定期调整技能配置，让 Agent 更贴近真实工作流。
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">技能自演进</span>
+                        <span class="metric-chip">建设中</span>
                         <span class="metric-chip">MCP 协议</span>
                         <span class="metric-chip">数据研发场景</span>
                     </div>
@@ -993,11 +1108,11 @@
                     <span class="case-tag">Agent · 记忆管理</span>
                     <h3 class="case-title">Agent 长任务记忆</h3>
                     <p class="case-thesis">
-                        Agent 跑长任务越干越迷糊，其实是<span class="em">给它塞的历史信息没边界</span>。做了分层保留、按重要性打分、跨会话继承，长任务不再"忘事"。
+                        长任务容易因为历史信息堆积而丢失重点。通过<span class="em">分层组织、重要性保留和跨会话状态</span>，改善上下文的一致性与可控性。
                     </p>
                     <div class="case-metrics">
                         <span class="metric-chip">上下文预算</span>
-                        <span class="metric-chip">长任务</span>
+                        <span class="metric-chip">建设中</span>
                         <span class="metric-chip">跨会话记忆</span>
                     </div>
                     <div class="case-foot">
@@ -1167,7 +1282,7 @@
             </div>
             <div class="cta-actions">
                 <a class="btn" href="mailto:cksamfeng@gmail.com?subject=[Hiring]%20Tianning%20Feng">写邮件 ↗</a>
-                <a class="btn ghost" href="FTN简历.pdf" target="_blank">下载简历</a>
+                <a class="btn ghost" href="#" onclick="printAsPdf(event)">导出 PDF</a>
                 <a class="btn ghost" href="index.html">看完整的我 →</a>
             </div>
         </div>
@@ -1190,7 +1305,7 @@
                 <p class="role">
                     Product Manager <span class="sep">·</span> Agent Engineer <span class="sep">·</span> UPenn CIS &#39;27
                 </p>
-                <div class="status"><span class="live-dot"></span>Open · Summer 2026 &amp; 2027 full-time</div>
+                <div class="status"><span class="live-dot"></span>Exploring · 2027 full-time</div>
             </div>
             <div class="contact-block">
                 <span class="row"><span class="k">Email</span><a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></span>
@@ -1205,7 +1320,7 @@
         <div class="objective">
             <h2>/ Objective</h2>
             <p>
-                Looking for <span class="em">Technical PM / Agent Engineer</span> roles.
+                Exploring <span class="em">2027 full-time Technical PM / Agent Engineer</span> roles.
                 Sectors: <b>AI agent platforms</b>, <b>developer tools</b>, <b>enterprise SaaS</b>, <b>health / edu tech</b>.
                 I write PRDs and push PRs — my edge is closing the gap between research-grade models and systems that actually ship.
             </p>
@@ -1250,17 +1365,17 @@
             <div class="entry">
                 <div class="entry-head">
                     <h3 class="entry-title">Agent Application Engineer</h3>
-                    <span class="entry-date">May 2026 → present</span>
+                    <span class="entry-date">May 20, 2026 → present</span>
                 </div>
                 <p class="entry-sub">
                     ByteDance <span class="accent">· data platform org — internal one-stop toolkit + agent for data engineers</span>
                     <span class="now-badge">Current</span>
                 </p>
                 <ul>
-                    <li>Building the workbench that internal data engineers use every day, and <b>independently owning</b> its agent modules — so the agent handles repetitive work and tool-switching for them.</li>
+                    <li>Working with the team to maintain and govern an internal data-engineering workbench, while <b>independently developing</b> specific agent modules that reduce repetitive work and tool-switching.</li>
                     <li>Product direction: a <b>data-engineering-native agent × one-stop platform</b>. Requirements, SQL, pipelines and debugging are only the entry — the agent then stitches together downstream services like job scheduling, data-asset catalog, lineage and quality governance into one conversation.</li>
-                    <li>Iterating on the agent from real user feedback. Example: a <b>Skills / MCP management module</b> that turns skills from &quot;hard-coded list&quot; into &quot;frequently used skills float up, unused ones retire&quot; — no manual config.</li>
-                    <li>Also owning <b>agent memory</b>: long-horizon agents drift because their context has no budget. Layered retention, importance scoring and cross-session carry-over keep them coherent through multi-hour tasks.</li>
+                    <li>Iterating from real user feedback. Currently building a <b>Skills / MCP management module</b> with explicit development, publishing and governance workflows, while exploring periodic adaptation to user habits.</li>
+                    <li>Also improving <b>context management</b> through layered organization, importance-based retention and cross-session state, reducing information loss and contradictions in long-running tasks.</li>
                 </ul>
             </div>
 
@@ -1342,10 +1457,10 @@
                     <span class="case-tag">Agent × Platform</span>
                     <h3 class="case-title">Skills / MCP module</h3>
                     <p class="case-thesis">
-                        Moves agent skills from <span class="em">static registration</span> to <span class="em">self-evolving</span> — skills get an explicit management surface and re-rank / merge / retire by usage.
+                        Turns scattered skill configuration into an <span class="em">explicit development and governance surface</span>, with ongoing exploration of usage-informed adaptation.
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">Self-evolve</span>
+                        <span class="metric-chip">In progress</span>
                         <span class="metric-chip">MCP-native</span>
                         <span class="metric-chip">Data-eng scope</span>
                     </div>
@@ -1359,11 +1474,11 @@
                     <span class="case-tag">Agent × Context</span>
                     <h3 class="case-title">Context budgeting</h3>
                     <p class="case-thesis">
-                        Long-running agents drift because their context has no budget. Layered eviction + priority + cross-session state keep long pipelines coherent.
+                        Long tasks lose focus as history accumulates. Layered organization, importance-based retention and cross-session state make context more coherent and controllable.
                     </p>
                     <div class="case-metrics">
                         <span class="metric-chip">Budgeting</span>
-                        <span class="metric-chip">Long-horizon</span>
+                        <span class="metric-chip">In progress</span>
                         <span class="metric-chip">Cross-session</span>
                     </div>
                     <div class="case-foot">
@@ -1530,7 +1645,7 @@
             </div>
             <div class="cta-actions">
                 <a class="btn" href="mailto:cksamfeng@gmail.com?subject=[Hiring]%20Tianning%20Feng">Email me ↗</a>
-                <a class="btn ghost" href="TianningFeng_SWE_Eng_2625.pdf" target="_blank">Download PDF</a>
+                <a class="btn ghost" href="#" onclick="printAsPdf(event)">Save as PDF</a>
                 <a class="btn ghost" href="index.html">See the full me →</a>
             </div>
         </div>
@@ -1599,6 +1714,25 @@
             }
         } catch (e) {}
         syncThemeButton();
+
+        /* =========================================================
+           PRINT AS PDF
+           - 保存/打印时把 document.title 临时改成一个体面的文件名，
+             因为浏览器保存 PDF 时会用 title 作为默认文件名。
+           - 打印完再还原原 title。
+           - 不依赖任何三方库；@media print 已经把布局锁死成 Classic。
+        ========================================================== */
+        function printAsPdf(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const originalTitle = document.title;
+            const isEN = document.getElementById('en')?.classList.contains('active');
+            document.title = isEN
+                ? 'Tianning Feng — Resume'
+                : 'Tianning Feng — 冯天宁 — 简历';
+            const restore = () => { document.title = originalTitle; };
+            window.addEventListener('afterprint', restore, { once: true });
+            setTimeout(() => window.print(), 60);
+        }
     </script>
 </body>
 </html>

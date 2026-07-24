@@ -71,68 +71,6 @@
         .page-lede { font-size: 1.05rem; line-height: 1.75; color: #c8ccd6; max-width: 780px; margin: 0; }
         .page-lede .accent { color: var(--accent); }
 
-        /* 相册区 */
-        .album { margin-bottom: 3rem; }
-        .album-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.2rem;
-            padding-bottom: 0.6rem; border-bottom: 1px solid var(--border-dim); }
-        .album-num { font-family:'JetBrains Mono',monospace; font-size: 0.75rem; color: var(--accent); letter-spacing: 0.2em; }
-        .album-title { font-family:'Chakra Petch',sans-serif; font-weight: 600; font-size: 1.35rem;
-            letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
-        .album-meta { margin-left: auto; font-family:'JetBrains Mono',monospace;
-            font-size: 0.65rem; letter-spacing: 0.18em; color: var(--text-mute); text-transform: uppercase; }
-
-        /* 图片网格 */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 0.8rem;
-        }
-        .photo {
-            aspect-ratio: 4 / 3;
-            border: 1px solid var(--border-dim);
-            background: rgba(15,18,26,0.55);
-            position: relative;
-            overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-        .photo:hover { transform: translateY(-2px); border-color: var(--border); }
-        .photo.tall { aspect-ratio: 3 / 4; }
-        .photo.wide { aspect-ratio: 16 / 9; grid-column: span 2; }
-        @media (max-width: 640px) { .photo.wide { grid-column: span 1; } }
-
-        /* 占位图（等真图上线后替换成 <img>） */
-        .photo-placeholder {
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            font-family:'JetBrains Mono',monospace;
-            color: var(--text-mute);
-            letter-spacing: 0.15em; font-size: 0.7rem;
-            text-transform: uppercase;
-            background:
-                repeating-linear-gradient(45deg, rgba(252,233,79,0.03) 0 12px, transparent 12px 24px),
-                linear-gradient(135deg, rgba(15,18,26,0.9), rgba(22,26,38,0.9));
-            padding: 1rem; text-align: center;
-        }
-        .photo-placeholder .icon {
-            font-family:'Chakra Petch',sans-serif;
-            font-size: 1.6rem; color: var(--accent);
-            letter-spacing: 0.05em; margin-bottom: 0.5rem;
-        }
-        .photo-placeholder .meta { display: block; margin-top: 0.4rem; color: var(--accent-dim); }
-
-        .photo-caption {
-            position: absolute; left: 0; right: 0; bottom: 0;
-            padding: 0.6rem 0.8rem;
-            font-family:'JetBrains Mono',monospace;
-            font-size: 0.65rem; letter-spacing: 0.12em;
-            color: var(--text); text-transform: uppercase;
-            background: linear-gradient(0deg, rgba(5,7,13,0.9), transparent);
-            opacity: 0; transition: opacity 0.2s;
-        }
-        .photo:hover .photo-caption { opacity: 1; }
-
         .empty-state {
             padding: 3rem 1.5rem; text-align: center;
             border: 1px dashed var(--border-dim);
@@ -167,6 +105,8 @@
             .page { padding: 6rem 5vw 3rem; }
         }
     </style>
+    <link rel="stylesheet" href="site-system.css">
+    <script src="site-system.js"></script>
 </head>
 <body>
 
@@ -194,58 +134,35 @@
             <h1 class="page-title">Photos</h1>
             <p class="page-lede">
                 拍照对我而言更像<span class="accent">视觉版的笔记</span>——记录我看世界的角度、光线、构图习惯。
-                以手机为主，偶有胶片。分成<span class="accent">三个相册</span>：城市、人物剪影、日常物件。
-                <br><br>
-                真图正在慢慢上传，先用占位框标出即将出现的位置。
+                以手机为主，偶有胶片。这里先保留三个长期主题：<span class="accent">城市、人物剪影、日常物件</span>。
+                我宁愿让页面保持克制，也不拿占位框假装已经完成。
             </p>
         </header>
 
-        <section class="album">
-            <div class="album-head">
-                <span class="album-num">/ 01</span>
-                <h2 class="album-title">City · 城市</h2>
-                <span class="album-meta">// Philly · Ningbo · Taipei · Atlanta</span>
-            </div>
-            <div class="photo-grid">
-                <div class="photo wide"><div class="photo-placeholder"><span class="icon">▨</span>Philadelphia<span class="meta">// 30th st station, 2025</span></div><div class="photo-caption">// 30th street · 5pm rain</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Ningbo<span class="meta">// old town, 2024</span></div><div class="photo-caption">// 老城巷道</div></div>
-                <div class="photo tall"><div class="photo-placeholder"><span class="icon">▨</span>Taipei<span class="meta">// 101, 2024</span></div><div class="photo-caption">// 101 塔下的雨夜</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Atlanta<span class="meta">// Emory quad, 2023</span></div><div class="photo-caption">// Emory quad · fall</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Philadelphia<span class="meta">// UPenn, 2025</span></div><div class="photo-caption">// Locust walk, 9am</div></div>
-            </div>
-        </section>
-
-        <section class="album">
-            <div class="album-head">
-                <span class="album-num">/ 02</span>
-                <h2 class="album-title">People · 剪影</h2>
-                <span class="album-meta">// silhouettes only</span>
-            </div>
-            <div class="photo-grid">
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #01</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #02</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #03</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #04</div></div>
-            </div>
-        </section>
-
-        <section class="album">
-            <div class="album-head">
-                <span class="album-num">/ 03</span>
-                <h2 class="album-title">Objects · 日常物件</h2>
-                <span class="album-meta">// still life</span>
-            </div>
-            <div class="photo-grid">
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Coffee &amp; laptop<span class="meta">// morning grind</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Bookstore<span class="meta">// Center City</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Drum machine<span class="meta">// practice</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Windowlight<span class="meta">// noon</span></div></div>
-            </div>
+        <section class="photo-series-grid" aria-label="影像主题">
+            <article class="photo-series">
+                <span class="photo-series-num">/ 01</span>
+                <h2>城市不是地标</h2>
+                <p>费城、宁波、台北、亚特兰大。拍车站雨后的地面、旧城窄巷和人真正经过的地方，而不是明信片角度。</p>
+                <span class="photo-series-meta">City · Light · Movement</span>
+            </article>
+            <article class="photo-series">
+                <span class="photo-series-num">/ 02</span>
+                <h2>不打扰的肖像</h2>
+                <p>人背对镜头、走进光里，或者只留下影子。比起辨认是谁，我更在意一个人如何占据空间。</p>
+                <span class="photo-series-meta">People · Distance · Silhouette</span>
+            </article>
+            <article class="photo-series">
+                <span class="photo-series-num">/ 03</span>
+                <h2>桌面考古</h2>
+                <p>咖啡、鼓机、拆开的设备、写满批注的书。日常物件会泄露一个人真正把时间花在哪里。</p>
+                <span class="photo-series-meta">Objects · Workbench · Routine</span>
+            </article>
         </section>
 
         <div class="empty-state">
-            <span class="big">// 完整相册正在上线</span>
-            如果你想抢先看的一部分，来 Instagram: <a href="https://instagram.com/CKSF" target="_blank">@CKSF</a>
+            <span class="big">// Archive in progress</span>
+            真实照片整理好后才会出现在这里。在此之前，可以在 Instagram <a href="https://instagram.com/CKSF" target="_blank">@CKSF</a> 看零散更新。
         </div>
 
         <footer class="site-footer">
@@ -274,46 +191,35 @@
             <h1 class="page-title">Photos</h1>
             <p class="page-lede">
                 For me photography is more like <span class="accent">visual note-taking</span> — how I see the world, the light, the compositions I default to.
-                Mostly phone, occasional film. Three albums: <span class="accent">city, silhouettes, everyday objects</span>.
-                <br><br>
-                Real photos are being uploaded in waves — placeholders below mark upcoming slots.
+                Mostly phone, occasional film. This page holds three long-running themes:
+                <span class="accent">city, silhouettes, and everyday objects</span>. I would rather keep it quiet than pretend placeholders are a finished archive.
             </p>
         </header>
 
-        <section class="album">
-            <div class="album-head"><span class="album-num">/ 01</span><h2 class="album-title">City</h2><span class="album-meta">// Philly · Ningbo · Taipei · Atlanta</span></div>
-            <div class="photo-grid">
-                <div class="photo wide"><div class="photo-placeholder"><span class="icon">▨</span>Philadelphia<span class="meta">// 30th st station, 2025</span></div><div class="photo-caption">// 30th street · 5pm rain</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Ningbo<span class="meta">// old town, 2024</span></div></div>
-                <div class="photo tall"><div class="photo-placeholder"><span class="icon">▨</span>Taipei<span class="meta">// 101, 2024</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Atlanta<span class="meta">// Emory quad, 2023</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Philadelphia<span class="meta">// UPenn, 2025</span></div></div>
-            </div>
-        </section>
-
-        <section class="album">
-            <div class="album-head"><span class="album-num">/ 02</span><h2 class="album-title">People · Silhouettes</h2><span class="album-meta">// silhouettes only</span></div>
-            <div class="photo-grid">
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #01</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #02</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #03</div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Silhouette #04</div></div>
-            </div>
-        </section>
-
-        <section class="album">
-            <div class="album-head"><span class="album-num">/ 03</span><h2 class="album-title">Objects · Everyday</h2><span class="album-meta">// still life</span></div>
-            <div class="photo-grid">
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Coffee &amp; laptop<span class="meta">// morning grind</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Bookstore<span class="meta">// Center City</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Drum machine<span class="meta">// practice</span></div></div>
-                <div class="photo"><div class="photo-placeholder"><span class="icon">▨</span>Windowlight<span class="meta">// noon</span></div></div>
-            </div>
+        <section class="photo-series-grid" aria-label="Photo series">
+            <article class="photo-series">
+                <span class="photo-series-num">/ 01</span>
+                <h2>Cities are not landmarks</h2>
+                <p>Philadelphia, Ningbo, Taipei, Atlanta. Wet pavement outside stations, narrow old-town alleys, and places people actually pass through — not postcard angles.</p>
+                <span class="photo-series-meta">City · Light · Movement</span>
+            </article>
+            <article class="photo-series">
+                <span class="photo-series-num">/ 02</span>
+                <h2>Portraits without interruption</h2>
+                <p>People facing away, walking into light, or leaving only a shadow. I care less about who they are than how a person occupies space.</p>
+                <span class="photo-series-meta">People · Distance · Silhouette</span>
+            </article>
+            <article class="photo-series">
+                <span class="photo-series-num">/ 03</span>
+                <h2>Desktop archaeology</h2>
+                <p>Coffee, drum machines, opened devices, heavily annotated books. Everyday objects reveal where someone actually spends their time.</p>
+                <span class="photo-series-meta">Objects · Workbench · Routine</span>
+            </article>
         </section>
 
         <div class="empty-state">
-            <span class="big">// Full album on the way</span>
-            For an early peek, come to Instagram: <a href="https://instagram.com/CKSF" target="_blank">@CKSF</a>
+            <span class="big">// Archive in progress</span>
+            Real photographs will appear when the edit is ready. Until then, fragments live on Instagram <a href="https://instagram.com/CKSF" target="_blank">@CKSF</a>.
         </div>
 
         <footer class="site-footer">

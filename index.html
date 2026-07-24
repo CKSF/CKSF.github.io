@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tianning Feng · 冯天宁 // Home</title>
-    <meta name="description" content="冯天宁 (Tianning Feng) 的个人主页 — Research · Projects · Writing · Now · Reading · Listening · Photos · CV。UPenn CIS 硕士，Google PM 认证，PSB 2026 论文合作者。" />
+    <meta name="description" content="冯天宁 (Tianning Feng) 的个人主页 — ByteDance Agent 应用工程师，UPenn CIS 硕士，PSB 2026 共同第一作者。作品、研究、写作与生活记录。" />
     <meta property="og:title" content="Tianning Feng · Personal Site" />
     <meta property="og:description" content="Research · Projects · Writing · Now · Reading · Listening · Photos · CV — a small window into how I think and build." />
     <meta property="og:type" content="website" />
@@ -428,6 +428,8 @@
             .page { padding: 6rem 5vw 3rem; }
         }
     </style>
+    <link rel="stylesheet" href="site-system.css">
+    <script src="site-system.js"></script>
 </head>
 <body>
 
@@ -461,15 +463,17 @@
         <header class="hero">
             <span class="hero-eyebrow">/ 001 · Home</span>
             <h1 class="hero-title">冯天宁 · <span class="accent">Tianning Feng</span></h1>
-            <p class="hero-sub">// Product · Research · Systems · Life</p>
+            <p class="hero-sub">// Agent Engineering · Product · Research · Life</p>
             <p class="hero-lede">
-                2002 年生于宁波。Emory 本科 <span class="accent">CS + 心理学</span>，UPenn 硕士读 <span class="accent">ML × 系统</span>。
-                学术上以共同一作提出 <span class="accent">SeizureFormer</span>（PSB 2026 口头报告），并合作发表 EpiDHGNN；工程上在 Liba Space 主导过 LLM 产品功能，在思政智能体做过 RAG 教案平台，在 Emory 语言实验室搭过百 GB 级 ETL 流水线。拿了 Google PM 认证，目前也在找产品经理机会——但比求职更重要的是，我希望这个网站是我<span class="accent">思考与构建这个世界的痕迹</span>。打鼓、拍照、写字，都在下面。
+                我在字节跳动做 <span class="accent">Agent 应用工程</span>，为数据研发场景搭建一站式智能工作台；
+                同时在 UPenn 读计算机硕士，关注 <span class="accent">ML × 系统</span>。此前在 Emory 学过 CS 与心理学，
+                以共同第一作者完成了 SeizureFormer（PSB 2026 Oral）。这个网站不只是履历，
+                更是我如何<span class="accent">做产品、写系统、理解人</span>的持续记录。工作之外，我打鼓、拍照，也写一些还没想完的东西。
             </p>
-            <p class="hero-tail"><span class="arrow">↓</span> 挑一个你感兴趣的入口 · pick a lane</p>
+            <p class="hero-tail"><span class="arrow">↓</span> 从作品开始，或者随便逛逛</p>
             <a class="recruiter-hint" href="hire.html">
-                <span class="tag">Recruiter?</span>
-                <span>看 <b>正式求职版 →</b> 更聚焦 · 更快</span>
+                <span class="tag">Career</span>
+                <span>需要快速了解我的经历？<b>打开职业档案 →</b></span>
             </a>
         </header>
 
@@ -478,7 +482,7 @@
             <div class="l-section-head">
                 <span class="l-section-num">/ 002</span>
                 <h2 class="l-section-title">Launchpad</h2>
-                <span class="l-section-meta">// 8 lanes · pick one</span>
+                <span class="l-section-meta">// work first · life included</span>
             </div>
 
             <div class="launchpad">
@@ -527,7 +531,7 @@
                     </div>
                     <h3 class="cell-title">Now</h3>
                     <p class="cell-sub">// 我现在在做什么</p>
-                    <p class="cell-desc">受 <a href="https://nownownow.com" target="_blank" style="color:inherit;text-decoration:underline;">nownownow</a> 启发的动态页——最近在看、在写、在做的事。</p>
+                    <p class="cell-desc">受 nownownow 启发的动态页——最近在看、在写、在做的事。</p>
                     <span class="cell-arrow">进入 →</span>
                 </a>
 
@@ -568,14 +572,14 @@
                 </a>
 
                 <!-- 8. CV -->
-                <a class="cell" href="resume.html">
+                <a class="cell" href="hire.html">
                     <div class="cell-head">
                         <span class="cell-num">// 08</span>
                         <span class="cell-status live">Live</span>
                     </div>
                     <h3 class="cell-title">CV</h3>
-                    <p class="cell-sub">// 一页版简历</p>
-                    <p class="cell-desc">Google PM 认证 · 教育背景 · 三段工作 · 两段科研 · 三个独立项目。</p>
+                    <p class="cell-sub">// 职业档案</p>
+                    <p class="cell-desc">Agent 工程 · 产品经历 · 教育科研 · 代表项目，并支持 Paper 阅读与 PDF 导出。</p>
                     <span class="cell-arrow">进入 →</span>
                 </a>
 
@@ -613,15 +617,18 @@
         <header class="hero">
             <span class="hero-eyebrow">/ 001 · Home</span>
             <h1 class="hero-title">Tianning Feng · <span class="accent">冯天宁</span></h1>
-            <p class="hero-sub">// Product · Research · Systems · Life</p>
+            <p class="hero-sub">// Agent Engineering · Product · Research · Life</p>
             <p class="hero-lede">
-                Born 2002 in Ningbo, China. BA at Emory in <span class="accent">CS + Psychology</span>, now MS at UPenn in <span class="accent">ML × Systems</span>.
-                Academically I'm co-first author of <span class="accent">SeizureFormer</span> (PSB 2026 Oral) and a co-author on EpiDHGNN. In industry I led an LLM product feature at Liba Space, built a RAG-based lesson-planning platform for a gov-sponsored AI education project, and shipped a 100GB+ speech ETL pipeline for the Emory Language Biomarker Lab. Google PM certified and open to product roles — but more than that, I want this site to be the trace of <span class="accent">how I think and build in the world</span>. Drumming, photography, writing — they're all here.
+                I build <span class="accent">agent-powered tools for data engineers</span> at ByteDance and study
+                <span class="accent">ML × systems</span> at UPenn. Before that, I studied CS and psychology at Emory
+                and co-led SeizureFormer, presented orally at PSB 2026. This site is more than a résumé:
+                it is a living record of how I <span class="accent">build products, reason about systems, and understand people</span>.
+                Outside work, I drum, take photos, and write before the thought is fully settled.
             </p>
-            <p class="hero-tail"><span class="arrow">↓</span> pick a lane · 挑一个感兴趣的入口</p>
+            <p class="hero-tail"><span class="arrow">↓</span> start with the work, or wander</p>
             <a class="recruiter-hint" href="hire.html">
-                <span class="tag">Recruiter?</span>
-                <span>Skip the tour — <b>go to the formal career page →</b></span>
+                <span class="tag">Career</span>
+                <span>Need the concise version? <b>Open the career portfolio →</b></span>
             </a>
         </header>
 
@@ -629,7 +636,7 @@
             <div class="l-section-head">
                 <span class="l-section-num">/ 002</span>
                 <h2 class="l-section-title">Launchpad</h2>
-                <span class="l-section-meta">// 8 lanes · pick one</span>
+                <span class="l-section-meta">// work first · life included</span>
             </div>
 
             <div class="launchpad">
@@ -662,7 +669,7 @@
                     <div class="cell-head"><span class="cell-num">// 04</span><span class="cell-status live">Live</span></div>
                     <h3 class="cell-title">Now</h3>
                     <p class="cell-sub">// what I'm up to</p>
-                    <p class="cell-desc">A <a href="https://nownownow.com" target="_blank" style="color:inherit;text-decoration:underline;">nownownow</a>-style page — currently reading, writing, and shipping.</p>
+                    <p class="cell-desc">A nownownow-style page — currently reading, writing, and shipping.</p>
                     <span class="cell-arrow">Enter →</span>
                 </a>
 
@@ -690,11 +697,11 @@
                     <span class="cell-arrow">Enter →</span>
                 </a>
 
-                <a class="cell" href="resume.html">
+                <a class="cell" href="hire.html">
                     <div class="cell-head"><span class="cell-num">// 08</span><span class="cell-status live">Live</span></div>
                     <h3 class="cell-title">CV</h3>
-                    <p class="cell-sub">// one-pager</p>
-                    <p class="cell-desc">Google PM cert · education · 3 jobs · 2 labs · 3 independent projects.</p>
+                    <p class="cell-sub">// career portfolio</p>
+                    <p class="cell-desc">Agent engineering · product work · research · selected projects, with Paper mode and PDF export.</p>
                     <span class="cell-arrow">Enter →</span>
                 </a>
 
