@@ -8,7 +8,7 @@
         { key: "now", href: "now.html", zh: "现在", en: "Now", hint: "Current focus" },
         { key: "reading", href: "reading.html", zh: "书架", en: "Library", hint: "Reading & listening" },
         { key: "photos", href: "photos.html", zh: "影像", en: "Photos", hint: "Visual notes" },
-        { key: "hire", href: "hire.html", zh: "求职档案", en: "Hire", hint: "Career portfolio" }
+        { key: "hire", href: "hire.html", zh: "职业档案", en: "Career", hint: "Experience & career" }
     ];
 
     const path = location.pathname.split("/").pop() || "index.html";
@@ -34,11 +34,11 @@
     if (roomPages.has(path)) {
         const roomStyles = document.createElement("link");
         roomStyles.rel = "stylesheet";
-        roomStyles.href = "room-system.css?v=20260725-room6";
+        roomStyles.href = "room-system.css?v=20260725-room11";
         document.head.append(roomStyles);
 
         const roomScript = document.createElement("script");
-        roomScript.src = "room-system.js?v=20260725-room6";
+        roomScript.src = "room-system.js?v=20260725-room11";
         document.head.append(roomScript);
     }
 
@@ -59,7 +59,7 @@
 
         url.searchParams.delete("classic");
         if (document.documentElement.dataset.siteTheme === "paper") {
-            url.searchParams.set("theme", "paper");
+            url.searchParams.set("theme", "light");
         } else {
             url.searchParams.delete("theme");
         }
@@ -83,10 +83,10 @@
 
     function initialTheme() {
         const params = new URLSearchParams(location.search);
-        if (params.has("classic") || params.get("theme") === "classic" || params.get("theme") === "paper") {
+        if (params.has("classic") || params.get("theme") === "classic" || params.get("theme") === "paper" || params.get("theme") === "light") {
             return "paper";
         }
-        if (params.get("theme") === "signature") return "signature";
+        if (params.get("theme") === "signature" || params.get("theme") === "dark") return "signature";
         const saved = getStored("site-theme") || getStored("theme");
         if (saved === "paper" || saved === "classic") return "paper";
         if (saved === "signature") return "signature";
@@ -105,7 +105,7 @@
         if (updateUrl) {
             const url = new URL(location.href);
             url.searchParams.delete("classic");
-            if (normalized === "paper") url.searchParams.set("theme", "paper");
+            if (normalized === "paper") url.searchParams.set("theme", "light");
             else url.searchParams.delete("theme");
             history.replaceState(null, "", url);
         }
@@ -119,17 +119,19 @@
     function toggleTheme() {
         setTheme(document.documentElement.dataset.siteTheme === "paper" ? "signature" : "paper", true);
         toast(document.documentElement.dataset.siteTheme === "paper"
-            ? (lang() === "zh" ? "已切换到 Paper 阅读模式" : "Paper reading mode")
-            : (lang() === "zh" ? "已切换到 Signature 个性模式" : "Signature mode"));
+            ? (lang() === "zh" ? "已切换到浅色模式" : "Light mode")
+            : (lang() === "zh" ? "已切换到深色模式" : "Dark mode"));
     }
 
     function syncThemeControls() {
         document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
             const paper = document.documentElement.dataset.siteTheme === "paper";
-            button.textContent = paper ? "Dark" : "Paper";
+            button.textContent = paper
+                ? (lang() === "zh" ? "深色" : "Dark")
+                : (lang() === "zh" ? "浅色" : "Light");
             button.setAttribute("aria-label", paper
-                ? (lang() === "zh" ? "切换到个性深色主题" : "Switch to signature theme")
-                : (lang() === "zh" ? "切换到纸张阅读主题" : "Switch to paper theme"));
+                ? (lang() === "zh" ? "切换到深色模式" : "Switch to dark mode")
+                : (lang() === "zh" ? "切换到浅色模式" : "Switch to light mode"));
         });
     }
 
@@ -149,6 +151,14 @@
                 ? "跳转页面、切换主题、联系我…"
                 : "Navigate, change theme, contact…";
         }
+        const commandPanel = document.querySelector(".command-panel");
+        commandPanel?.setAttribute("aria-label", target === "zh" ? "快捷导航" : "Quick navigation");
+        const commandHint = document.querySelector(".command-hint");
+        if (commandHint) {
+            commandHint.innerHTML = target === "zh"
+                ? "<span><kbd>↑</kbd> <kbd>↓</kbd> 选择</span><span><kbd>Esc</kbd> 关闭</span>"
+                : "<span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span><span><kbd>Esc</kbd> Close</span>";
+        }
         setStored("lang", target);
         buildNavigation();
         renderCommands();
@@ -167,7 +177,7 @@
         nav.className = "global-nav";
         nav.setAttribute("aria-label", currentLang === "zh" ? "全站导航" : "Primary navigation");
 
-        const visibleRoutes = routes.filter((route) => route.key !== "home" && route.key !== "hire");
+        const visibleRoutes = routes.filter((route) => route.key !== "home");
         nav.innerHTML = `
             <div class="global-nav-inner">
                 <a class="global-brand" href="${themedHref("index.html")}" aria-label="${currentLang === "zh" ? "返回首页" : "Back home"}">
@@ -182,13 +192,9 @@
                     `).join("")}
                 </div>
                 <div class="global-actions">
-                    <button class="global-action command-trigger" type="button" data-command-open aria-label="${currentLang === "zh" ? "打开快捷导航" : "Open quick navigation"}">⌘K</button>
                     <button class="global-action" type="button" data-theme-toggle></button>
                     <button class="global-action" type="button" data-lang-toggle aria-label="${currentLang === "zh" ? "Switch to English" : "切换到中文"}">${currentLang === "zh" ? "EN" : "中"}</button>
-                    ${pageKey === "hire"
-                        ? `<a class="global-action hire" href="${themedHref("index.html")}">Personal</a>`
-                        : `<a class="global-action hire" href="${themedHref("hire.html")}">${currentLang === "zh" ? "求职版" : "Hire"}</a>`}
-                    <button class="global-action global-menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="global-links">Menu</button>
+                    <button class="global-action global-menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="global-links">${currentLang === "zh" ? "导航" : "Menu"}</button>
                 </div>
             </div>`;
 
@@ -202,7 +208,9 @@
         nav.querySelector("[data-menu-toggle]").addEventListener("click", (event) => {
             const open = nav.classList.toggle("menu-open");
             event.currentTarget.setAttribute("aria-expanded", String(open));
-            event.currentTarget.textContent = open ? "Close" : "Menu";
+            event.currentTarget.textContent = open
+                ? (currentLang === "zh" ? "关闭" : "Close")
+                : (currentLang === "zh" ? "导航" : "Menu");
         });
         syncThemeControls();
         syncInternalLinks();
@@ -278,7 +286,7 @@
             })),
             {
                 title: currentLang === "zh" ? "切换主题" : "Toggle theme",
-                hint: currentLang === "zh" ? "Signature / Paper" : "Signature / Paper",
+                hint: currentLang === "zh" ? "深色 / 浅色" : "Dark / Light",
                 action: toggleTheme
             },
             {
@@ -299,13 +307,13 @@
         backdrop.className = "command-backdrop";
         backdrop.setAttribute("aria-hidden", "true");
         backdrop.innerHTML = `
-            <section class="command-panel" role="dialog" aria-modal="true" aria-label="Quick navigation">
+            <section class="command-panel" role="dialog" aria-modal="true" aria-label="${lang() === "zh" ? "快捷导航" : "Quick navigation"}">
                 <div class="command-input-wrap">
                     <span>/</span>
                     <input class="command-input" type="search" autocomplete="off" spellcheck="false">
                 </div>
                 <div class="command-list" role="listbox"></div>
-                <div class="command-hint"><span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span><span><kbd>Esc</kbd> Close</span></div>
+                <div class="command-hint"><span><kbd>↑</kbd> <kbd>↓</kbd> ${lang() === "zh" ? "选择" : "Navigate"}</span><span><kbd>Esc</kbd> ${lang() === "zh" ? "关闭" : "Close"}</span></div>
             </section>`;
         document.body.append(backdrop);
 

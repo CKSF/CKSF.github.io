@@ -897,7 +897,7 @@
         }
     </style>
     <link rel="stylesheet" href="site-system.css">
-    <script src="site-system.js?v=20260725-room6"></script>
+    <script src="site-system.js?v=20260725-system5"></script>
 </head>
 <body>
 
@@ -905,13 +905,13 @@
         <div class="topbar-inner">
             <a href="index.html" class="brand">
                 <span class="dot"></span>Tianning.Feng
-                <span class="sub">// For Hire</span>
+                <span class="sub">// Career</span>
             </a>
             <div class="top-tools">
-                <button id="btn-theme" onclick="toggleTheme()" title="切换主题 · Toggle theme">Classic</button>
+                <button id="btn-theme" onclick="toggleTheme()" title="切换主题 · Toggle theme">Light</button>
                 <button id="btn-zh" class="lang active" onclick="showLang('zh')">ZH</button>
                 <button id="btn-en" class="lang" onclick="showLang('en')">EN</button>
-                <a href="index.html" title="Back to personal site">← Personal</a>
+                <a href="index.html" title="Back to website home">← Home</a>
             </div>
         </div>
     </div>
@@ -1283,13 +1283,13 @@
             <div class="cta-actions">
                 <a class="btn" href="mailto:cksamfeng@gmail.com?subject=[Hiring]%20Tianning%20Feng">写邮件 ↗</a>
                 <a class="btn ghost" href="#" onclick="printAsPdf(event)">导出 PDF</a>
-                <a class="btn ghost" href="index.html">看完整的我 →</a>
+                <a class="btn ghost" href="index.html">返回网站首页 →</a>
             </div>
         </div>
 
         <footer class="site-footer">
             <span>© 2025 Tianning Feng · Career Portfolio</span>
-            <span><a href="index.html">← Back to personal site</a></span>
+            <span><a href="index.html">← 返回网站首页</a></span>
         </footer>
     </div>
 
@@ -1646,13 +1646,13 @@
             <div class="cta-actions">
                 <a class="btn" href="mailto:cksamfeng@gmail.com?subject=[Hiring]%20Tianning%20Feng">Email me ↗</a>
                 <a class="btn ghost" href="#" onclick="printAsPdf(event)">Save as PDF</a>
-                <a class="btn ghost" href="index.html">See the full me →</a>
+                <a class="btn ghost" href="index.html">Back to website →</a>
             </div>
         </div>
 
         <footer class="site-footer">
             <span>© 2025 Tianning Feng · Career Portfolio</span>
-            <span><a href="index.html">← Back to personal site</a></span>
+            <span><a href="index.html">← Back to website home</a></span>
         </footer>
     </div>
 
@@ -1686,7 +1686,7 @@
         function syncThemeButton() {
             const btn = document.getElementById('btn-theme');
             if (!btn) return;
-            btn.textContent = currentTheme() === 'classic' ? 'Signature' : 'Classic';
+            btn.textContent = currentTheme() === 'classic' ? 'Dark' : 'Light';
         }
         function toggleTheme() {
             const next = currentTheme() === 'classic' ? 'signature' : 'classic';

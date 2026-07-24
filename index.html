@@ -13,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="site-system.css">
-    <link rel="stylesheet" href="city.css?v=20260725-world2">
-    <script src="site-system.js"></script>
-    <script type="module" src="city.js?v=20260725-world2"></script>
+    <link rel="stylesheet" href="city.css?v=20260725-realism1">
+    <script src="site-system.js?v=20260725-system5"></script>
+    <script type="module" src="city.js?v=20260725-touch1"></script>
 </head>
 <body class="city-home" data-home-mode="city">
     <main class="city-main" id="main-content">
@@ -38,10 +38,6 @@
                         <span data-copy-zh="开始城市导览" data-copy-en="Start city tour">开始城市导览</span>
                         <span class="city-button-key">ENTER</span>
                     </button>
-                    <a class="city-button" href="hire.html?from=city&amp;room=data">
-                        <span data-copy-zh="职业档案" data-copy-en="Career portfolio">职业档案</span>
-                        <span aria-hidden="true">↗</span>
-                    </a>
                 </div>
                 <div class="city-status" aria-label="Current status">
                     <span><b data-copy-zh="北京 / 费城" data-copy-en="Beijing / Philly">北京 / 费城</b><span data-copy-zh="当前坐标" data-copy-en="Location">当前坐标</span></span>
@@ -65,25 +61,29 @@
                 </div>
                 <div class="city-overlay-top">
                     <div class="city-mode-switch" aria-label="Homepage mode">
-                        <button class="active" type="button" data-home-mode="city">CITY</button>
-                        <button type="button" data-home-mode="index">INDEX</button>
+                        <button class="active" type="button" data-home-mode="city" data-copy-zh="城市" data-copy-en="CITY">城市</button>
+                        <button type="button" data-home-mode="index" data-copy-zh="索引" data-copy-en="INDEX">索引</button>
                     </div>
                     <button class="city-help" type="button" data-city-help aria-label="City controls">?</button>
                 </div>
                 <aside class="city-controls-panel" data-city-controls-panel role="dialog" aria-label="City controls" aria-hidden="true">
                     <div class="city-controls-head">
-                        <span>City controls</span>
+                        <span data-copy-zh="城市操作" data-copy-en="City controls">城市操作</span>
                         <button type="button" data-city-help-close aria-label="Close controls">×</button>
                     </div>
                     <dl>
-                        <div><dt>Drag</dt><dd data-copy-zh="旋转城市" data-copy-en="Rotate city">旋转城市</dd></div>
-                        <div><dt>Hover</dt><dd data-copy-zh="查看区域" data-copy-en="Inspect district">查看区域</dd></div>
-                        <div><dt>Click</dt><dd data-copy-zh="进入建筑" data-copy-en="Enter building">进入建筑</dd></div>
+                        <div><dt data-copy-zh="拖动" data-copy-en="Drag">拖动</dt><dd data-copy-zh="旋转城市" data-copy-en="Rotate city">旋转城市</dd></div>
+                        <div><dt data-copy-zh="悬停" data-copy-en="Hover">悬停</dt><dd data-copy-zh="查看区域" data-copy-en="Inspect district">查看区域</dd></div>
+                        <div><dt data-copy-zh="点击" data-copy-en="Click">点击</dt><dd data-copy-zh="进入建筑" data-copy-en="Enter building">进入建筑</dd></div>
                         <div><dt>I</dt><dd data-copy-zh="切换城市 / 索引" data-copy-en="Toggle city / index">切换城市 / 索引</dd></div>
                         <div><dt>⌘ K</dt><dd data-copy-zh="快速导航" data-copy-en="Quick navigation">快速导航</dd></div>
                     </dl>
                 </aside>
-                <p class="city-hint"><span>Drag</span> rotate · <span>Hover</span> inspect · <span>Click</span> enter</p>
+                <p class="city-hint"
+                   data-copy-zh="<span>拖动</span>旋转 · <span>悬停</span>查看 · <span>点击</span>进入"
+                   data-copy-en="<span>Drag</span> rotate · <span>Hover</span> inspect · <span>Click</span> enter">
+                    <span>拖动</span>旋转 · <span>悬停</span>查看 · <span>点击</span>进入
+                </p>
             </div>
         </section>
 
@@ -188,7 +188,7 @@
     <footer class="home-footer">
         <span>© 2026 Tianning Feng · City OS</span>
         <span>
-            <a href="mailto:cksamfeng@gmail.com">Email</a> ·
+            <a href="mailto:cksamfeng@gmail.com" data-copy-zh="邮件" data-copy-en="Email">邮件</a> ·
             <a href="https://github.com/CKSF" target="_blank">GitHub</a> ·
             <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn</a>
         </span>

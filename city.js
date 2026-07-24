@@ -138,16 +138,34 @@ const state = {
     mode: "city",
     language: document.documentElement.lang.startsWith("en") ? "en" : "zh",
     theme: document.documentElement.dataset.siteTheme || "signature",
+    compact: window.matchMedia("(max-width: 760px)").matches || new URLSearchParams(location.search).get("mobile") === "1",
     touring: false,
     tourTimer: null
 };
 
 function applyCopy() {
     state.language = document.documentElement.lang.startsWith("en") ? "en" : "zh";
+    const english = state.language === "en";
     document.querySelectorAll("[data-copy-zh]").forEach((node) => {
-        const value = node.dataset[state.language === "en" ? "copyEn" : "copyZh"];
+        const value = node.dataset[english ? "copyEn" : "copyZh"];
         if (value != null) node.innerHTML = value;
     });
+    document.querySelector(".city-mode-switch")?.setAttribute(
+        "aria-label",
+        english ? "Homepage mode" : "首页模式"
+    );
+    document.querySelector("[data-city-help]")?.setAttribute(
+        "aria-label",
+        english ? "City controls" : "城市操作"
+    );
+    document.querySelector("[data-city-controls-panel]")?.setAttribute(
+        "aria-label",
+        english ? "City controls" : "城市操作"
+    );
+    document.querySelector("[data-city-help-close]")?.setAttribute(
+        "aria-label",
+        english ? "Close controls" : "关闭操作说明"
+    );
 }
 
 function setHomeMode(mode) {
@@ -172,12 +190,13 @@ function setHomeMode(mode) {
 function themedHref(href, params = {}) {
     const url = new URL(href, location.href);
     Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
-    if (document.documentElement.dataset.siteTheme === "paper") url.searchParams.set("theme", "paper");
+    if (document.documentElement.dataset.siteTheme === "paper") url.searchParams.set("theme", "light");
     else url.searchParams.delete("theme");
     return `${url.pathname.split("/").pop()}${url.search}${url.hash}`;
 }
 
 function bindPageControls() {
+    document.body.dataset.mobileExperience = state.compact ? "compact" : "desktop";
     document.querySelectorAll("[data-home-mode]").forEach((button) => {
         button.addEventListener("click", () => setHomeMode(button.dataset.homeMode));
     });
@@ -186,7 +205,8 @@ function bindPageControls() {
     const savedMode = (() => {
         try { return localStorage.getItem("home-mode"); } catch (error) { return null; }
     })();
-    setHomeMode(requestedMode === "index" || (!requestedMode && savedMode === "index") ? "index" : "city");
+    const mobileDefault = state.compact && !requestedMode && !savedMode;
+    setHomeMode(requestedMode === "index" || (!requestedMode && savedMode === "index") || mobileDefault ? "index" : "city");
 
     const controlsPanel = document.querySelector("[data-city-controls-panel]");
     const setControlsOpen = (open) => {
@@ -197,6 +217,29 @@ function bindPageControls() {
         setControlsOpen(!controlsPanel?.classList.contains("open"));
     });
     document.querySelector("[data-city-help-close]")?.addEventListener("click", () => setControlsOpen(false));
+    if (state.compact && controlsPanel) {
+        const rows = controlsPanel.querySelectorAll("dl div");
+        if (rows[0]) rows[0].innerHTML = '<dt data-copy-zh="滑动" data-copy-en="Swipe">滑动</dt><dd data-copy-zh="旋转城市" data-copy-en="Rotate city">旋转城市</dd>';
+        if (rows[1]) rows[1].innerHTML = '<dt data-copy-zh="点按" data-copy-en="Tap">点按</dt><dd data-copy-zh="进入建筑" data-copy-en="Enter building">进入建筑</dd>';
+        if (rows[2]) rows[2].innerHTML = '<dt>INDEX</dt><dd data-copy-zh="打开快速索引" data-copy-en="Open fast navigation">打开快速索引</dd>';
+        rows[3]?.remove();
+        rows[4]?.remove();
+        const hint = document.querySelector(".city-hint");
+        if (hint) {
+            hint.dataset.copyZh = "<span>滑动</span>旋转 · <span>点按</span>进入";
+            hint.dataset.copyEn = "<span>Swipe</span> rotate · <span>Tap</span> enter";
+        }
+        const indexIntro = document.querySelector(".index-header p");
+        if (indexIntro) {
+            indexIntro.dataset.copyZh = "手机端默认使用快速索引，信息更集中、点击路径更短。也可以随时进入完整 3D 城市。";
+            indexIntro.dataset.copyEn = "Mobile opens with the fast index for shorter paths. The full 3D city remains one tap away.";
+        }
+        const cityButtonLabel = document.querySelector(".index-toolbar [data-home-mode='city'] span:first-child");
+        if (cityButtonLabel) {
+            cityButtonLabel.dataset.copyZh = "进入 3D 城市";
+            cityButtonLabel.dataset.copyEn = "Open 3D city";
+        }
+    }
 
     window.addEventListener("keydown", (event) => {
         if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
@@ -244,7 +287,7 @@ async function bootCity() {
     try {
         renderer = new THREE.WebGLRenderer({
             canvas,
-            antialias: window.devicePixelRatio <= 1.5,
+            antialias: !state.compact,
             alpha: true,
             powerPreference: "high-performance"
         });
@@ -252,8 +295,10 @@ async function bootCity() {
         viewport.classList.add("failed");
         return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, state.compact ? 1.25 : 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = state.theme === "paper" ? 1.08 : 1.16;
     renderer.shadowMap.enabled = window.innerWidth > 760;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -307,7 +352,7 @@ async function bootCity() {
             color: palette[state.theme][slot],
             roughness: options.roughness ?? 0.82,
             metalness: options.metalness ?? 0.04,
-            flatShading: options.flatShading ?? true,
+            flatShading: options.flatShading ?? false,
             transparent: options.transparent ?? false,
             opacity: options.opacity ?? 1
         });
@@ -316,18 +361,25 @@ async function bootCity() {
         return material;
     };
 
-    const matGround = makeMaterial("ground");
-    const matGroundTop = makeMaterial("groundTop");
-    const matBuilding = makeMaterial("building");
-    const matBuildingAlt = makeMaterial("buildingAlt");
-    const matRoof = makeMaterial("roof");
-    const matRoad = makeMaterial("road");
-    const matAccent = makeMaterial("accent", { metalness: 0.08 });
-    const matAccentSoft = makeMaterial("accentSoft");
-    const matCool = makeMaterial("cool");
-    const matPlant = makeMaterial("plant");
-    const matWindow = new THREE.MeshBasicMaterial({ color: palette[state.theme].window });
+    const matGround = makeMaterial("ground", { roughness: 0.98 });
+    const matGroundTop = makeMaterial("groundTop", { roughness: 0.9 });
+    const matBuilding = makeMaterial("building", { roughness: 0.58, metalness: 0.14 });
+    const matBuildingAlt = makeMaterial("buildingAlt", { roughness: 0.66, metalness: 0.1 });
+    const matRoof = makeMaterial("roof", { roughness: 0.46, metalness: 0.28 });
+    const matRoad = makeMaterial("road", { roughness: 0.94 });
+    const matAccent = makeMaterial("accent", { roughness: 0.3, metalness: 0.42 });
+    const matAccentSoft = makeMaterial("accentSoft", { roughness: 0.52, metalness: 0.2 });
+    const matCool = makeMaterial("cool", { roughness: 0.28, metalness: 0.24 });
+    const matPlant = makeMaterial("plant", { roughness: 0.84 });
+    const matWindow = new THREE.MeshStandardMaterial({
+        color: palette[state.theme].window,
+        emissive: palette[state.theme].window,
+        emissiveIntensity: state.theme === "paper" ? 0.18 : 2.8,
+        roughness: 0.24,
+        metalness: 0.12
+    });
     matWindow.userData.paletteSlot = "window";
+    matWindow.userData.emissivePaletteSlot = "window";
     dynamicMaterials.push(matWindow);
     const signboards = [];
 
@@ -400,16 +452,22 @@ async function bootCity() {
     const sun = new THREE.DirectionalLight(state.theme === "paper" ? 0xfff7e4 : 0xfff3ba, 3.2);
     sun.position.set(15, 30, 18);
     sun.castShadow = renderer.shadowMap.enabled;
-    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.mapSize.set(2048, 2048);
     sun.shadow.camera.left = -24;
     sun.shadow.camera.right = 24;
     sun.shadow.camera.top = 24;
     sun.shadow.camera.bottom = -24;
+    sun.shadow.bias = -0.00018;
+    sun.shadow.normalBias = 0.025;
+    sun.shadow.radius = 3;
     scene.add(sun);
 
     const fill = new THREE.PointLight(palette[state.theme].cool, 1.6, 42);
     fill.position.set(-14, 11, -8);
     scene.add(fill);
+    const rim = new THREE.DirectionalLight(palette[state.theme].cool, state.theme === "paper" ? 0.65 : 2.2);
+    rim.position.set(-18, 16, -20);
+    scene.add(rim);
 
     const groundBase = new THREE.Mesh(new THREE.BoxGeometry(36, 1.5, 36), matGround);
     groundBase.position.y = -0.8;
@@ -432,7 +490,7 @@ async function bootCity() {
     const outlineMaterial = new THREE.LineBasicMaterial({
         color: palette[state.theme].line,
         transparent: true,
-        opacity: state.theme === "paper" ? 0.5 : 0.34
+        opacity: state.theme === "paper" ? 0.22 : 0.08
     });
     outlineMaterial.userData.paletteSlot = "line";
     dynamicMaterials.push(outlineMaterial);
@@ -466,7 +524,7 @@ async function bootCity() {
         for (let index = 0; index < count; index++) {
             const offset = (index - (count - 1) / 2) * spread;
             detailBox(group, 0.72, 0.52, 0.9, material, centerX + offset, baseHeight + 0.26, centerZ);
-            const vent = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.42, 8), matAccentSoft);
+            const vent = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.42, 16), matAccentSoft);
             vent.position.set(centerX + offset, baseHeight + 0.72, centerZ);
             addOutline(vent);
             group.add(vent);
@@ -497,7 +555,7 @@ async function bootCity() {
         person.rotation.y = options.rotation ?? 0;
         const bodyHeight = options.seated ? 0.34 : 0.52;
         const body = box(0.18, bodyHeight, 0.16, options.material || matCool, 0, bodyHeight / 2, 0);
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.105, 7, 5), matGroundTop);
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.105, 16, 12), matGroundTop);
         head.position.y = bodyHeight + 0.1;
         head.userData.decorative = true;
         body.userData.decorative = true;
@@ -533,7 +591,7 @@ async function bootCity() {
 
     function addPlanter(group, x, y, z, scale = 1) {
         detailBox(group, 0.62 * scale, 0.24 * scale, 0.42 * scale, matCool, x, y, z);
-        const crown = new THREE.Mesh(new THREE.SphereGeometry(0.25 * scale, 7, 5), matPlant);
+        const crown = new THREE.Mesh(new THREE.SphereGeometry(0.25 * scale, 16, 12), matPlant);
         crown.position.set(x, y + 0.28 * scale, z);
         crown.userData.decorative = true;
         group.add(crown);
@@ -566,7 +624,7 @@ async function bootCity() {
         const group = new THREE.Group();
         group.position.set(x, 0.28, z);
         group.rotation.y = rotation;
-        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.075, 2.2, 7), matRoof);
+        const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.075, 2.2, 12), matRoof);
         pole.position.y = 1.1;
         const arm = box(0.62, 0.07, 0.07, matRoof, 0.25, 2.16, 0);
         const lamp = box(0.24, 0.14, 0.18, matWindow, 0.54, 2.08, 0);
@@ -614,7 +672,7 @@ async function bootCity() {
         paperLayer.add(person);
     });
 
-    const plaza = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.1, 12), matRoof);
+    const plaza = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.1, 32), matRoof);
     plaza.position.set(8.5, 0.29, 9.5);
     plaza.receiveShadow = true;
     paperLayer.add(plaza);
@@ -626,6 +684,12 @@ async function bootCity() {
 
     const interactiveMeshes = [];
     const districtGroups = [];
+    const interactionMaterial = new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0,
+        depthWrite: false
+    });
+    interactionMaterial.colorWrite = false;
 
     function addWindows(group, district, width, height, depth) {
         const rows = Math.max(2, Math.floor(height / 1.5));
@@ -738,7 +802,7 @@ async function bootCity() {
             main = box(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0);
             group.add(main);
             const dome = new THREE.Mesh(
-                new THREE.SphereGeometry(1.35, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2),
+                new THREE.SphereGeometry(1.35, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2),
                 matCool
             );
             dome.position.set(1.2, district.height + 0.55, 0);
@@ -750,7 +814,7 @@ async function bootCity() {
             detailBox(group, 3.2, 0.22, 0.7, matAccentSoft, -1, district.height + 0.72, 1.15);
             detailBox(group, 3.8, 0.12, 0.82, matGroundTop, 0.15, 0.88, district.depth / 2 + 0.72);
             for (let station = -1; station <= 1; station++) {
-                const vial = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.48, 10), station === 0 ? matAccent : matCool);
+                const vial = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.48, 16), station === 0 ? matAccent : matCool);
                 vial.position.set(station * 0.9, 1.18, district.depth / 2 + 0.72);
                 vial.userData.decorative = true;
                 group.add(vial);
@@ -760,7 +824,7 @@ async function bootCity() {
             const molecule = new THREE.Group();
             molecule.position.set(district.width / 2 + 0.55, 2.05, district.depth / 2 + 0.4);
             [[0, 0, 0], [0.42, 0.34, 0], [-0.38, 0.4, 0.1], [0.15, 0.76, -0.1]].forEach(([x, y, z], index) => {
-                const atom = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), index === 0 ? matAccent : matCool);
+                const atom = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 12), index === 0 ? matAccent : matCool);
                 atom.position.set(x, y, z);
                 atom.userData.decorative = true;
                 molecule.add(atom);
@@ -777,7 +841,7 @@ async function bootCity() {
                 group.add(tooth);
             }
             for (let index = -1; index <= 1; index++) {
-                const chimney = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 1.8 + index * 0.25, 8), matAccentSoft);
+                const chimney = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 1.8 + index * 0.25, 16), matAccentSoft);
                 chimney.position.set(index * 1.35, district.height + 1.3, -1.1);
                 addOutline(chimney);
                 group.add(chimney);
@@ -790,7 +854,7 @@ async function bootCity() {
             cargo.userData.craneCargo = true;
             detailBox(group, 3.8, 0.13, 0.85, matAccent, -0.35, 0.84, district.depth / 2 + 0.72);
             for (let part = 0; part < 4; part++) {
-                const component = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.26, 10), matRoof);
+                const component = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.26, 16), matRoof);
                 component.position.set(-1.55 + part * 0.62, 1.03, district.depth / 2 + 0.72);
                 component.userData.decorative = true;
                 group.add(component);
@@ -829,7 +893,7 @@ async function bootCity() {
             group.add(main);
             addAntenna(group, district.height + 0.55);
             const dish = new THREE.Mesh(
-                new THREE.SphereGeometry(1.15, 16, 8, 0, Math.PI * 2, 0, Math.PI / 3),
+                new THREE.SphereGeometry(1.15, 32, 16, 0, Math.PI * 2, 0, Math.PI / 3),
                 matCool
             );
             dish.scale.y = 0.28;
@@ -842,12 +906,12 @@ async function bootCity() {
             detailBox(group, 2.2, 1.08, 0.1, matCool, district.width / 2 + 1.25, 1.64, 0.98);
             detailBox(group, 1.75, 0.11, 0.52, matAccent, district.width / 2 + 1.25, 0.8, 1.36);
             addMiniPerson(group, district.width / 2 + 1.05, 1.42, { seated: true, rotation: Math.PI, material: matAccentSoft });
-            const record = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.07, 24), matRoof);
+            const record = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.07, 32), matRoof);
             record.rotation.x = Math.PI / 2;
             record.position.set(-district.width / 2 - 0.62, 0.82, district.depth / 2 + 0.6);
             record.userData.decorative = true;
             group.add(record);
-            const recordCenter = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.08, 12), matAccent);
+            const recordCenter = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.08, 20), matAccent);
             recordCenter.rotation.x = Math.PI / 2;
             recordCenter.position.set(-district.width / 2 - 0.62, 0.82, district.depth / 2 + 0.65);
             recordCenter.userData.decorative = true;
@@ -855,7 +919,7 @@ async function bootCity() {
         } else if (district.style === "photo") {
             main = box(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0);
             group.add(main);
-            const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.35, 16), matCool);
+            const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.35, 32), matCool);
             lens.rotation.x = Math.PI / 2;
             lens.position.set(0, district.height / 2 + 0.6, district.depth / 2 + 0.25);
             addOutline(lens);
@@ -895,7 +959,7 @@ async function bootCity() {
             const vault = new THREE.Mesh(new THREE.TorusGeometry(0.82, 0.16, 8, 24), matAccent);
             vault.position.set(0, 1.8, district.depth / 2 + 0.2);
             group.add(vault);
-            const vaultDoor = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 0.16, 20), matRoof);
+            const vaultDoor = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.66, 0.16, 32), matRoof);
             vaultDoor.rotation.x = Math.PI / 2;
             vaultDoor.position.set(0, 1.8, district.depth / 2 + 0.28);
             group.add(vaultDoor);
@@ -936,6 +1000,20 @@ async function bootCity() {
         addWindows(group, district, district.width, district.height, district.depth);
         addSignboard(group, district, district.style === "tower" ? 3.45 : 3.05);
 
+        const interactionPadding = state.compact ? 2.4 : 1.1;
+        const interactionHeight = district.height + (state.compact ? 4 : 2.2);
+        const interactionTarget = new THREE.Mesh(
+            new THREE.BoxGeometry(
+                district.width + interactionPadding,
+                interactionHeight,
+                district.depth + interactionPadding
+            ),
+            interactionMaterial
+        );
+        interactionTarget.position.y = interactionHeight / 2 + 0.1;
+        interactionTarget.userData.hitTarget = true;
+        group.add(interactionTarget);
+
         group.traverse((object) => {
             if (!object.isMesh || object.userData.decorative) return;
             object.userData.district = district;
@@ -959,7 +1037,8 @@ async function bootCity() {
             return (seed - 1) / 2147483646;
         };
     })();
-    for (let i = 0; i < 46; i++) {
+    const fillerBudget = state.compact ? 24 : 46;
+    for (let i = 0; i < fillerBudget; i++) {
         const x = -15 + random() * 30;
         const z = -15 + random() * 30;
         if (Math.abs(x) < 1.8 || Math.abs(z) < 1.8 || Math.abs(z - 9.8) < 1.4) continue;
@@ -991,7 +1070,7 @@ async function bootCity() {
     ];
     treePositions.forEach(([x, z], index) => {
         const trunk = box(0.16, 0.8, 0.16, treeTrunkMaterial, x, 0.6, z);
-        const top = new THREE.Mesh(new THREE.ConeGeometry(0.62 + (index % 3) * 0.08, 1.5, 5), treeTopMaterial);
+        const top = new THREE.Mesh(new THREE.ConeGeometry(0.62 + (index % 3) * 0.08, 1.5, 12), treeTopMaterial);
         top.position.set(x, 1.65, z);
         top.castShadow = renderer.shadowMap.enabled;
         paperLayer.add(trunk, top);
@@ -1083,7 +1162,7 @@ async function bootCity() {
         cyberLayer.add(flyer);
         return flyer;
     }
-    const flyingVehicles = Array.from({ length: 7 }, (_, index) => createFlyer(index));
+    const flyingVehicles = Array.from({ length: state.compact ? 4 : 7 }, (_, index) => createFlyer(index));
 
     function createDrone(index) {
         const drone = new THREE.Group();
@@ -1104,7 +1183,7 @@ async function bootCity() {
         cyberLayer.add(drone);
         return drone;
     }
-    const cyberDrones = Array.from({ length: 4 }, (_, index) => createDrone(index));
+    const cyberDrones = Array.from({ length: state.compact ? 2 : 4 }, (_, index) => createDrone(index));
 
     const holograms = [];
     [
@@ -1112,7 +1191,7 @@ async function bootCity() {
     ].forEach(([x, height, z], index) => {
         const hologram = new THREE.Group();
         hologram.position.set(x, 0.32, z);
-        const column = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, height, 6, 1, true), cyberGlass);
+        const column = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.8, height, 16, 1, true), cyberGlass);
         column.position.y = height / 2;
         const ring = new THREE.Mesh(new THREE.TorusGeometry(0.78, 0.035, 5, 20), cyberNeonMaterials[index % 3]);
         ring.rotation.x = Math.PI / 2;
@@ -1149,17 +1228,78 @@ async function bootCity() {
         cyberLayer.add(burst);
         return { burst, particles, flash, material, phase };
     }
-    const microBursts = [
-        createMicroBurst(new THREE.Vector3(6.6, 6.4, -5.2), 0),
-        createMicroBurst(new THREE.Vector3(-7.4, 8.1, -3.2), 1),
-        createMicroBurst(new THREE.Vector3(-0.8, 5.4, 0.8), 2)
+    const burstOrigins = [
+        new THREE.Vector3(6.6, 6.4, -5.2),
+        new THREE.Vector3(-7.4, 8.1, -3.2),
+        new THREE.Vector3(-0.8, 5.4, 0.8)
     ];
+    const microBursts = burstOrigins
+        .slice(0, state.compact ? 2 : 3)
+        .map((origin, index) => createMicroBurst(origin, index));
 
     const cyanGlow = new THREE.PointLight(0x21e6ff, 3.2, 30);
     cyanGlow.position.set(-8, 9, -5);
     const magentaGlow = new THREE.PointLight(0xff3fa4, 2.6, 28);
     magentaGlow.position.set(8, 7, 5);
     cyberLayer.add(cyanGlow, magentaGlow);
+
+    const focusTextureCanvas = document.createElement("canvas");
+    focusTextureCanvas.width = 256;
+    focusTextureCanvas.height = 256;
+    const focusContext = focusTextureCanvas.getContext("2d");
+    const focusGradient = focusContext.createRadialGradient(128, 128, 8, 128, 128, 128);
+    focusGradient.addColorStop(0, "rgba(246, 221, 71, 0.7)");
+    focusGradient.addColorStop(0.28, "rgba(104, 216, 232, 0.28)");
+    focusGradient.addColorStop(0.68, "rgba(104, 216, 232, 0.08)");
+    focusGradient.addColorStop(1, "rgba(104, 216, 232, 0)");
+    focusContext.fillStyle = focusGradient;
+    focusContext.fillRect(0, 0, 256, 256);
+    const focusTexture = new THREE.CanvasTexture(focusTextureCanvas);
+    focusTexture.colorSpace = THREE.SRGBColorSpace;
+    const focusAuraMaterial = new THREE.SpriteMaterial({
+        map: focusTexture,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    });
+    const focusAura = new THREE.Sprite(focusAuraMaterial);
+    focusAura.scale.set(0.1, 0.1, 1);
+    focusAura.renderOrder = 900;
+
+    const focusTarget = new THREE.Object3D();
+    const focusSpot = new THREE.SpotLight(0xf6e88a, 0, 38, 0.46, 0.94, 1.25);
+    focusSpot.position.set(0, 18, 0);
+    focusSpot.target = focusTarget;
+    focusSpot.castShadow = false;
+    const focusFill = new THREE.PointLight(0x68d8e8, 0, 14, 1.65);
+    cyberLayer.add(focusSpot, focusTarget, focusFill, focusAura);
+
+    function createCyberCitizen(index) {
+        const person = new THREE.Group();
+        const neon = cyberNeonMaterials[index % cyberNeonMaterials.length];
+        const body = box(0.22, 0.62, 0.18, matBuildingAlt, 0, 0.48, 0);
+        const coat = box(0.29, 0.34, 0.21, matRoof, 0, 0.36, 0);
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), matGroundTop);
+        head.position.y = 0.9;
+        const visor = box(0.22, 0.055, 0.04, neon, 0, 0.92, 0.12);
+        const leftLeg = box(0.07, 0.28, 0.08, matBuildingAlt, -0.065, 0.14, 0);
+        const rightLeg = box(0.07, 0.28, 0.08, matBuildingAlt, 0.065, 0.14, 0);
+        person.add(body, coat, head, visor, leftLeg, rightLeg);
+        person.userData.visor = visor;
+        person.userData.axis = index % 2 ? "z" : "x";
+        person.userData.lane = index % 4 < 2 ? 1.52 : -1.52;
+        person.userData.offset = index / (state.compact ? 7 : 12);
+        person.userData.direction = index % 3 ? 1 : -1;
+        person.userData.speed = 0.021 + (index % 4) * 0.003;
+        cyberLayer.add(person);
+        return person;
+    }
+    const cyberCitizens = Array.from(
+        { length: state.compact ? 7 : 12 },
+        (_, index) => createCyberCitizen(index)
+    );
 
     const paperVehicles = [car];
     const paperCarColors = [matAccent, matCool, matAccentSoft, matRoof];
@@ -1193,7 +1333,8 @@ async function bootCity() {
         person.userData.direction = index % 3 ? 1 : -1;
         person.userData.speed = 0.018 + (index % 4) * 0.003;
     });
-    for (let index = 0; index < 10; index++) {
+    const commuterBudget = state.compact ? 6 : 10;
+    for (let index = 0; index < commuterBudget; index++) {
         const axis = index % 2 ? "z" : "x";
         const lane = index % 4 < 2 ? 1.55 : -1.55;
         const commuter = addMiniPerson(paperLayer, 0, 0, {
@@ -1201,11 +1342,28 @@ async function bootCity() {
         });
         commuter.userData.axis = axis;
         commuter.userData.lane = lane;
-        commuter.userData.offset = index / 10;
+        commuter.userData.offset = index / commuterBudget;
         commuter.userData.direction = index % 3 ? 1 : -1;
         commuter.userData.speed = 0.017 + (index % 3) * 0.003;
         paperCommuters.push(commuter);
     }
+    const paperPlazaPeople = [
+        [7.45, 8.85, false, matAccent],
+        [8.05, 8.7, false, matCool],
+        [9.15, 9.0, true, matAccentSoft],
+        [9.8, 9.2, true, matCool],
+        [8.0, 10.35, false, matRoof],
+        [8.55, 10.55, false, matAccent]
+    ].map(([x, z, seated, material], index) => {
+        const person = addMiniPerson(paperLayer, x, z, {
+            seated,
+            rotation: index % 2 ? Math.PI * 0.35 : -Math.PI * 0.35,
+            material
+        });
+        person.userData.baseY = person.position.y;
+        person.userData.socialPhase = index * 0.9;
+        return person;
+    });
 
     [
         [-11.8, -11.5, 4.2, 2.2], [8.8, -10.8, 4.8, 2.1],
@@ -1214,7 +1372,7 @@ async function bootCity() {
         paperLayer.add(box(width, 0.06, depth, matPlant, x, 0.3, z));
         for (let tree = -1; tree <= 1; tree++) {
             const trunk = box(0.1, 0.72, 0.1, treeTrunkMaterial, x + tree * width * 0.26, 0.68, z);
-            const crown = new THREE.Mesh(new THREE.ConeGeometry(0.46, 1.1, 7), matPlant);
+            const crown = new THREE.Mesh(new THREE.ConeGeometry(0.46, 1.1, 12), matPlant);
             crown.position.set(x + tree * width * 0.26, 1.55, z);
             paperLayer.add(trunk, crown);
         }
@@ -1248,17 +1406,25 @@ async function bootCity() {
         paperLayer.add(bird);
         return bird;
     }
-    const paperBirds = Array.from({ length: 11 }, (_, index) => createBird(index));
+    const paperBirds = Array.from({ length: state.compact ? 7 : 11 }, (_, index) => createBird(index));
 
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2(10, 10);
     let hoveredGroup = null;
     let pointerMoved = false;
     let dragging = false;
+    let activePointerId = null;
     let dragStartX = 0;
+    let dragStartY = 0;
     let rotationStart = 0;
+    let lastTouchNavigation = 0;
     let targetRotation = world.rotation.y;
     let elapsed = 0;
+    let focusStrength = 0;
+    const focusAimPosition = new THREE.Vector3();
+    const focusLightPosition = new THREE.Vector3();
+    const focusAuraPosition = new THREE.Vector3();
+    const focusAuraScale = new THREE.Vector3(0.1, 0.1, 1);
 
     function pointerPosition(event) {
         const rect = canvas.getBoundingClientRect();
@@ -1267,15 +1433,43 @@ async function bootCity() {
         pointerMoved = true;
     }
 
+    function districtAtEvent(event) {
+        pointerPosition(event);
+        raycaster.setFromCamera(pointer, camera);
+        const hit = raycaster.intersectObjects(interactiveMeshes, false)[0];
+        pointerMoved = false;
+        return hit?.object.userData.districtGroup || null;
+    }
+
+    function eventHitsInterface(event) {
+        return Boolean(event.target.closest?.(".city-overlay-top, .city-controls-panel"));
+    }
+
+    function enterDistrict(selectedGroup, delay = 320) {
+        if (!selectedGroup || viewport.classList.contains("departing")) return;
+        hoveredGroup = selectedGroup;
+        updateTooltip(selectedGroup);
+        const district = selectedGroup.userData.district;
+        viewport.dataset.selectedDistrict = district.id;
+        viewport.classList.add("departing");
+        setTimeout(() => {
+            location.href = themedHref(district.href, { from: "city", room: district.id });
+        }, delay);
+    }
+
     viewport.addEventListener("pointerdown", (event) => {
+        if (!event.isPrimary || eventHitsInterface(event)) return;
         dragging = true;
+        activePointerId = event.pointerId;
         dragStartX = event.clientX;
+        dragStartY = event.clientY;
         rotationStart = targetRotation;
+        pointerPosition(event);
         viewport.setPointerCapture?.(event.pointerId);
     });
     viewport.addEventListener("pointermove", (event) => {
         pointerPosition(event);
-        if (dragging) {
+        if (dragging && event.pointerId === activePointerId) {
             const delta = event.clientX - dragStartX;
             targetRotation = rotationStart + delta * 0.006;
         }
@@ -1283,22 +1477,39 @@ async function bootCity() {
         tooltip.style.top = `${Math.min(event.clientY, innerHeight - 150)}px`;
     });
     viewport.addEventListener("pointerup", (event) => {
+        if (event.pointerId !== activePointerId) return;
+        const travel = Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY);
+        const isTouch = event.pointerType !== "mouse";
         dragging = false;
+        activePointerId = null;
+        viewport.releasePointerCapture?.(event.pointerId);
+        if (isTouch && travel <= 18 && !eventHitsInterface(event)) {
+            const selectedGroup = districtAtEvent(event);
+            if (selectedGroup) {
+                lastTouchNavigation = performance.now();
+                enterDistrict(selectedGroup, 240);
+            }
+        }
+    });
+    viewport.addEventListener("pointercancel", (event) => {
+        if (event.pointerId !== activePointerId) return;
+        dragging = false;
+        activePointerId = null;
         viewport.releasePointerCapture?.(event.pointerId);
     });
     viewport.addEventListener("pointerleave", () => {
         dragging = false;
+        activePointerId = null;
         pointer.set(10, 10);
         pointerMoved = true;
         tooltip.classList.remove("visible");
     });
     viewport.addEventListener("click", (event) => {
-        if (Math.abs(event.clientX - dragStartX) > 6 || !hoveredGroup) return;
-        const district = hoveredGroup.userData.district;
-        viewport.classList.add("departing");
-        setTimeout(() => {
-            location.href = themedHref(district.href, { from: "city", room: district.id });
-        }, 320);
+        if (eventHitsInterface(event) || performance.now() - lastTouchNavigation < 600) return;
+        const threshold = event.pointerType && event.pointerType !== "mouse" ? 18 : 8;
+        if (Math.hypot(event.clientX - dragStartX, event.clientY - dragStartY) > threshold) return;
+        const selectedGroup = districtAtEvent(event);
+        enterDistrict(selectedGroup);
     });
 
     function updateTooltip(group) {
@@ -1363,19 +1574,32 @@ async function bootCity() {
         const paperMode = state.theme === "paper";
         dynamicMaterials.forEach((material) => {
             material.color.setHex(colors[material.userData.paletteSlot]);
+            if (material.emissive && material.userData.emissivePaletteSlot) {
+                material.emissive.setHex(colors[material.userData.emissivePaletteSlot]);
+            }
         });
         roadLineMaterial.color.setHex(colors.line);
-        outlineMaterial.opacity = paperMode ? 0.5 : 0.34;
+        outlineMaterial.opacity = paperMode ? 0.22 : 0.08;
         scene.fog.color.setHex(colors.fog);
-        scene.fog.density = paperMode ? 0.012 : 0.023;
-        ambient.intensity = paperMode ? 2.5 : 1.15;
-        sun.intensity = paperMode ? 3.4 : 1.8;
+        scene.fog.density = paperMode ? 0.01 : 0.018;
+        ambient.intensity = paperMode ? 2.25 : 0.9;
+        sun.intensity = paperMode ? 3.2 : 3;
         sun.color.setHex(paperMode ? 0xfff7e4 : 0x9fb9ff);
         fill.color.setHex(colors.cool);
-        fill.intensity = paperMode ? 0.7 : 2.2;
+        fill.intensity = paperMode ? 0.55 : 4.2;
+        rim.color.setHex(paperMode ? 0x8c806f : colors.cool);
+        rim.intensity = paperMode ? 0.65 : 2.2;
+        matWindow.emissiveIntensity = paperMode ? 0.16 : 2.8;
+        renderer.toneMappingExposure = paperMode ? 1.08 : 1.16;
         cyberLayer.visible = !paperMode;
         paperLayer.visible = paperMode;
         document.body.dataset.cityWorld = paperMode ? "paper" : "cyber";
+        viewport.dataset.population = String(
+            paperMode
+                ? paperCommuters.length + paperPlazaPeople.length
+                : cyberCitizens.length
+        );
+        if (paperMode) viewport.dataset.focusedDistrict = "";
         renderer.setClearColor(colors.background, 0);
         signboards.forEach(drawSign);
     }
@@ -1460,6 +1684,21 @@ async function bootCity() {
             });
             cyanGlow.intensity = 2.7 + Math.sin(elapsed * 2.1) * 0.9;
             magentaGlow.intensity = 2.2 + Math.sin(elapsed * 1.7 + 1) * 0.8;
+            cyberCitizens.forEach((person, index) => {
+                const progress = (elapsed * person.userData.speed + person.userData.offset) % 1;
+                const travel = person.userData.direction > 0 ? progress : 1 - progress;
+                const position = -13.5 + travel * 27;
+                if (person.userData.axis === "x") {
+                    person.position.set(position, 0.3, person.userData.lane);
+                    person.rotation.y = person.userData.direction > 0 ? Math.PI / 2 : -Math.PI / 2;
+                } else {
+                    person.position.set(person.userData.lane, 0.3, position);
+                    person.rotation.y = person.userData.direction > 0 ? 0 : Math.PI;
+                }
+                person.position.y += Math.abs(Math.sin(elapsed * 4.6 + index)) * 0.04;
+                const visorPulse = 0.82 + Math.sin(elapsed * 3.4 + index * 0.7) * 0.18;
+                person.userData.visor.scale.x = visorPulse;
+            });
         } else {
             paperVehicles.forEach((vehicle) => {
                 const progress = (elapsed * vehicle.userData.speed + vehicle.userData.offset) % 1;
@@ -1485,6 +1724,11 @@ async function bootCity() {
                     person.position.z = position;
                 }
                 person.position.y = 0.3 + Math.abs(Math.sin(elapsed * 4 + index)) * 0.035;
+            });
+            paperPlazaPeople.forEach((person, index) => {
+                person.position.y = person.userData.baseY
+                    + Math.sin(elapsed * 1.2 + person.userData.socialPhase) * 0.018;
+                person.rotation.y += Math.sin(elapsed * 0.7 + index) * delta * 0.025;
             });
             paperBirds.forEach((bird, index) => {
                 const angle = elapsed * bird.userData.speed + bird.userData.phase;
@@ -1526,11 +1770,41 @@ async function bootCity() {
             const nextGroup = hit?.object.userData.districtGroup || null;
             if (nextGroup !== hoveredGroup) {
                 hoveredGroup = nextGroup;
+                viewport.dataset.focusedDistrict = hoveredGroup?.userData.district.id || "";
                 updateTooltip(hoveredGroup);
                 canvas.style.cursor = hoveredGroup ? "pointer" : "grab";
             }
             pointerMoved = false;
         }
+
+        const focusedDistrict = state.theme === "signature"
+            ? hoveredGroup?.userData.district
+            : null;
+        const focusTargetStrength = focusedDistrict ? 1 : 0;
+        const focusRate = focusedDistrict ? 4.2 : 2.2;
+        focusStrength += (focusTargetStrength - focusStrength) * (1 - Math.exp(-delta * focusRate));
+        if (focusedDistrict) {
+            const focusHeight = Math.max(3.2, focusedDistrict.height * 0.56);
+            focusAimPosition.set(focusedDistrict.x, focusHeight, focusedDistrict.z);
+            focusLightPosition.set(
+                focusedDistrict.x + 2.8,
+                focusedDistrict.height + 11,
+                focusedDistrict.z + 3.6
+            );
+            focusAuraPosition.set(focusedDistrict.x, focusHeight, focusedDistrict.z);
+            const auraWidth = Math.max(focusedDistrict.width, focusedDistrict.depth) * 2.8;
+            focusAuraScale.set(auraWidth, Math.max(7, focusedDistrict.height * 1.55), 1);
+            const follow = 1 - Math.exp(-delta * 5.2);
+            focusTarget.position.lerp(focusAimPosition, follow);
+            focusSpot.position.lerp(focusLightPosition, follow * 0.72);
+            focusFill.position.lerp(focusAimPosition, follow);
+            focusAura.position.lerp(focusAuraPosition, follow);
+            focusAura.scale.lerp(focusAuraScale, follow * 0.74);
+        }
+        focusSpot.intensity = focusStrength * 1992;
+        focusFill.intensity = focusStrength * 5.6;
+        focusAuraMaterial.opacity = focusStrength
+            * (0.3 + Math.sin(elapsed * 1.15) * 0.035);
 
         renderer.render(scene, camera);
     }

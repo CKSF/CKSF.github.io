@@ -66,13 +66,171 @@ html:not([data-site-theme="paper"]) body.room-page .page h3 {
     color: var(--site-ink);
 }
 
-html:not([data-site-theme="paper"]) body.room-page .page section,
-html:not([data-site-theme="paper"]) body.room-page .page article,
-html:not([data-site-theme="paper"]) body.room-page .page .card,
-html:not([data-site-theme="paper"]) body.room-page .page .entry,
-html:not([data-site-theme="paper"]) body.room-page .page .case {
-    background-color: color-mix(in srgb, var(--site-surface-strong) 88%, transparent);
-    border-color: var(--site-line);
+body.room-page .page :is(
+    .pub,
+    .project,
+    .proj,
+    .post,
+    .now-block,
+    .book,
+    .track,
+    .entry,
+    .case,
+    .photo-series
+) {
+    padding: clamp(1rem, 2vw, 1.35rem);
+    border: 1px solid var(--site-line);
+    border-left: 2px solid var(--room-accent);
+    border-radius: var(--site-radius);
+    background: var(--site-surface);
+    color: var(--site-ink);
+    box-shadow: none;
+    transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+body.room-page .page :is(
+    .pub,
+    .project,
+    .proj,
+    .post,
+    .now-block,
+    .book,
+    .track,
+    .entry,
+    .case,
+    .photo-series
+):hover {
+    transform: translateY(-2px);
+    border-color: var(--room-accent);
+    background: var(--site-surface-strong);
+}
+
+body.room-page .page :is(
+    .pub-title,
+    .project-title,
+    .proj-title,
+    .post-title,
+    .now-block-title,
+    .book-title,
+    .track-title,
+    .entry-title,
+    .case-title
+) {
+    color: var(--site-ink);
+    font-family: var(--site-display);
+}
+
+body.room-page .page :is(
+    .pub-abstract,
+    .project-desc,
+    .proj-desc,
+    .post-desc,
+    .now-block-desc,
+    .book-note,
+    .track-note,
+    .entry-sub,
+    .case-thesis
+) {
+    color: var(--site-ink-soft);
+}
+
+body.room-page .page :is(
+    .w-section,
+    .now-section,
+    .shelf,
+    .stack,
+    .album,
+    .card
+) {
+    margin-bottom: clamp(2.4rem, 6vw, 4rem);
+    background: transparent;
+}
+
+body.room-page .page :is(
+    .w-section-head,
+    .now-section-head,
+    .shelf-head,
+    .stack-head,
+    .album-head,
+    .sec-head
+) {
+    min-height: 46px;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--site-line);
+}
+
+body.room-page .page :is(.book-grid, .track-grid, .case-grid, .proj-grid) {
+    gap: 0.85rem;
+}
+
+body.room-page .page .proj {
+    clip-path: none;
+}
+
+body.room-page .page :is(
+    .pub-link,
+    .track-link,
+    .filter-btn,
+    .metric-chip,
+    .proj-stack .tag,
+    .post-tags .tag,
+    .now-block-tag,
+    .book-rating,
+    .case-tag,
+    .updated-stamp,
+    .tags .tag
+) {
+    border: 1px solid var(--site-line);
+    border-radius: var(--site-radius);
+    background: color-mix(in srgb, var(--site-ink) 4%, transparent);
+    color: var(--site-ink-soft) !important;
+    box-shadow: none;
+}
+
+body.room-page .page :is(
+    .pub-link,
+    .track-link,
+    .filter-btn,
+    .metric-chip,
+    .proj-stack .tag,
+    .post-tags .tag,
+    .now-block-tag,
+    .book-rating,
+    .case-tag,
+    .updated-stamp,
+    .tags .tag
+):hover {
+    border-color: var(--room-accent);
+    background: color-mix(in srgb, var(--room-accent) 10%, var(--site-surface));
+    color: var(--site-ink) !important;
+}
+
+body.room-page .page :is(.pub-tag, .now-badge, .tags .tag.hot) {
+    border: 1px solid var(--room-accent);
+    background: var(--room-accent);
+    color: var(--site-accent-ink) !important;
+    box-shadow: none;
+}
+
+body.room-page .page .pub-tag.review {
+    border-color: var(--room-secondary);
+    background: var(--room-secondary);
+}
+
+body.room-page .page .pub-tag.preprint {
+    border-color: var(--room-accent);
+    background: transparent;
+    color: var(--room-accent) !important;
+}
+
+body.room-page .page .filter-btn.active {
+    border-color: var(--room-accent);
+    background: color-mix(in srgb, var(--room-accent) 12%, var(--site-surface));
+    color: var(--room-accent) !important;
+}
+
+body.room-page .page :is(.book-rating, .updated-stamp) {
+    padding: 0.22rem 0.52rem;
 }
 
 .room-arrival {
@@ -726,13 +884,58 @@ body.room-arriving .room-shell {
 }
 
 @media (max-width: 640px) {
-    .room-copy { min-height: 54svh; padding: 3rem 1rem 1.5rem; }
-    .room-copy h1 { font-size: clamp(3.4rem, 18vw, 5.4rem); }
-    .room-stage { min-height: 58svh; }
+    .room-copy {
+        min-height: 43svh;
+        padding: 2.2rem 1rem 1.15rem;
+    }
+    .room-copy h1 {
+        margin-top: 0.8rem;
+        font-size: clamp(2.9rem, 14vw, 4.3rem);
+    }
+    .room-copy p {
+        margin-top: 1rem;
+        font-size: 0.92rem;
+        line-height: 1.58;
+    }
+    .room-copy-actions {
+        margin-top: 1.15rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .room-action {
+        min-height: 48px;
+        padding: 0.7rem 0.75rem;
+        justify-content: center;
+        font-size: 0.58rem;
+    }
+    .room-copy-meta {
+        margin-top: 1.15rem;
+        padding-top: 0.8rem;
+        justify-content: space-between;
+    }
+    .room-copy-meta span { font-size: 0.51rem; }
+    .room-stage {
+        min-height: max(410px, 54svh);
+        touch-action: pan-y;
+        border-top: 1px solid var(--site-line);
+    }
     .room-shell { width: 92%; }
-    .room-stage-label { right: 0.8rem; }
+    .room-stage-label {
+        right: 0.65rem;
+        bottom: 0.65rem;
+        padding: 0.42rem 0.5rem;
+        background: color-mix(in srgb, var(--site-bg) 82%, transparent);
+        backdrop-filter: blur(8px);
+        font-size: 0.5rem;
+    }
+    .room-rail { height: 48px; }
+    .room-rail a {
+        min-width: 48px;
+        padding: 0 0.8rem;
+    }
     .room-rail a span { display: none; }
     .room-rail-current { font-size: 0.54rem; }
+    .room-page > main.page { padding-top: 3rem !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

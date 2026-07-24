@@ -141,7 +141,7 @@
             url.searchParams.set("from", "room");
         }
         if (document.documentElement.dataset.siteTheme === "paper") {
-            url.searchParams.set("theme", "paper");
+            url.searchParams.set("theme", "light");
         } else {
             url.searchParams.delete("theme");
         }
@@ -162,7 +162,10 @@
         nodes.current.textContent = `${room.code} · ${en ? room.en : room.zh}`;
         nodes.statusLabel.textContent = en ? "Room status" : "房间状态";
         nodes.floorLabel.textContent = en ? "City floor" : "城市楼层";
-        nodes.stageLabel.textContent = en ? "Move cursor · inspect room" : "移动鼠标 · 查看房间";
+        const compact = window.matchMedia("(max-width: 760px)").matches || new URLSearchParams(location.search).get("mobile") === "1";
+        nodes.stageLabel.textContent = compact
+            ? (en ? "Swipe · inspect building" : "滑动 · 查看建筑")
+            : (en ? "Move cursor · inspect room" : "移动鼠标 · 查看房间");
         nodes.rail.setAttribute("aria-label", en ? "Room tour" : "房间导览");
     }
 
@@ -195,6 +198,7 @@
         };
         const themeName = () => document.documentElement.dataset.siteTheme === "paper" ? "paper" : "signature";
         let colors = palettes[themeName()];
+        const compact = window.matchMedia("(max-width: 760px)").matches || new URLSearchParams(location.search).get("mobile") === "1";
         const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(colors.bg);
@@ -207,11 +211,11 @@
 
         const renderer = new THREE.WebGLRenderer({
             canvas,
-            antialias: window.devicePixelRatio <= 1.5,
+            antialias: !compact && window.devicePixelRatio <= 1.5,
             alpha: true,
             powerPreference: "high-performance"
         });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1 : 1.5));
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.shadowMap.enabled = window.innerWidth > 760;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -620,6 +624,7 @@
             const rect = stage.getBoundingClientRect();
             renderer.setSize(rect.width, rect.height, false);
             camera.aspect = rect.width / rect.height;
+            camera.fov = compact ? (isTower ? 45 : 41) : 33;
             camera.updateProjectionMatrix();
         };
         resize();
