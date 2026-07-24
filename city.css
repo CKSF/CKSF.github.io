@@ -141,19 +141,6 @@ html[lang^="zh"] .city-title {
     font-size: 0.58rem;
 }
 
-.city-recruiter-note {
-    max-width: 520px;
-    margin: 0.75rem 0 0;
-    color: var(--site-ink-soft);
-    font: 500 0.68rem/1.55 var(--site-mono);
-}
-
-.city-recruiter-note::before {
-    content: "↳";
-    margin-right: 0.45rem;
-    color: var(--site-accent);
-}
-
 .city-status {
     margin-top: auto;
     padding-top: 2.5rem;
@@ -649,6 +636,92 @@ body[data-home-mode="index"] .city-index { display: block; }
 
 .home-footer a { color: var(--site-ink-soft); }
 
+.recruiter-prompt {
+    position: fixed;
+    right: 1.2rem;
+    bottom: calc(1.2rem + env(safe-area-inset-bottom));
+    z-index: 850;
+    width: min(360px, calc(100vw - 2.4rem));
+    padding: 1.15rem;
+    border: 1px solid var(--site-line-strong);
+    background: color-mix(in srgb, var(--site-surface-strong) 96%, transparent);
+    color: var(--site-ink);
+    box-shadow: var(--site-shadow);
+    backdrop-filter: blur(18px) saturate(130%);
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease;
+}
+
+.recruiter-prompt::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--site-accent);
+}
+
+.recruiter-prompt.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.recruiter-prompt.dismissed {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+    pointer-events: none;
+}
+
+.recruiter-prompt-close {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--site-line);
+    background: transparent;
+    color: var(--site-ink-soft);
+    font: 500 1rem/1 var(--site-mono);
+    cursor: pointer;
+}
+
+.recruiter-prompt-kicker {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--site-accent);
+    font: 600 0.58rem/1 var(--site-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.recruiter-prompt strong {
+    max-width: calc(100% - 44px);
+    display: block;
+    font: 650 1.2rem/1.2 var(--site-display);
+}
+
+.recruiter-prompt p {
+    margin: 0.65rem 0 0.9rem;
+    color: var(--site-ink-soft);
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.recruiter-prompt-link {
+    min-height: 42px;
+    padding: 0.7rem 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--site-accent);
+    background: var(--site-accent);
+    color: var(--site-accent-ink) !important;
+    font: 600 0.66rem/1 var(--site-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
 html[data-site-theme="paper"] .city-copy::after {
     background: linear-gradient(90deg, var(--site-bg) 0 73%, transparent);
 }
@@ -706,10 +779,6 @@ html[data-site-theme="paper"] .city-title .outline {
         font-size: 0.61rem;
     }
     .city-button-key { display: none; }
-    .city-recruiter-note {
-        margin-top: 0.65rem;
-        font-size: 0.62rem;
-    }
     .city-status {
         display: none;
     }
@@ -758,6 +827,14 @@ html[data-site-theme="paper"] .city-title .outline {
         opacity: 0;
         visibility: hidden;
     }
+    .recruiter-prompt {
+        right: 0.75rem;
+        bottom: calc(0.75rem + env(safe-area-inset-bottom));
+        width: calc(100vw - 1.5rem);
+        padding: 1rem;
+    }
+    .recruiter-prompt strong { font-size: 1.08rem; }
+    .recruiter-prompt p { font-size: 0.82rem; }
     .city-index {
         padding: 1.65rem 0.75rem calc(2rem + env(safe-area-inset-bottom));
     }

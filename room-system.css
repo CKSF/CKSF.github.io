@@ -1175,3 +1175,86 @@ body[data-room="darkroom"] .room-structure-core {
     border-radius: 50%;
     background: radial-gradient(circle at 36% 32%, var(--site-surface) 0 10%, var(--room-accent) 11% 18%, var(--site-bg) 19% 53%, var(--room-secondary) 54% 59%, var(--site-surface-strong) 60%);
 }
+
+/* Interactive model inspection */
+.room-stage.room-3d-ready {
+    cursor: grab;
+    user-select: none;
+}
+
+.room-stage.room-3d-ready.dragging {
+    cursor: grabbing;
+}
+
+.room-canvas {
+    touch-action: none;
+}
+
+.room-inspect-controls {
+    position: absolute;
+    z-index: 7;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.room-quality-badge {
+    min-height: 34px;
+    padding: 0 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--site-line);
+    background: color-mix(in srgb, var(--site-bg) 84%, transparent);
+    color: var(--site-muted);
+    backdrop-filter: blur(12px);
+    font: 600 0.5rem/1 var(--site-mono);
+    letter-spacing: 0.08em;
+}
+
+.room-inspect-controls button {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--site-line);
+    background: color-mix(in srgb, var(--site-bg) 88%, transparent);
+    color: var(--site-ink);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.room-inspect-controls button:hover {
+    border-color: var(--room-accent);
+    background: var(--site-surface-strong);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+    .room-stage {
+        touch-action: pan-y;
+    }
+
+    .room-canvas {
+        touch-action: none;
+    }
+
+    .room-inspect-controls {
+        top: 0.65rem;
+        right: 0.65rem;
+    }
+
+    .room-inspect-controls button {
+        width: 44px;
+        height: 44px;
+    }
+
+    .room-quality-badge {
+        min-height: 42px;
+        padding: 0 0.55rem;
+        font-size: 0.46rem;
+    }
+
+}

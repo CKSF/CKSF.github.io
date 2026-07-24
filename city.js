@@ -166,6 +166,18 @@ function applyCopy() {
         "aria-label",
         english ? "Close controls" : "关闭操作说明"
     );
+    document.querySelector("[data-recruiter-prompt-close]")?.setAttribute(
+        "aria-label",
+        english ? "Close recruiter prompt" : "关闭招聘入口"
+    );
+    document.querySelector(".city-status")?.setAttribute(
+        "aria-label",
+        english ? "Current status" : "当前状态"
+    );
+    document.querySelector(".city-tour-nav")?.setAttribute(
+        "aria-label",
+        english ? "Tour navigation" : "导览切换"
+    );
     document.querySelector("[data-city-tour-prev]")?.setAttribute(
         "aria-label",
         english ? "Previous building" : "上一栋建筑"
@@ -212,6 +224,33 @@ function themedHref(href, params = {}) {
 
 function bindPageControls() {
     document.body.dataset.mobileExperience = state.compact ? "compact" : "desktop";
+    const recruiterPrompt = document.querySelector("[data-recruiter-prompt]");
+    if (recruiterPrompt) {
+        const storageKey = "recruiter-prompt-dismissed-v1";
+        const dismissRecruiterPrompt = () => {
+            if (recruiterPrompt.classList.contains("dismissed")) return;
+            try { localStorage.setItem(storageKey, "1"); } catch (error) {}
+            recruiterPrompt.classList.remove("visible");
+            recruiterPrompt.classList.add("dismissed");
+            window.setTimeout(() => {
+                recruiterPrompt.hidden = true;
+                recruiterPrompt.setAttribute("aria-hidden", "true");
+            }, 240);
+        };
+        let dismissed = false;
+        try { dismissed = localStorage.getItem(storageKey) === "1"; } catch (error) {}
+        if (!dismissed) {
+            recruiterPrompt.hidden = false;
+            recruiterPrompt.removeAttribute("aria-hidden");
+            requestAnimationFrame(() => recruiterPrompt.classList.add("visible"));
+            document.addEventListener("click", dismissRecruiterPrompt, {
+                capture: true,
+                once: true
+            });
+            recruiterPrompt.querySelector("[data-recruiter-prompt-close]")
+                ?.addEventListener("click", dismissRecruiterPrompt);
+        }
+    }
     document.querySelectorAll("[data-home-mode]").forEach((button) => {
         button.addEventListener("click", () => setHomeMode(button.dataset.homeMode));
     });
@@ -236,7 +275,7 @@ function bindPageControls() {
         const rows = controlsPanel.querySelectorAll("dl div");
         if (rows[0]) rows[0].innerHTML = '<dt data-copy-zh="滑动" data-copy-en="Swipe">滑动</dt><dd data-copy-zh="旋转城市" data-copy-en="Rotate city">旋转城市</dd>';
         if (rows[1]) rows[1].innerHTML = '<dt data-copy-zh="点按" data-copy-en="Tap">点按</dt><dd data-copy-zh="进入建筑" data-copy-en="Enter building">进入建筑</dd>';
-        if (rows[2]) rows[2].innerHTML = '<dt>INDEX</dt><dd data-copy-zh="打开快速索引" data-copy-en="Open fast navigation">打开快速索引</dd>';
+        if (rows[2]) rows[2].innerHTML = '<dt data-copy-zh="索引" data-copy-en="INDEX">索引</dt><dd data-copy-zh="打开快速索引" data-copy-en="Open fast navigation">打开快速索引</dd>';
         rows[3]?.remove();
         rows[4]?.remove();
         const hint = document.querySelector(".city-hint");
@@ -302,15 +341,20 @@ async function bootCity() {
     try {
         renderer = new THREE.WebGLRenderer({
             canvas,
-            antialias: !state.compact,
+            antialias: true,
             alpha: true,
+            precision: "highp",
             powerPreference: "high-performance"
         });
     } catch (error) {
         viewport.classList.add("failed");
         return;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, state.compact ? 1.25 : 2));
+    const devicePixelRatio = window.devicePixelRatio || 1;
+    const renderScale = state.compact
+        ? Math.min(Math.max(devicePixelRatio, 1.25), 1.5)
+        : Math.min(Math.max(devicePixelRatio, 1.5), 2.5);
+    renderer.setPixelRatio(renderScale);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = state.theme === "paper" ? 1.08 : 1.16;
@@ -361,6 +405,104 @@ async function bootCity() {
         }
     };
 
+    function createBakedSurface(kind, repeatX, repeatY) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 512;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#f2f1ed";
+        context.fillRect(0, 0, 512, 512);
+
+        if (kind === "facade") {
+            context.strokeStyle = "rgba(92, 99, 108, 0.24)";
+            context.lineWidth = 3;
+            for (let x = 0; x <= 512; x += 128) {
+                context.beginPath();
+                context.moveTo(x, 0);
+                context.lineTo(x, 512);
+                context.stroke();
+            }
+            for (let y = 0; y <= 512; y += 86) {
+                context.beginPath();
+                context.moveTo(0, y);
+                context.lineTo(512, y);
+                context.stroke();
+            }
+            context.fillStyle = "rgba(48, 54, 62, 0.12)";
+            for (let row = 0; row < 6; row++) {
+                for (let column = 0; column < 4; column++) {
+                    const offset = ((row * 7 + column * 11) % 9) - 4;
+                    context.fillRect(column * 128 + 14, row * 86 + 66 + offset, 100, 5);
+                }
+            }
+        } else if (kind === "roof") {
+            context.strokeStyle = "rgba(70, 75, 82, 0.2)";
+            context.lineWidth = 2;
+            for (let line = 0; line <= 512; line += 64) {
+                context.strokeRect(line, 0, 64, 512);
+                context.strokeRect(0, line, 512, 64);
+            }
+            context.fillStyle = "rgba(48, 52, 58, 0.22)";
+            for (let y = 24; y < 512; y += 64) {
+                for (let x = 24; x < 512; x += 64) {
+                    context.beginPath();
+                    context.arc(x, y, 3, 0, Math.PI * 2);
+                    context.fill();
+                }
+            }
+        } else if (kind === "window") {
+            context.fillStyle = "#d9d8d2";
+            context.fillRect(0, 0, 512, 512);
+            for (let row = 0; row < 8; row++) {
+                const shade = 185 + (row % 3) * 18;
+                context.fillStyle = `rgb(${shade}, ${shade}, ${shade})`;
+                context.fillRect(0, row * 64 + 5, 512, 50);
+                context.fillStyle = "rgba(42, 46, 52, 0.3)";
+                context.fillRect(0, row * 64 + 54, 512, 4);
+            }
+            context.fillStyle = "rgba(255, 255, 255, 0.24)";
+            context.fillRect(46, 0, 18, 512);
+            context.fillRect(320, 0, 8, 512);
+        } else {
+            const image = context.getImageData(0, 0, 512, 512);
+            for (let i = 0; i < image.data.length; i += 4) {
+                const pixel = i / 4;
+                const x = pixel % 512;
+                const y = Math.floor(pixel / 512);
+                const noise = ((x * 19 + y * 37 + (x * y) % 31) % 25) - 12;
+                const value = 224 + noise;
+                image.data[i] = value;
+                image.data[i + 1] = value;
+                image.data[i + 2] = value;
+                image.data[i + 3] = 255;
+            }
+            context.putImageData(image, 0, 0);
+            context.strokeStyle = "rgba(80, 84, 90, 0.18)";
+            context.lineWidth = 2;
+            for (let seam = 0; seam < 512; seam += 128) {
+                context.beginPath();
+                context.moveTo(0, seam);
+                context.lineTo(512, seam + 18);
+                context.stroke();
+            }
+        }
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(repeatX, repeatY);
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        return texture;
+    }
+
+    const bakedSurfaces = {
+        facade: createBakedSurface("facade", 2, 3),
+        roof: createBakedSurface("roof", 3, 3),
+        ground: createBakedSurface("ground", 8, 8),
+        window: createBakedSurface("window", 1, 1)
+    };
+
     const dynamicMaterials = [];
     const makeMaterial = (slot, options = {}) => {
         const material = new THREE.MeshStandardMaterial({
@@ -369,19 +511,22 @@ async function bootCity() {
             metalness: options.metalness ?? 0.04,
             flatShading: options.flatShading ?? false,
             transparent: options.transparent ?? false,
-            opacity: options.opacity ?? 1
+            opacity: options.opacity ?? 1,
+            map: options.map || null,
+            bumpMap: options.bumpMap || null,
+            bumpScale: options.bumpScale ?? 0
         });
         material.userData.paletteSlot = slot;
         dynamicMaterials.push(material);
         return material;
     };
 
-    const matGround = makeMaterial("ground", { roughness: 0.98 });
-    const matGroundTop = makeMaterial("groundTop", { roughness: 0.9 });
-    const matBuilding = makeMaterial("building", { roughness: 0.58, metalness: 0.14 });
-    const matBuildingAlt = makeMaterial("buildingAlt", { roughness: 0.66, metalness: 0.1 });
-    const matRoof = makeMaterial("roof", { roughness: 0.46, metalness: 0.28 });
-    const matRoad = makeMaterial("road", { roughness: 0.94 });
+    const matGround = makeMaterial("ground", { roughness: 0.98, map: bakedSurfaces.ground, bumpMap: bakedSurfaces.ground, bumpScale: 0.018 });
+    const matGroundTop = makeMaterial("groundTop", { roughness: 0.9, map: bakedSurfaces.ground, bumpMap: bakedSurfaces.ground, bumpScale: 0.012 });
+    const matBuilding = makeMaterial("building", { roughness: 0.58, metalness: 0.14, map: bakedSurfaces.facade, bumpMap: bakedSurfaces.facade, bumpScale: 0.025 });
+    const matBuildingAlt = makeMaterial("buildingAlt", { roughness: 0.66, metalness: 0.1, map: bakedSurfaces.facade, bumpMap: bakedSurfaces.facade, bumpScale: 0.02 });
+    const matRoof = makeMaterial("roof", { roughness: 0.46, metalness: 0.28, map: bakedSurfaces.roof, bumpMap: bakedSurfaces.roof, bumpScale: 0.018 });
+    const matRoad = makeMaterial("road", { roughness: 0.94, map: bakedSurfaces.ground, bumpMap: bakedSurfaces.ground, bumpScale: 0.012 });
     const matAccent = makeMaterial("accent", { roughness: 0.3, metalness: 0.42 });
     const matAccentSoft = makeMaterial("accentSoft", { roughness: 0.52, metalness: 0.2 });
     const matCool = makeMaterial("cool", { roughness: 0.28, metalness: 0.24 });
@@ -390,6 +535,8 @@ async function bootCity() {
         color: palette[state.theme].window,
         emissive: palette[state.theme].window,
         emissiveIntensity: state.theme === "paper" ? 0.18 : 2.8,
+        map: bakedSurfaces.window,
+        emissiveMap: bakedSurfaces.window,
         roughness: 0.24,
         metalness: 0.12
     });
@@ -438,6 +585,7 @@ async function bootCity() {
         canvas.height = 128;
         const texture = new THREE.CanvasTexture(canvas);
         texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
         const material = new THREE.SpriteMaterial({
             map: texture,
             transparent: true,
@@ -460,14 +608,15 @@ async function bootCity() {
         return sign;
     }
 
-    scene.fog = new THREE.FogExp2(palette[state.theme].fog, 0.018);
+    scene.fog = new THREE.FogExp2(palette[state.theme].fog, state.theme === "paper" ? 0.008 : 0.014);
 
     const ambient = new THREE.HemisphereLight(0xdbe7ff, 0x141821, state.theme === "paper" ? 2.4 : 1.6);
     scene.add(ambient);
     const sun = new THREE.DirectionalLight(state.theme === "paper" ? 0xfff7e4 : 0xfff3ba, 3.2);
     sun.position.set(15, 30, 18);
     sun.castShadow = renderer.shadowMap.enabled;
-    sun.shadow.mapSize.set(2048, 2048);
+    const shadowMapSize = Math.min(state.compact ? 2048 : 4096, renderer.capabilities.maxTextureSize);
+    sun.shadow.mapSize.set(shadowMapSize, shadowMapSize);
     sun.shadow.camera.left = -24;
     sun.shadow.camera.right = 24;
     sun.shadow.camera.top = 24;
@@ -1629,7 +1778,7 @@ async function bootCity() {
         roadLineMaterial.color.setHex(colors.line);
         outlineMaterial.opacity = paperMode ? 0.22 : 0.08;
         scene.fog.color.setHex(colors.fog);
-        scene.fog.density = paperMode ? 0.01 : 0.018;
+        scene.fog.density = paperMode ? 0.008 : 0.014;
         ambient.intensity = paperMode ? 2.25 : 0.9;
         sun.intensity = paperMode ? 3.2 : 3;
         sun.color.setHex(paperMode ? 0xfff7e4 : 0x9fb9ff);

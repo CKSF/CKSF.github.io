@@ -23,6 +23,65 @@
         "resume.html": "hire",
         "hire.html": "hire"
     })[path] || "home";
+    const pageMetadata = {
+        home: {
+            zhTitle: "冯天宁的城市｜个人网站",
+            enTitle: "Tianning Feng's City | Portfolio",
+            zhDescription: "冯天宁的个人网站：Agent 工程、产品、研究、写作与生活记录。",
+            enDescription: "Tianning Feng's portfolio: agent engineering, products, research, writing, and life."
+        },
+        work: {
+            zhTitle: "作品与研究｜冯天宁",
+            enTitle: "Work & Research | Tianning Feng",
+            zhDescription: "冯天宁的论文、研究成果与工程项目。",
+            enDescription: "Publications, research, and engineering projects by Tianning Feng."
+        },
+        blog: {
+            zhTitle: "写作｜冯天宁",
+            enTitle: "Writing | Tianning Feng",
+            zhDescription: "关于技术、产品与心理学的长文。",
+            enDescription: "Long-form writing about technology, products, and psychology."
+        },
+        now: {
+            zhTitle: "现在｜冯天宁",
+            enTitle: "Now | Tianning Feng",
+            zhDescription: "冯天宁当前正在投入的工作、学习与思考。",
+            enDescription: "What Tianning Feng is currently working on, learning, and thinking about."
+        },
+        reading: {
+            zhTitle: "阅读｜冯天宁",
+            enTitle: "Reading | Tianning Feng",
+            zhDescription: "正在读、读完与计划阅读的书。",
+            enDescription: "Books currently reading, finished, and queued."
+        },
+        photos: {
+            zhTitle: "影像｜冯天宁",
+            enTitle: "Photos | Tianning Feng",
+            zhDescription: "城市、人物与日常物件的视觉笔记。",
+            enDescription: "Visual notes on cities, people, and everyday objects."
+        },
+        hire: {
+            zhTitle: "招聘档案｜冯天宁",
+            enTitle: "For Hire | Tianning Feng",
+            zhDescription: "冯天宁的求职方向、工作经历、项目、研究、论文与联系方式。",
+            enDescription: "Tianning Feng's objective, experience, projects, research, publications, and contact details."
+        }
+    };
+    if (path === "listening.html") {
+        pageMetadata.reading = {
+            zhTitle: "音乐与播客｜冯天宁",
+            enTitle: "Listening | Tianning Feng",
+            zhDescription: "编码、通勤与生活中的音乐和播客。",
+            enDescription: "Music and podcasts for coding, commuting, and everyday life."
+        };
+    } else if (path === "resume.html") {
+        pageMetadata.hire = {
+            zhTitle: "简历｜冯天宁",
+            enTitle: "Resume | Tianning Feng",
+            zhDescription: "冯天宁的一页式简历。",
+            enDescription: "Tianning Feng's one-page resume."
+        };
+    }
 
     const isHire = path === "hire.html";
     const lang = () => document.documentElement.lang.startsWith("en") ? "en" : "zh";
@@ -34,11 +93,11 @@
     if (roomPages.has(path)) {
         const roomStyles = document.createElement("link");
         roomStyles.rel = "stylesheet";
-        roomStyles.href = "room-system.css?v=20260725-room13";
+        roomStyles.href = "room-system.css?v=20260725-inspect2";
         document.head.append(roomStyles);
 
         const roomScript = document.createElement("script");
-        roomScript.src = "room-system.js?v=20260725-room13";
+        roomScript.src = "room-system.js?v=20260725-inspect2";
         document.head.append(roomScript);
     }
 
@@ -135,6 +194,17 @@
         });
     }
 
+    function syncDocumentMetadata(target) {
+        const metadata = pageMetadata[pageKey] || pageMetadata.home;
+        const english = target === "en";
+        const title = metadata[english ? "enTitle" : "zhTitle"];
+        const description = metadata[english ? "enDescription" : "zhDescription"];
+        document.title = title;
+        document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+        document.querySelector('meta[property="og:title"]')?.setAttribute("content", title);
+        document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
+    }
+
     function applyLanguage(next) {
         const target = next === "en" ? "en" : "zh";
         document.querySelectorAll(".lang-block").forEach((block) => {
@@ -159,6 +229,7 @@
                 ? "<span><kbd>↑</kbd> <kbd>↓</kbd> 选择</span><span><kbd>Esc</kbd> 关闭</span>"
                 : "<span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span><span><kbd>Esc</kbd> Close</span>";
         }
+        syncDocumentMetadata(target);
         setStored("lang", target);
         buildNavigation();
         renderCommands();
@@ -200,7 +271,7 @@
                         ${currentLang === "zh" ? "招聘" : "Hire"}
                     </a>
                     <button class="global-action" type="button" data-theme-toggle></button>
-                    <button class="global-action" type="button" data-lang-toggle aria-label="${currentLang === "zh" ? "Switch to English" : "切换到中文"}">${currentLang === "zh" ? "EN" : "中"}</button>
+                    <button class="global-action" type="button" data-lang-toggle aria-label="${currentLang === "zh" ? "切换到英文" : "Switch to Chinese"}">${currentLang === "zh" ? "EN" : "中"}</button>
                     <button class="global-action global-menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="global-links">${currentLang === "zh" ? "导航" : "Menu"}</button>
                 </div>
             </div>`;
@@ -420,10 +491,9 @@
 
     addEventListener("DOMContentLoaded", () => {
         const savedLanguage = getStored("lang");
-        if (savedLanguage === "en" || savedLanguage === "zh") applyLanguage(savedLanguage);
         addPageChrome();
-        buildNavigation();
         buildCommands();
+        applyLanguage(savedLanguage === "en" ? "en" : "zh");
         bindKeyboard();
     });
 })();
