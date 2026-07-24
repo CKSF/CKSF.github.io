@@ -26,6 +26,21 @@
 
     const isHire = path === "hire.html";
     const lang = () => document.documentElement.lang.startsWith("en") ? "en" : "zh";
+    const roomPages = new Set([
+        "hire.html", "work.html", "blog.html", "now.html",
+        "reading.html", "listening.html", "photos.html"
+    ]);
+
+    if (roomPages.has(path)) {
+        const roomStyles = document.createElement("link");
+        roomStyles.rel = "stylesheet";
+        roomStyles.href = "room-system.css?v=20260725-room6";
+        document.head.append(roomStyles);
+
+        const roomScript = document.createElement("script");
+        roomScript.src = "room-system.js?v=20260725-room6";
+        document.head.append(roomScript);
+    }
 
     function getStored(key) {
         try { return localStorage.getItem(key); } catch (error) { return null; }
@@ -96,6 +111,9 @@
         }
         syncThemeControls();
         syncInternalLinks();
+        window.dispatchEvent(new CustomEvent("site-theme-change", {
+            detail: { theme: normalized }
+        }));
     }
 
     function toggleTheme() {
@@ -135,6 +153,9 @@
         buildNavigation();
         renderCommands();
         syncThemeControls();
+        window.dispatchEvent(new CustomEvent("site-language-change", {
+            detail: { language: target }
+        }));
     }
 
     function buildNavigation() {

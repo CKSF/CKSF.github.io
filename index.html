@@ -3,827 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tianning Feng · 冯天宁 // Home</title>
-    <meta name="description" content="冯天宁 (Tianning Feng) 的个人主页 — ByteDance Agent 应用工程师，UPenn CIS 硕士，PSB 2026 共同第一作者。作品、研究、写作与生活记录。" />
-    <meta property="og:title" content="Tianning Feng · Personal Site" />
-    <meta property="og:description" content="Research · Projects · Writing · Now · Reading · Listening · Photos · CV — a small window into how I think and build." />
-    <meta property="og:type" content="website" />
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-void:    #05070d;
-            --bg-panel:   rgba(10, 14, 22, 0.72);
-            --accent:     #fce94f;
-            --accent-dim: #b8a634;
-            --cyan:       #24e0ff;
-            --magenta:    #ff003c;
-            --text:       #e5e7ee;
-            --text-mute:  #7d8494;
-            --border:     rgba(252, 233, 79, 0.35);
-            --border-dim: rgba(255, 255, 255, 0.08);
-        }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; background: #05070d; margin: 0; padding: 0; }
-        body {
-            margin: 0; padding: 0;
-            background: transparent;
-            color: var(--text);
-            font-family: 'Rajdhani', 'Chakra Petch', 'PingFang SC', -apple-system, sans-serif;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-            z-index: 0;
-        }
-        ::selection { background: var(--accent); color: #000; }
-        a { color: var(--accent); text-decoration: none; transition: color .15s; }
-        a:hover { color: #fff; }
-
-        /* ===== 背景层 ===== */
-        .matrix-rain {
-            position: fixed; inset: 0; z-index: -5;
-            width: 100%; height: 100%; display: block;
-            background: #05070d;
-        }
-        .bg-veil {
-            position: fixed; inset: 0; z-index: -4; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%);
-        }
-        .bg-grid {
-            position: fixed; inset: 0; z-index: -3; pointer-events: none;
-            background:
-                radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
-                radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%);
-        }
-        .bg-grid::before {
-            content: ''; position: absolute; inset: 0;
-            background-image:
-                linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
-            background-size: 64px 64px;
-            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-        }
-        .scanlines {
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px);
-        }
-        .noise {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            opacity: 0.05; mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-        }
-
-        /* ===== 导航 ===== */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 2rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
-            backdrop-filter: blur(6px);
-        }
-        .nav-brand {
-            color: var(--accent); font-weight: 500;
-            display: flex; align-items: center; gap: 0.6rem;
-        }
-        .nav-brand .dot {
-            width: 6px; height: 6px; background: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-            animation: pulse 2.4s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent); }
-            50% { opacity: 0.55; box-shadow: 0 0 3px var(--accent); }
-        }
-        .nav-status {
-            color: var(--text-mute);
-            display: none;
-            align-items: center; gap: 0.5rem;
-        }
-        @media (min-width: 640px) { .nav-status { display: flex; } }
-        .nav-status .live {
-            width: 6px; height: 6px; background: var(--cyan);
-            box-shadow: 0 0 8px var(--cyan);
-            animation: pulse 2.4s ease-in-out infinite;
-        }
-        .nav-lang { display: flex; gap: 0.4rem; }
-        .nav-lang button {
-            font-family: inherit; font-size: 0.7rem; letter-spacing: 0.2em;
-            padding: 0.35em 0.75em; background: transparent;
-            color: var(--text-mute); border: 1px solid var(--border-dim);
-            cursor: pointer; text-transform: uppercase; transition: all 0.15s;
-        }
-        .nav-lang button.active { color: var(--accent); border-color: var(--accent); }
-        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
-
-        /* Recruiter / For Hire 入口：明显但不喧宾夺主 */
-        .nav-hire {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            padding: 0.4em 0.9em;
-            color: #000;
-            background: var(--accent);
-            border: 1px solid var(--accent);
-            margin-right: 0.4rem;
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            transition: filter 0.15s, transform 0.15s;
-        }
-        .nav-hire:hover { color: #000; filter: brightness(1.08); transform: translateY(-1px); }
-        .nav-hire .dot-red {
-            width: 6px; height: 6px; background: #000;
-            display: inline-block;
-        }
-
-        /* Recruiter 快捷通道：hero-tail 下方的一行小提示 */
-        .recruiter-hint {
-            margin-top: 1.4rem;
-            padding: 0.7rem 1rem;
-            border: 1px dashed var(--border);
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-mute);
-            transition: color 0.15s, border-color 0.15s;
-        }
-        .recruiter-hint:hover { color: var(--accent); border-color: var(--accent); }
-        .recruiter-hint b { color: var(--accent); font-weight: 500; }
-        .recruiter-hint .tag {
-            padding: 0.15em 0.55em;
-            background: var(--accent);
-            color: #000;
-            font-weight: 700;
-        }
-
-        /* ===== 页面容器 + 中央蒙版 ===== */
-        .page {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 7rem 6vw 4rem;
-            position: relative;
-        }
-        .page::before {
-            content: '';
-            position: fixed;
-            top: 0; bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(1180px, 92%);
-            background: linear-gradient(90deg,
-                rgba(5,7,13,0)    0%,
-                rgba(5,7,13,0.85) 8%,
-                rgba(5,7,13,0.93) 50%,
-                rgba(5,7,13,0.85) 92%,
-                rgba(5,7,13,0)    100%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* ===== Hero ===== */
-        .hero {
-            padding-bottom: 3rem;
-            border-bottom: 1px solid var(--border-dim);
-            margin-bottom: 3rem;
-        }
-        .hero-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; letter-spacing: 0.3em;
-            color: var(--accent); text-transform: uppercase;
-            display: inline-block;
-            padding: 0.35em 0.9em;
-            border: 1px solid var(--border);
-            margin-bottom: 1.4rem;
-        }
-        .hero-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-size: clamp(2.6rem, 7vw, 4.6rem);
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            line-height: 1;
-            margin: 0 0 0.5rem;
-            text-transform: uppercase;
-        }
-        .hero-title .glitch {
-            display: inline-block;
-            position: relative;
-        }
-        .hero-title .accent { color: var(--accent); }
-        .hero-sub {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            letter-spacing: 0.2em;
-            color: var(--cyan);
-            text-transform: uppercase;
-            margin: 0 0 1.5rem;
-        }
-        .hero-lede {
-            font-size: 1.05rem;
-            line-height: 1.85;
-            color: #c8ccd6;
-            max-width: 780px;
-            margin: 0 0 1.6rem;
-        }
-        .hero-lede .accent { color: var(--accent); font-weight: 500; }
-        .hero-tail {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.18em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            margin: 0;
-        }
-        .hero-tail .arrow { color: var(--accent); margin-right: 0.4em; }
-
-        /* ===== Section head（复用 work.html 的 w-section） ===== */
-        .l-section-head {
-            display: flex; align-items: baseline; gap: 1rem;
-            margin-bottom: 1.8rem;
-            padding-bottom: 0.7rem;
-            border-bottom: 1px solid var(--border-dim);
-        }
-        .l-section-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem; color: var(--accent);
-            letter-spacing: 0.2em;
-        }
-        .l-section-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600; font-size: 1.5rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin: 0;
-        }
-        .l-section-meta {
-            margin-left: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-        }
-
-        /* ===== Launchpad 八宫格 ===== */
-        .launchpad {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 4rem;
-        }
-        @media (max-width: 960px) {
-            .launchpad { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 480px) {
-            .launchpad { grid-template-columns: 1fr; }
-        }
-        .cell {
-            display: flex; flex-direction: column;
-            padding: 1.4rem 1.3rem 1.2rem;
-            background: rgba(15, 18, 26, 0.55);
-            border: 1px solid var(--border-dim);
-            position: relative;
-            min-height: 170px;
-            transition: background 0.2s, border-color 0.2s, transform 0.2s;
-            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-            overflow: hidden;
-        }
-        .cell::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px; height: 100%;
-            background: var(--accent);
-            opacity: 0.4;
-            transition: opacity 0.2s;
-        }
-        .cell:hover {
-            background: rgba(22, 26, 38, 0.78);
-            border-color: var(--border);
-            transform: translateY(-3px);
-        }
-        .cell:hover::before { opacity: 1; }
-        .cell.disabled {
-            opacity: 0.55;
-            pointer-events: none;
-        }
-        .cell.disabled::before { background: var(--text-mute); opacity: 0.3; }
-        .cell-head {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 0.6rem;
-        }
-        .cell-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-        }
-        .cell-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 0.2em;
-            padding: 0.25em 0.55em;
-            border: 1px solid var(--border-dim);
-            color: var(--text-mute);
-            text-transform: uppercase;
-        }
-        .cell-status.live { color: var(--cyan); border-color: rgba(36, 224, 255, 0.4); }
-        .cell-status.soon { color: var(--accent-dim); border-color: rgba(184, 166, 52, 0.4); }
-        .cell-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 0.02em;
-            color: var(--text);
-            margin: 0 0 0.35rem;
-            line-height: 1.05;
-            text-transform: uppercase;
-        }
-        .cell:hover .cell-title { color: var(--accent); }
-        .cell-sub {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.18em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin: 0 0 0.7rem;
-        }
-        .cell-desc {
-            font-size: 0.88rem;
-            line-height: 1.55;
-            color: #b8bcc7;
-            margin: 0 0 0.9rem;
-            flex-grow: 1;
-        }
-        .cell-arrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-            text-transform: uppercase;
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            transition: transform 0.2s;
-        }
-        .cell:hover .cell-arrow { transform: translateX(3px); }
-
-        /* ===== 页脚（全站统一） ===== */
-        .site-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-dim);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: baseline;
-        }
-        @media (max-width: 640px) {
-            .footer-grid { grid-template-columns: 1fr; }
-        }
-        .footer-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 0.6rem;
-        }
-        .footer-links {
-            display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            letter-spacing: 0.05em;
-        }
-        .footer-links a {
-            color: var(--text);
-            border-bottom: 1px dashed transparent;
-            transition: color 0.15s, border-color 0.15s;
-        }
-        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-        .footer-links .sep { color: var(--text-mute); }
-        .footer-meta {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            text-align: right;
-            line-height: 1.8;
-        }
-        @media (max-width: 640px) {
-            .footer-meta { text-align: left; }
-        }
-
-        /* 语言块 */
-        .lang-block { display: none; }
-        .lang-block.active { display: block; }
-
-        @media (max-width: 820px) {
-            .nav { padding: 0.9rem 1.2rem; }
-            .page { padding: 6rem 5vw 3rem; }
-        }
-    </style>
+    <title>Tianning Feng · 冯天宁 // City OS</title>
+    <meta name="description" content="冯天宁 (Tianning Feng) 的数字城市：Agent 工程、产品、研究、写作与生活档案。">
+    <meta name="theme-color" content="#07090d">
+    <meta property="og:title" content="Tianning Feng · City OS">
+    <meta property="og:description" content="A spatial portfolio about agents, systems, research, and life.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="site-system.css">
+    <link rel="stylesheet" href="city.css?v=20260725-world2">
     <script src="site-system.js"></script>
+    <script type="module" src="city.js?v=20260725-world2"></script>
 </head>
-<body>
-
-    <canvas class="matrix-rain" id="matrixRain"></canvas>
-    <div class="bg-veil"></div>
-    <div class="bg-grid"></div>
-    <div class="scanlines"></div>
-    <div class="noise"></div>
-
-    <!-- NAV -->
-    <nav class="nav">
-        <a href="index.html" class="nav-brand"><span class="dot"></span>TIANNING.FENG</a>
-        <div class="nav-status">
-            <span class="live"></span><span id="nav-status-text">SYSTEM ONLINE // HOME</span>
-        </div>
-        <div class="nav-lang">
-            <a href="hire.html" class="nav-hire" title="Recruiter mode · 正式求职版"><span class="dot-red"></span>For Hire</a>
-            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
-            <button id="btn-en" onclick="showLang('en')">EN</button>
-        </div>
-    </nav>
-
-    <main class="page">
-
-    <!-- ============================================================
-         中文
-    ============================================================= -->
-    <div class="lang-block active" id="zh">
-
-        <!-- Hero -->
-        <header class="hero">
-            <span class="hero-eyebrow">/ 001 · Home</span>
-            <h1 class="hero-title">冯天宁 · <span class="accent">Tianning Feng</span></h1>
-            <p class="hero-sub">// Agent Engineering · Product · Research · Life</p>
-            <p class="hero-lede">
-                我在字节跳动做 <span class="accent">Agent 应用工程</span>，为数据研发场景搭建一站式智能工作台；
-                同时在 UPenn 读计算机硕士，关注 <span class="accent">ML × 系统</span>。此前在 Emory 学过 CS 与心理学，
-                以共同第一作者完成了 SeizureFormer（PSB 2026 Oral）。这个网站不只是履历，
-                更是我如何<span class="accent">做产品、写系统、理解人</span>的持续记录。工作之外，我打鼓、拍照，也写一些还没想完的东西。
-            </p>
-            <p class="hero-tail"><span class="arrow">↓</span> 从作品开始，或者随便逛逛</p>
-            <a class="recruiter-hint" href="hire.html">
-                <span class="tag">Career</span>
-                <span>需要快速了解我的经历？<b>打开职业档案 →</b></span>
-            </a>
-        </header>
-
-        <!-- Launchpad -->
-        <section>
-            <div class="l-section-head">
-                <span class="l-section-num">/ 002</span>
-                <h2 class="l-section-title">Launchpad</h2>
-                <span class="l-section-meta">// work first · life included</span>
+<body class="city-home" data-home-mode="city">
+    <main class="city-main" id="main-content">
+        <section class="city-hero" aria-labelledby="city-title">
+            <div class="city-copy">
+                <p class="city-kicker" data-copy-zh="个人系统 · 版本 2026.07" data-copy-en="Personal system · build 2026.07">
+                    个人系统 · 版本 2026.07
+                </p>
+                <h1 class="city-title" id="city-title">
+                    <span data-copy-zh="冯天宁" data-copy-en="Tianning">冯天宁</span>
+                    <span class="outline" data-copy-zh="的城市" data-copy-en="Feng's City">的城市</span>
+                </h1>
+                <p class="city-intro"
+                   data-copy-zh="我在字节跳动做 <strong>Agent 应用工程</strong>，在 UPenn 研究 ML 与系统。这座城市把工作、研究和生活放进同一个空间：每栋建筑都是一条真实路径。"
+                   data-copy-en="I build <strong>agent-powered tools</strong> at ByteDance and study ML × systems at UPenn. This city puts work, research, and life in one space: every building is a real path.">
+                    我在字节跳动做 <strong>Agent 应用工程</strong>，在 UPenn 研究 ML 与系统。这座城市把工作、研究和生活放进同一个空间：每栋建筑都是一条真实路径。
+                </p>
+                <div class="city-actions">
+                    <button class="city-button primary" type="button" data-city-tour>
+                        <span data-copy-zh="开始城市导览" data-copy-en="Start city tour">开始城市导览</span>
+                        <span class="city-button-key">ENTER</span>
+                    </button>
+                    <a class="city-button" href="hire.html?from=city&amp;room=data">
+                        <span data-copy-zh="职业档案" data-copy-en="Career portfolio">职业档案</span>
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                </div>
+                <div class="city-status" aria-label="Current status">
+                    <span><b data-copy-zh="北京 / 费城" data-copy-en="Beijing / Philly">北京 / 费城</b><span data-copy-zh="当前坐标" data-copy-en="Location">当前坐标</span></span>
+                    <span><b data-copy-zh="Agent 工程" data-copy-en="Agent Eng.">Agent 工程</b><span data-copy-zh="当前工作" data-copy-en="Current work">当前工作</span></span>
+                    <span><b data-copy-zh="可探索" data-copy-en="Explorable">可探索</b><span data-copy-zh="城市状态" data-copy-en="City status">城市状态</span></span>
+                </div>
             </div>
 
-            <div class="launchpad">
-
-                <!-- 1. Research -->
-                <a class="cell" href="work.html#publications">
-                    <div class="cell-head">
-                        <span class="cell-num">// 01</span>
-                        <span class="cell-status live">Live</span>
+            <div class="city-viewport" data-city-viewport>
+                <canvas class="city-canvas" data-city-canvas aria-hidden="true"></canvas>
+                <div class="city-loader" data-city-loader>
+                    <span data-copy-zh="正在生成城市" data-copy-en="Generating city">正在生成城市</span>
+                </div>
+                <div class="city-fallback">
+                    <div class="city-fallback-grid">
+                        <a href="hire.html?from=city&amp;room=data"><small>01 · Data Tower</small><span data-copy-zh="Agent 与职业档案" data-copy-en="Agent work & career">Agent 与职业档案</span></a>
+                        <a href="work.html?from=city&amp;room=lab#publications"><small>02 · Research Lab</small><span data-copy-zh="论文与研究" data-copy-en="Papers & research">论文与研究</span></a>
+                        <a href="work.html?from=city&amp;room=workshop#projects"><small>03 · Workshop</small><span data-copy-zh="项目与工程" data-copy-en="Projects & engineering">项目与工程</span></a>
+                        <a href="now.html?from=city&amp;room=apartment"><small>04 · Apartment</small><span data-copy-zh="现在与生活" data-copy-en="Now & life">现在与生活</span></a>
                     </div>
-                    <h3 class="cell-title">Research</h3>
-                    <p class="cell-sub">// 学术论文</p>
-                    <p class="cell-desc">共同一作 SeizureFormer（PSB 2026 Oral）+ 合作作者 EpiDHGNN。深度学习 · 临床 AI · 图学习。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 2. Projects -->
-                <a class="cell" href="work.html#projects">
-                    <div class="cell-head">
-                        <span class="cell-num">// 02</span>
-                        <span class="cell-status live">Live</span>
+                </div>
+                <div class="city-overlay-top">
+                    <div class="city-mode-switch" aria-label="Homepage mode">
+                        <button class="active" type="button" data-home-mode="city">CITY</button>
+                        <button type="button" data-home-mode="index">INDEX</button>
                     </div>
-                    <h3 class="cell-title">Projects</h3>
-                    <p class="cell-sub">// 工程作品</p>
-                    <p class="cell-desc">PhillyHome 200+ 用户 · OpenAPS 实时 PID &lt;100ms · Smart Home MongoDB Change Streams。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 3. Writing -->
-                <a class="cell" href="blog.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 03</span>
-                        <span class="cell-status soon">Growing</span>
+                    <button class="city-help" type="button" data-city-help aria-label="City controls">?</button>
+                </div>
+                <aside class="city-controls-panel" data-city-controls-panel role="dialog" aria-label="City controls" aria-hidden="true">
+                    <div class="city-controls-head">
+                        <span>City controls</span>
+                        <button type="button" data-city-help-close aria-label="Close controls">×</button>
                     </div>
-                    <h3 class="cell-title">Writing</h3>
-                    <p class="cell-sub">// 长文博客</p>
-                    <p class="cell-desc">技术、产品、心理三条支线。想通了才写下来——不写日报流水账。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 4. Now -->
-                <a class="cell" href="now.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 04</span>
-                        <span class="cell-status live">Live</span>
-                    </div>
-                    <h3 class="cell-title">Now</h3>
-                    <p class="cell-sub">// 我现在在做什么</p>
-                    <p class="cell-desc">受 nownownow 启发的动态页——最近在看、在写、在做的事。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 5. Reading -->
-                <a class="cell" href="reading.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 05</span>
-                        <span class="cell-status soon">Growing</span>
-                    </div>
-                    <h3 class="cell-title">Reading</h3>
-                    <p class="cell-sub">// 阅读收藏</p>
-                    <p class="cell-desc">在读 · 读完 · 想读。心理学、系统、产品思考、一点点小说。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 6. Listening -->
-                <a class="cell" href="listening.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 06</span>
-                        <span class="cell-status soon">Growing</span>
-                    </div>
-                    <h3 class="cell-title">Listening</h3>
-                    <p class="cell-sub">// 音乐 &amp; 播客</p>
-                    <p class="cell-desc">写代码时听的、开车时听的、鼓机练习时循环的。附上 playlist 链接。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 7. Photos -->
-                <a class="cell" href="photos.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 07</span>
-                        <span class="cell-status soon">Growing</span>
-                    </div>
-                    <h3 class="cell-title">Photos</h3>
-                    <p class="cell-sub">// 图像笔记</p>
-                    <p class="cell-desc">从费城到宁波，从台北到亚特兰大。手机随手拍 + 少量胶片。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
-                <!-- 8. CV -->
-                <a class="cell" href="hire.html">
-                    <div class="cell-head">
-                        <span class="cell-num">// 08</span>
-                        <span class="cell-status live">Live</span>
-                    </div>
-                    <h3 class="cell-title">CV</h3>
-                    <p class="cell-sub">// 职业档案</p>
-                    <p class="cell-desc">Agent 工程 · 产品经历 · 教育科研 · 代表项目，并支持 Paper 阅读与 PDF 导出。</p>
-                    <span class="cell-arrow">进入 →</span>
-                </a>
-
+                    <dl>
+                        <div><dt>Drag</dt><dd data-copy-zh="旋转城市" data-copy-en="Rotate city">旋转城市</dd></div>
+                        <div><dt>Hover</dt><dd data-copy-zh="查看区域" data-copy-en="Inspect district">查看区域</dd></div>
+                        <div><dt>Click</dt><dd data-copy-zh="进入建筑" data-copy-en="Enter building">进入建筑</dd></div>
+                        <div><dt>I</dt><dd data-copy-zh="切换城市 / 索引" data-copy-en="Toggle city / index">切换城市 / 索引</dd></div>
+                        <div><dt>⌘ K</dt><dd data-copy-zh="快速导航" data-copy-en="Quick navigation">快速导航</dd></div>
+                    </dl>
+                </aside>
+                <p class="city-hint"><span>Drag</span> rotate · <span>Hover</span> inspect · <span>Click</span> enter</p>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="footer-grid">
-                <div>
-                    <div class="footer-label">/ Contact · 联系我</div>
-                    <div class="footer-links">
-                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
-                        <span class="sep">·</span>
-                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
-                        <span class="sep">·</span>
-                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
-                        <span class="sep">·</span>
-                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
-                    </div>
-                </div>
-                <div class="footer-meta">
-                    // TIANNING.FENG · 2025<br>
-                    // BUILT WITH CARE
-                </div>
+        <section class="city-index" aria-labelledby="index-title">
+            <div class="index-header">
+                <h1 id="index-title" data-copy-zh="城市索引" data-copy-en="City Index">城市索引</h1>
+                <p data-copy-zh="不想探索 3D？这里是同一座城市的快速入口。职业信息优先，生活侧面仍然保留。"
+                   data-copy-en="Prefer speed over exploration? This is the same city as a direct index. Career information comes first; life remains part of the picture.">
+                    不想探索 3D？这里是同一座城市的快速入口。职业信息优先，生活侧面仍然保留。
+                </p>
             </div>
-        </footer>
-    </div>
-
-    <!-- ============================================================
-         English
-    ============================================================= -->
-    <div class="lang-block" id="en">
-
-        <header class="hero">
-            <span class="hero-eyebrow">/ 001 · Home</span>
-            <h1 class="hero-title">Tianning Feng · <span class="accent">冯天宁</span></h1>
-            <p class="hero-sub">// Agent Engineering · Product · Research · Life</p>
-            <p class="hero-lede">
-                I build <span class="accent">agent-powered tools for data engineers</span> at ByteDance and study
-                <span class="accent">ML × systems</span> at UPenn. Before that, I studied CS and psychology at Emory
-                and co-led SeizureFormer, presented orally at PSB 2026. This site is more than a résumé:
-                it is a living record of how I <span class="accent">build products, reason about systems, and understand people</span>.
-                Outside work, I drum, take photos, and write before the thought is fully settled.
-            </p>
-            <p class="hero-tail"><span class="arrow">↓</span> start with the work, or wander</p>
-            <a class="recruiter-hint" href="hire.html">
-                <span class="tag">Career</span>
-                <span>Need the concise version? <b>Open the career portfolio →</b></span>
-            </a>
-        </header>
-
-        <section>
-            <div class="l-section-head">
-                <span class="l-section-num">/ 002</span>
-                <h2 class="l-section-title">Launchpad</h2>
-                <span class="l-section-meta">// work first · life included</span>
+            <div class="index-toolbar">
+                <span data-copy-zh="08 个区域 · 一个系统" data-copy-en="08 districts · one system">08 个区域 · 一个系统</span>
+                <button class="city-button" type="button" data-home-mode="city">
+                    <span data-copy-zh="返回城市" data-copy-en="Return to city">返回城市</span>
+                    <span aria-hidden="true">↗</span>
+                </button>
             </div>
-
-            <div class="launchpad">
-
-                <a class="cell" href="work.html#publications">
-                    <div class="cell-head"><span class="cell-num">// 01</span><span class="cell-status live">Live</span></div>
-                    <h3 class="cell-title">Research</h3>
-                    <p class="cell-sub">// peer-reviewed</p>
-                    <p class="cell-desc">Co-first on SeizureFormer (PSB 2026 Oral) + co-author on EpiDHGNN. Deep learning · clinical AI · graph learning.</p>
-                    <span class="cell-arrow">Enter →</span>
+            <div class="district-grid">
+                <a class="district-card" href="hire.html?from=city&amp;room=data" data-code="01">
+                    <span class="district-card-num">01 · Data Tower</span>
+                    <h2 data-copy-zh="Agent 工程与职业档案" data-copy-en="Agent engineering & career">Agent 工程与职业档案</h2>
+                    <p data-copy-zh="数据研发 Agent、Skills / MCP、上下文治理，以及完整工作经历。"
+                       data-copy-en="Data-engineering agents, Skills / MCP, context governance, and my full professional record.">
+                        数据研发 Agent、Skills / MCP、上下文治理，以及完整工作经历。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="进入高塔 →" data-copy-en="Enter tower →">进入高塔 →</span>
                 </a>
-
-                <a class="cell" href="work.html#projects">
-                    <div class="cell-head"><span class="cell-num">// 02</span><span class="cell-status live">Live</span></div>
-                    <h3 class="cell-title">Projects</h3>
-                    <p class="cell-sub">// what I've built</p>
-                    <p class="cell-desc">PhillyHome 200+ users · OpenAPS real-time PID &lt;100ms · Smart Home MongoDB Change Streams.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="work.html?from=city&amp;room=lab#publications" data-code="02">
+                    <span class="district-card-num">02 · Research Lab</span>
+                    <h2 data-copy-zh="研究不是另一条支线" data-copy-en="Research is not a side quest">研究不是另一条支线</h2>
+                    <p data-copy-zh="SeizureFormer、EpiDHGNN，以及临床 AI 中如何把模型指标对齐真实问题。"
+                       data-copy-en="SeizureFormer, EpiDHGNN, and how clinical AI metrics connect to real problems.">
+                        SeizureFormer、EpiDHGNN，以及临床 AI 中如何把模型指标对齐真实问题。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="进入实验室 →" data-copy-en="Enter lab →">进入实验室 →</span>
                 </a>
-
-                <a class="cell" href="blog.html">
-                    <div class="cell-head"><span class="cell-num">// 03</span><span class="cell-status soon">Growing</span></div>
-                    <h3 class="cell-title">Writing</h3>
-                    <p class="cell-sub">// long-form</p>
-                    <p class="cell-desc">Tech, product, and a bit of psychology. Only writes when the thought is actually cooked.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="work.html?from=city&amp;room=workshop#projects" data-code="03">
+                    <span class="district-card-num">03 · Workshop</span>
+                    <h2 data-copy-zh="项目与工程" data-copy-en="Projects & engineering">项目与工程</h2>
+                    <p data-copy-zh="从数据产品、实时系统到独立项目，关注实际使用而不是 Demo。"
+                       data-copy-en="Data products, real-time systems, and independent builds designed for use, not demos.">
+                        从数据产品、实时系统到独立项目，关注实际使用而不是 Demo。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="打开工坊 →" data-copy-en="Open workshop →">打开工坊 →</span>
                 </a>
-
-                <a class="cell" href="now.html">
-                    <div class="cell-head"><span class="cell-num">// 04</span><span class="cell-status live">Live</span></div>
-                    <h3 class="cell-title">Now</h3>
-                    <p class="cell-sub">// what I'm up to</p>
-                    <p class="cell-desc">A nownownow-style page — currently reading, writing, and shipping.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="blog.html?from=city&amp;room=library" data-code="04">
+                    <span class="district-card-num">04 · Library</span>
+                    <h2 data-copy-zh="写作" data-copy-en="Writing">写作</h2>
+                    <p data-copy-zh="技术、产品和心理学。想清楚一部分，再公开剩下的问题。"
+                       data-copy-en="Technology, product, and psychology. Clarify part of the thought, then publish the remaining question.">
+                        技术、产品和心理学。想清楚一部分，再公开剩下的问题。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="进入图书馆 →" data-copy-en="Enter library →">进入图书馆 →</span>
                 </a>
-
-                <a class="cell" href="reading.html">
-                    <div class="cell-head"><span class="cell-num">// 05</span><span class="cell-status soon">Growing</span></div>
-                    <h3 class="cell-title">Reading</h3>
-                    <p class="cell-sub">// bookshelf</p>
-                    <p class="cell-desc">Reading · read · want to read. Psychology, systems, product thinking, occasional fiction.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="now.html?from=city&amp;room=apartment" data-code="05">
+                    <span class="district-card-num">05 · Apartment</span>
+                    <h2 data-copy-zh="现在" data-copy-en="Now">现在</h2>
+                    <p data-copy-zh="当前工作、正在学习的东西，以及还没有答案的问题。"
+                       data-copy-en="Current work, what I am learning, and questions that still have no answer.">
+                        当前工作、正在学习的东西，以及还没有答案的问题。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="上楼坐坐 →" data-copy-en="Come upstairs →">上楼坐坐 →</span>
                 </a>
-
-                <a class="cell" href="listening.html">
-                    <div class="cell-head"><span class="cell-num">// 06</span><span class="cell-status soon">Growing</span></div>
-                    <h3 class="cell-title">Listening</h3>
-                    <p class="cell-sub">// music &amp; podcasts</p>
-                    <p class="cell-desc">What I code to, drive to, and loop while practicing drum machines. Playlists included.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="reading.html?from=city&amp;room=archive" data-code="06">
+                    <span class="district-card-num">06 · Archive</span>
+                    <h2 data-copy-zh="阅读档案" data-copy-en="Reading archive">阅读档案</h2>
+                    <p data-copy-zh="不是完整书单，只保留真正改变过我判断方式的内容。"
+                       data-copy-en="Not a complete shelf, only the books that changed how I make judgments.">
+                        不是完整书单，只保留真正改变过我判断方式的内容。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="打开档案 →" data-copy-en="Open archive →">打开档案 →</span>
                 </a>
-
-                <a class="cell" href="photos.html">
-                    <div class="cell-head"><span class="cell-num">// 07</span><span class="cell-status soon">Growing</span></div>
-                    <h3 class="cell-title">Photos</h3>
-                    <p class="cell-sub">// visual notes</p>
-                    <p class="cell-desc">From Philly to Ningbo, from Taipei to Atlanta. Mostly phone, some film.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="listening.html?from=city&amp;room=radio" data-code="07">
+                    <span class="district-card-num">07 · Radio Station</span>
+                    <h2 data-copy-zh="正在播放" data-copy-en="Now playing">正在播放</h2>
+                    <p data-copy-zh="写代码、开车和练鼓时的声音环境。"
+                       data-copy-en="The sound environment for coding, driving, and drum practice.">
+                        写代码、开车和练鼓时的声音环境。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="调到这个频道 →" data-copy-en="Tune in →">调到这个频道 →</span>
                 </a>
-
-                <a class="cell" href="hire.html">
-                    <div class="cell-head"><span class="cell-num">// 08</span><span class="cell-status live">Live</span></div>
-                    <h3 class="cell-title">CV</h3>
-                    <p class="cell-sub">// career portfolio</p>
-                    <p class="cell-desc">Agent engineering · product work · research · selected projects, with Paper mode and PDF export.</p>
-                    <span class="cell-arrow">Enter →</span>
+                <a class="district-card" href="photos.html?from=city&amp;room=darkroom" data-code="08">
+                    <span class="district-card-num">08 · Photo Booth</span>
+                    <h2 data-copy-zh="视觉笔记" data-copy-en="Visual notes">视觉笔记</h2>
+                    <p data-copy-zh="城市、剪影和桌面考古。照片只在真正整理好后出现。"
+                       data-copy-en="Cities, silhouettes, and desktop archaeology. Photos appear only after the edit is ready.">
+                        城市、剪影和桌面考古。照片只在真正整理好后出现。
+                    </p>
+                    <span class="district-card-arrow" data-copy-zh="进入暗房 →" data-copy-en="Enter darkroom →">进入暗房 →</span>
                 </a>
-
             </div>
         </section>
-
-        <footer class="site-footer">
-            <div class="footer-grid">
-                <div>
-                    <div class="footer-label">/ Contact</div>
-                    <div class="footer-links">
-                        <a href="mailto:1796377690@qq.com">1796377690@qq.com</a>
-                        <span class="sep">·</span>
-                        <a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a>
-                        <span class="sep">·</span>
-                        <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn: CKSF</a>
-                        <span class="sep">·</span>
-                        <a href="https://instagram.com/CKSF" target="_blank">Instagram: CKSF</a>
-                    </div>
-                </div>
-                <div class="footer-meta">
-                    // TIANNING.FENG · 2025<br>
-                    // BUILT WITH CARE
-                </div>
-            </div>
-        </footer>
-    </div>
-
     </main>
 
-    <script>
-        /* ================================================
-           Matrix 数字雨（全站一致）
-           ================================================ */
-        (function initMatrixRain() {
-            const canvas = document.getElementById('matrixRain');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d', { alpha: false });
-            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
-            const FONT_SIZE = 15;
-            let cols = 0, drops = [], speeds = [], leaders = [];
-            function resize() {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                canvas.width  = Math.floor(window.innerWidth  * dpr);
-                canvas.height = Math.floor(window.innerHeight * dpr);
-                canvas.style.width  = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                cols = Math.floor(window.innerWidth / FONT_SIZE);
-                drops   = new Array(cols).fill(0).map(() => Math.random() * -50);
-                speeds  = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
-                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
-            }
-            resize();
-            window.addEventListener('resize', resize);
-            const COLOR_TRAIL='rgba(180,160,40,0.75)', COLOR_MID='rgba(252,233,79,0.85)',
-                  COLOR_LEADER='rgba(255,255,220,1)', COLOR_CYAN='rgba(36,224,255,0.9)';
-            function draw() {
-                ctx.fillStyle = 'rgba(5,7,13,0.08)';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
-                ctx.textBaseline = 'top';
-                for (let i = 0; i < cols; i++) {
-                    const x = i * FONT_SIZE, y = drops[i] * FONT_SIZE;
-                    if (Math.random() < 0.02) leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
-                    ctx.fillText(leaders[i], x, y);
-                    ctx.fillStyle = COLOR_MID;
-                    for (let k = 1; k <= 3; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    ctx.fillStyle = COLOR_TRAIL;
-                    for (let k = 4; k <= 8; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    drops[i] += speeds[i];
-                    if (y > window.innerHeight && Math.random() > 0.985) {
-                        drops[i] = Math.random() * -20;
-                        speeds[i] = 0.12 + Math.random() * 0.28;
-                    }
-                }
-                requestAnimationFrame(draw);
-            }
-            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                ctx.fillStyle = '#05070d';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-            } else { requestAnimationFrame(draw); }
-        })();
+    <div class="city-tooltip" data-city-tooltip role="status">
+        <span class="city-tooltip-num"></span>
+        <strong></strong>
+        <span></span>
+    </div>
 
-        /* 语言切换 */
-        function showLang(lang) {
-            const zh = document.getElementById('zh');
-            const en = document.getElementById('en');
-            const bZ = document.getElementById('btn-zh');
-            const bE = document.getElementById('btn-en');
-            if (lang === 'zh') {
-                zh.classList.add('active'); en.classList.remove('active');
-                bZ.classList.add('active'); bE.classList.remove('active');
-                document.documentElement.lang = 'zh-CN';
-            } else {
-                en.classList.add('active'); zh.classList.remove('active');
-                bE.classList.add('active'); bZ.classList.remove('active');
-                document.documentElement.lang = 'en';
-            }
-            try { localStorage.setItem('lang', lang); } catch (e) {}
-        }
-        try {
-            const saved = localStorage.getItem('lang');
-            if (saved === 'en') showLang('en');
-        } catch (e) {}
+    <footer class="home-footer">
+        <span>© 2026 Tianning Feng · City OS</span>
+        <span>
+            <a href="mailto:cksamfeng@gmail.com">Email</a> ·
+            <a href="https://github.com/CKSF" target="_blank">GitHub</a> ·
+            <a href="https://www.linkedin.com/in/CKSF" target="_blank">LinkedIn</a>
+        </span>
+    </footer>
 
-        /* Cell 淡入 */
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    e.target.style.opacity = '1';
-                    e.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.cell, .hero, .l-section-head, .site-footer').forEach((el, i) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(16px)';
-            el.style.transition = `opacity 0.6s ease ${i * 0.04}s, transform 0.6s cubic-bezier(0.2,0.7,0.3,1) ${i * 0.04}s`;
-            io.observe(el);
-        });
-    </script>
+    <noscript>
+        <style>
+            .city-loader { display: none; }
+            .city-fallback { display: grid; }
+        </style>
+    </noscript>
 </body>
 </html>
