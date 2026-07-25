@@ -334,8 +334,13 @@ async function bootCity() {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 120);
-    camera.position.set(28, 25, 31);
-    camera.lookAt(0, 2.4, 0);
+    const cameraHomePosition = new THREE.Vector3(28, 25, 31);
+    const cameraIntroPosition = new THREE.Vector3(34, 33, 38);
+    const cameraLookTarget = new THREE.Vector3(0, 2.4, 0);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let introProgress = reducedMotion ? 1 : 0;
+    camera.position.copy(introProgress ? cameraHomePosition : cameraIntroPosition);
+    camera.lookAt(cameraLookTarget);
 
     let renderer;
     try {
@@ -352,9 +357,10 @@ async function bootCity() {
     }
     const devicePixelRatio = window.devicePixelRatio || 1;
     const renderScale = state.compact
-        ? Math.min(Math.max(devicePixelRatio, 1.25), 1.5)
-        : Math.min(Math.max(devicePixelRatio, 1.5), 2.5);
-    renderer.setPixelRatio(renderScale);
+        ? Math.min(Math.max(devicePixelRatio, 1.15), 1.35)
+        : Math.min(Math.max(devicePixelRatio, 1.35), 2);
+    let activeRenderScale = renderScale;
+    renderer.setPixelRatio(activeRenderScale);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = state.theme === "paper" ? 1.08 : 1.16;
@@ -543,70 +549,46 @@ async function bootCity() {
     matWindow.userData.paletteSlot = "window";
     matWindow.userData.emissivePaletteSlot = "window";
     dynamicMaterials.push(matWindow);
-    const signboards = [];
 
-    function signText(district) {
-        const label = state.language === "en" ? district.en : district.zh;
-        const icons = {
-            tower: "▥",
-            lab: "◌",
-            workshop: "▦",
-            library: "≡",
-            apartment: "⌂",
-            archive: "[]",
-            radio: ")))",
-            photo: "●"
+    function applyStylizedSurface(material, strength = 0.08) {
+        material.onBeforeCompile = (shader) => {
+            shader.uniforms.stylizedStrength = { value: strength };
+            shader.vertexShader = `
+                varying vec3 vStylizedWorldPosition;
+                varying vec3 vStylizedWorldNormal;
+            ` + shader.vertexShader;
+            shader.vertexShader = shader.vertexShader.replace(
+                "#include <project_vertex>",
+                `
+                    vStylizedWorldPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;
+                    vStylizedWorldNormal = normalize(mat3(modelMatrix) * objectNormal);
+                    #include <project_vertex>
+                `
+            );
+            shader.fragmentShader = `
+                uniform float stylizedStrength;
+                varying vec3 vStylizedWorldPosition;
+                varying vec3 vStylizedWorldNormal;
+            ` + shader.fragmentShader;
+            shader.fragmentShader = shader.fragmentShader.replace(
+                "#include <tonemapping_fragment>",
+                `
+                    float heightShade = smoothstep(0.0, 12.0, vStylizedWorldPosition.y);
+                    float upwardShade = max(dot(normalize(vStylizedWorldNormal), vec3(0.0, 1.0, 0.0)), 0.0);
+                    outgoingLight *= mix(1.0 - stylizedStrength, 1.0 + stylizedStrength * 0.8, heightShade);
+                    outgoingLight += upwardShade * stylizedStrength * 0.18;
+                    #include <tonemapping_fragment>
+                `
+            );
         };
-        return `${icons[district.style] || "·"}  ${district.code}  //  ${label}`;
+        material.customProgramCacheKey = () => `stylized-surface-v1-${strength}`;
+        material.needsUpdate = true;
     }
-
-    function drawSign(signboard) {
-        const { canvas, texture, district } = signboard;
-        const context = canvas.getContext("2d");
-        const colors = palette[state.theme];
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = `#${colors.background.toString(16).padStart(6, "0")}`;
-        context.globalAlpha = state.theme === "paper" ? 0.94 : 0.92;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.globalAlpha = 1;
-        context.strokeStyle = `#${colors.accent.toString(16).padStart(6, "0")}`;
-        context.lineWidth = 4;
-        context.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
-        context.fillStyle = `#${colors.accent.toString(16).padStart(6, "0")}`;
-        context.font = "600 27px 'JetBrains Mono', monospace";
-        context.textBaseline = "middle";
-        context.fillText(signText(district), 24, canvas.height / 2);
-        texture.needsUpdate = true;
-    }
-
-    function addSignboard(group, district, width = 3.4) {
-        const canvas = document.createElement("canvas");
-        canvas.width = 768;
-        canvas.height = 128;
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-        const material = new THREE.SpriteMaterial({
-            map: texture,
-            transparent: true,
-            depthTest: false,
-            depthWrite: false
-        });
-        const sign = new THREE.Sprite(material);
-        sign.scale.set(width, width * 0.17, 1);
-        sign.position.set(0, 1.05, district.depth / 2 + 0.95);
-        sign.renderOrder = 1000;
-        sign.userData.decorative = true;
-        group.add(sign);
-        const leftPost = detailBox(group, 0.055, 0.72, 0.055, matAccent, -width * 0.38, 0.62, district.depth / 2 + 0.9, false);
-        const rightPost = detailBox(group, 0.055, 0.72, 0.055, matAccent, width * 0.38, 0.62, district.depth / 2 + 0.9, false);
-        leftPost.userData.decorative = true;
-        rightPost.userData.decorative = true;
-        const signboard = { canvas, texture, material, district, sign };
-        signboards.push(signboard);
-        drawSign(signboard);
-        return sign;
-    }
+    applyStylizedSurface(matBuilding, 0.1);
+    applyStylizedSurface(matBuildingAlt, 0.085);
+    applyStylizedSurface(matRoof, 0.07);
+    applyStylizedSurface(matAccentSoft, 0.06);
+    applyStylizedSurface(matPlant, 0.12);
 
     scene.fog = new THREE.FogExp2(palette[state.theme].fog, state.theme === "paper" ? 0.008 : 0.014);
 
@@ -615,7 +597,7 @@ async function bootCity() {
     const sun = new THREE.DirectionalLight(state.theme === "paper" ? 0xfff7e4 : 0xfff3ba, 3.2);
     sun.position.set(15, 30, 18);
     sun.castShadow = renderer.shadowMap.enabled;
-    const shadowMapSize = Math.min(state.compact ? 2048 : 4096, renderer.capabilities.maxTextureSize);
+    const shadowMapSize = Math.min(state.compact ? 1024 : 2048, renderer.capabilities.maxTextureSize);
     sun.shadow.mapSize.set(shadowMapSize, shadowMapSize);
     sun.shadow.camera.left = -24;
     sun.shadow.camera.right = 24;
@@ -623,7 +605,7 @@ async function bootCity() {
     sun.shadow.camera.bottom = -24;
     sun.shadow.bias = -0.00018;
     sun.shadow.normalBias = 0.025;
-    sun.shadow.radius = 3;
+    sun.shadow.radius = 4;
     scene.add(sun);
 
     const fill = new THREE.PointLight(palette[state.theme].cool, 1.6, 42);
@@ -651,6 +633,63 @@ async function bootCity() {
         return mesh;
     }
 
+    const softGeometryCache = new Map();
+    function softBlockGeometry(width, height, depth, requestedRadius = 0.18) {
+        const radius = Math.min(requestedRadius, width * 0.12, height * 0.12, depth * 0.12);
+        const key = [width, height, depth, radius].map((value) => value.toFixed(3)).join(":");
+        if (softGeometryCache.has(key)) return softGeometryCache.get(key);
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
+        const shape = new THREE.Shape();
+        shape.moveTo(-halfWidth + radius, -halfHeight);
+        shape.lineTo(halfWidth - radius, -halfHeight);
+        shape.quadraticCurveTo(halfWidth, -halfHeight, halfWidth, -halfHeight + radius);
+        shape.lineTo(halfWidth, halfHeight - radius);
+        shape.quadraticCurveTo(halfWidth, halfHeight, halfWidth - radius, halfHeight);
+        shape.lineTo(-halfWidth + radius, halfHeight);
+        shape.quadraticCurveTo(-halfWidth, halfHeight, -halfWidth, halfHeight - radius);
+        shape.lineTo(-halfWidth, -halfHeight + radius);
+        shape.quadraticCurveTo(-halfWidth, -halfHeight, -halfWidth + radius, -halfHeight);
+        const geometry = new THREE.ExtrudeGeometry(shape, {
+            depth,
+            steps: 1,
+            bevelEnabled: true,
+            bevelSegments: 1,
+            bevelSize: radius * 0.42,
+            bevelThickness: radius * 0.42,
+            curveSegments: 2
+        });
+        geometry.translate(0, 0, -depth / 2);
+        geometry.computeVertexNormals();
+        softGeometryCache.set(key, geometry);
+        return geometry;
+    }
+
+    function softBlock(width, height, depth, material, x = 0, y = height / 2, z = 0, radius = 0.18) {
+        const mesh = new THREE.Mesh(softBlockGeometry(width, height, depth, radius), material);
+        mesh.position.set(x, y, z);
+        mesh.castShadow = renderer.shadowMap.enabled;
+        mesh.receiveShadow = true;
+        return mesh;
+    }
+
+    const taperedGeometryCache = new Map();
+    function taperedBlock(width, height, depth, material, x, y, z, topScale = 0.86, sides = 8) {
+        const key = [height, topScale, sides].join(":");
+        let geometry = taperedGeometryCache.get(key);
+        if (!geometry) {
+            geometry = new THREE.CylinderGeometry(0.5 * topScale, 0.5, height, sides, 1, false);
+            geometry.rotateY(Math.PI / sides);
+            taperedGeometryCache.set(key, geometry);
+        }
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(x, y, z);
+        mesh.scale.set(width, 1, depth);
+        mesh.castShadow = renderer.shadowMap.enabled;
+        mesh.receiveShadow = true;
+        return mesh;
+    }
+
     const outlineMaterial = new THREE.LineBasicMaterial({
         color: palette[state.theme].line,
         transparent: true,
@@ -670,6 +709,8 @@ async function bootCity() {
         edges.userData.decorative = true;
         if (parent === mesh) {
             edges.position.set(0, 0, 0);
+            edges.rotation.set(0, 0, 0);
+            edges.scale.set(1, 1, 1);
             mesh.add(edges);
         } else {
             parent.add(edges);
@@ -677,7 +718,7 @@ async function bootCity() {
         return mesh;
     }
 
-    function detailBox(group, width, height, depth, material, x, y, z, outlined = true) {
+    function detailBox(group, width, height, depth, material, x, y, z, outlined = false) {
         const mesh = box(width, height, depth, material, x, y, z);
         if (outlined) addOutline(mesh);
         group.add(mesh);
@@ -718,7 +759,11 @@ async function bootCity() {
         person.position.set(x, options.y ?? 0.55, z);
         person.rotation.y = options.rotation ?? 0;
         const bodyHeight = options.seated ? 0.34 : 0.52;
-        const body = box(0.18, bodyHeight, 0.16, options.material || matCool, 0, bodyHeight / 2, 0);
+        const body = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.105, 0.15, bodyHeight, 10),
+            options.material || matCool
+        );
+        body.position.y = bodyHeight / 2;
         const head = new THREE.Mesh(new THREE.SphereGeometry(0.105, 16, 12), matGroundTop);
         head.position.y = bodyHeight + 0.1;
         head.userData.decorative = true;
@@ -761,12 +806,85 @@ async function bootCity() {
         group.add(crown);
     }
 
+    const portalOffsets = {
+        tower: -1.15,
+        lab: -1.85,
+        workshop: 1.35,
+        library: 0,
+        apartment: -1,
+        archive: 0,
+        radio: 0.65,
+        photo: -1.15
+    };
+    function addStoryEntrance(group, district) {
+        const x = portalOffsets[district.style] || 0;
+        const front = district.depth / 2 + 0.16;
+        const doorMaterial = district.style === "library" || district.style === "apartment"
+            ? matAccentSoft
+            : matBuildingAlt;
+        const door = softBlock(0.92, 1.45, 0.18, doorMaterial, x, 1.28, front, 0.2);
+        const canopy = softBlock(1.48, 0.18, 0.82, matAccent, x, 2.05, front + 0.18, 0.12);
+        const step = softBlock(1.55, 0.14, 0.72, matRoof, x, 0.69, front + 0.38, 0.1);
+        canopy.rotation.x = -0.1;
+        door.userData.decorative = true;
+        canopy.userData.decorative = true;
+        step.userData.decorative = true;
+        group.add(door, canopy, step);
+    }
+
+    const barrelRoofGeometry = new THREE.CylinderGeometry(1, 1, 1, 24, 1, false, 0, Math.PI);
+    function addBarrelRoof(group, width, depth, y, radius, material) {
+        const roof = new THREE.Mesh(barrelRoofGeometry, material);
+        roof.position.set(0, y, 0);
+        roof.rotation.x = Math.PI / 2;
+        roof.scale.set(width / 2, depth, radius);
+        roof.castShadow = renderer.shadowMap.enabled;
+        roof.userData.decorative = true;
+        group.add(roof);
+        return roof;
+    }
+
+    const domeRoofGeometry = new THREE.SphereGeometry(1, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+    function addDomeRoof(group, width, depth, y, height, material) {
+        const roof = new THREE.Mesh(domeRoofGeometry, material);
+        roof.position.set(0, y, 0);
+        roof.scale.set(width / 2, height, depth / 2);
+        roof.castShadow = renderer.shadowMap.enabled;
+        roof.userData.decorative = true;
+        group.add(roof);
+        return roof;
+    }
+
     const roads = [
-        box(32, 0.06, 2.1, matRoad, 0, 0.21, 0),
-        box(2.1, 0.06, 32, matRoad, 0, 0.22, 0),
-        box(25, 0.06, 1.2, matRoad, -2, 0.23, 9.8)
+        softBlock(32, 0.06, 2.1, matRoad, 0, 0.21, 0, 0.78),
+        softBlock(2.1, 0.06, 32, matRoad, 0, 0.22, 0, 0.78),
+        softBlock(25, 0.06, 1.2, matRoad, -2, 0.23, 9.8, 0.48)
     ];
     roads.forEach((road) => world.add(road));
+
+    const walkingPaths = [
+        [
+            [-12.5, -5.8], [-9.2, -3.8], [-6.5, -2.4], [-3.2, -1.6]
+        ],
+        [
+            [2.2, 2.4], [4.8, 3.2], [6.8, 5.4], [7.1, 8.2]
+        ],
+        [
+            [-10.4, 10.7], [-7.5, 9.6], [-5.2, 8.3], [-2.8, 7.9]
+        ]
+    ];
+    walkingPaths.forEach((points) => {
+        const curve = new THREE.CatmullRomCurve3(
+            points.map(([x, z]) => new THREE.Vector3(x, 0.31, z))
+        );
+        const path = new THREE.Mesh(
+            new THREE.TubeGeometry(curve, 28, 0.28, 8, false),
+            matGroundTop
+        );
+        path.scale.y = 0.18;
+        path.receiveShadow = true;
+        paperLayer.add(path);
+    });
 
     const roadLineMaterial = new THREE.MeshBasicMaterial({ color: palette[state.theme].line });
     roadLineMaterial.userData.paletteSlot = "line";
@@ -827,8 +945,12 @@ async function bootCity() {
     ].forEach(([x, z], index) => {
         const person = new THREE.Group();
         person.position.set(x, 0.3, z);
-        const body = box(0.2, 0.58, 0.18, citizenColors[index % citizenColors.length], 0, 0.45, 0);
-        const head = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), matGroundTop);
+        const body = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.11, 0.16, 0.58, 10),
+            citizenColors[index % citizenColors.length]
+        );
+        body.position.y = 0.45;
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 8), matGroundTop);
         head.position.y = 0.84;
         person.add(body, head);
         person.userData.walkPhase = index * 0.7;
@@ -840,11 +962,6 @@ async function bootCity() {
     plaza.position.set(8.5, 0.29, 9.5);
     plaza.receiveShadow = true;
     paperLayer.add(plaza);
-    const sculpture = new THREE.Mesh(new THREE.TorusKnotGeometry(0.55, 0.13, 48, 6, 2, 3), matAccent);
-    sculpture.position.set(8.5, 1.05, 9.5);
-    sculpture.scale.set(1, 1.4, 1);
-    sculpture.castShadow = renderer.shadowMap.enabled;
-    paperLayer.add(sculpture);
 
     const interactiveMeshes = [];
     const districtGroups = [];
@@ -859,15 +976,9 @@ async function bootCity() {
         const rows = Math.max(2, Math.floor(height / 1.5));
         const columns = Math.max(2, Math.floor(width / 1.15));
         const windowGeometry = new THREE.BoxGeometry(0.34, 0.32, 0.045);
-        const frontWindows = [];
+        const transforms = [];
         const addWindow = (x, y, z, rotationY = 0) => {
-            const windowMesh = new THREE.Mesh(windowGeometry, matWindow);
-            windowMesh.position.set(x, y, z);
-            windowMesh.rotation.y = rotationY;
-            windowMesh.userData.baseScale = 1;
-            windowMesh.userData.decorative = true;
-            frontWindows.push(windowMesh);
-            group.add(windowMesh);
+            transforms.push({ x, y, z, rotationY });
         };
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
@@ -888,7 +999,21 @@ async function bootCity() {
                 if ((row + column) % 2 === 1) addWindow(-width / 2 - 0.026, y, z, Math.PI / 2);
             }
         }
-        group.userData.windows = frontWindows;
+        const windows = new THREE.InstancedMesh(windowGeometry, matWindow, transforms.length);
+        windows.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        windows.userData.decorative = true;
+        const dummy = new THREE.Object3D();
+        transforms.forEach((transform, index) => {
+            dummy.position.set(transform.x, transform.y, transform.z);
+            dummy.rotation.set(0, transform.rotationY, 0);
+            dummy.scale.setScalar(1);
+            dummy.updateMatrix();
+            windows.setMatrixAt(index, dummy.matrix);
+        });
+        windows.instanceMatrix.needsUpdate = true;
+        windows.computeBoundingSphere();
+        group.add(windows);
+        group.userData.windowInstances = { mesh: windows, transforms };
     }
 
     function addAntenna(group, height) {
@@ -921,24 +1046,40 @@ async function bootCity() {
             photo: [1.5, 2.2, 0.4]
         };
         const [platformWidth, platformDepth, platformX] = platformProfiles[district.style] || [0.7, 0.7, 0];
-        const podium = box(
+        const landscapedPatch = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.5, 0.54, 0.16, 28),
+            matGroundTop
+        );
+        landscapedPatch.position.set(platformX, 0.12, 0.55);
+        landscapedPatch.scale.set(
+            district.width + platformWidth + 0.8,
+            1,
+            district.depth + platformDepth + 0.8
+        );
+        landscapedPatch.receiveShadow = true;
+        group.add(landscapedPatch);
+        const podium = softBlock(
             district.width + platformWidth,
             0.55,
             district.depth + platformDepth,
             matRoof,
             platformX,
             0.275,
-            0.55
+            0.55,
+            0.16
         );
         addOutline(podium);
         group.add(podium);
 
         let main;
         if (district.style === "tower") {
-            main = box(district.width, 6.2, district.depth, matBuilding, 0, 3.65, 0);
+            main = taperedBlock(district.width, 6.2, district.depth, matBuilding, 0, 3.65, 0, 0.9, 8);
             group.add(main);
-            detailBox(group, 3.45, 2.8, 3.45, matBuildingAlt, 0, 8.15, 0);
-            detailBox(group, 2.55, 1.8, 2.55, matBuilding, 0, 10.45, 0);
+            const middleTower = taperedBlock(3.45, 2.8, 3.45, matBuildingAlt, 0, 8.15, 0, 0.86, 8);
+            const upperTower = taperedBlock(2.55, 1.8, 2.55, matBuilding, 0, 10.45, 0, 0.78, 8);
+            addOutline(middleTower);
+            addOutline(upperTower);
+            group.add(middleTower, upperTower);
             detailBox(group, district.width + 0.55, 0.32, district.depth + 0.55, matAccent, 0, 6.85, 0);
             detailBox(group, 3.85, 0.26, 3.85, matAccentSoft, 0, 9.58, 0);
             const crown = detailBox(group, 2.9, 0.4, 2.9, matAccent, 0, 11.55, 0);
@@ -963,7 +1104,7 @@ async function bootCity() {
             }
             addAntenna(group, district.height + 0.8);
         } else if (district.style === "lab") {
-            main = box(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0, 0.34);
             group.add(main);
             const dome = new THREE.Mesh(
                 new THREE.SphereGeometry(1.35, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2),
@@ -996,7 +1137,7 @@ async function bootCity() {
             molecule.userData.decorative = true;
             group.add(molecule);
         } else if (district.style === "workshop") {
-            main = box(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0, 0.18);
             group.add(main);
             for (let i = -2; i <= 2; i++) {
                 const tooth = box(0.92, 0.72 + (i + 2) * 0.16, district.depth, i * 1.02, district.height + 0.45, 0);
@@ -1026,7 +1167,7 @@ async function bootCity() {
             addMiniPerson(group, -1.7, district.depth / 2 + 1.12, { rotation: Math.PI, material: matAccentSoft });
             addMiniPerson(group, 1.45, district.depth / 2 + 1.02, { rotation: Math.PI, material: matAccent });
         } else if (district.style === "library") {
-            main = box(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0, 0.3);
             group.add(main);
             for (let bay = -2; bay <= 2; bay++) {
                 detailBox(group, 0.22, district.height - 0.9, 0.28, matAccentSoft, bay * 0.86, district.height / 2 + 0.3, district.depth / 2 + 0.2, false);
@@ -1053,7 +1194,7 @@ async function bootCity() {
             }
             addPlanter(group, district.width / 2 + 0.72, 0.78, district.depth / 2 + 0.85, 0.82);
         } else if (district.style === "radio") {
-            main = box(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0, 0.28);
             group.add(main);
             addAntenna(group, district.height + 0.55);
             const dish = new THREE.Mesh(
@@ -1081,7 +1222,7 @@ async function bootCity() {
             recordCenter.userData.decorative = true;
             group.add(recordCenter);
         } else if (district.style === "photo") {
-            main = box(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0, 0.32);
             group.add(main);
             const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.35, 32), matCool);
             lens.rotation.x = Math.PI / 2;
@@ -1115,7 +1256,7 @@ async function bootCity() {
             tripod.userData.decorative = true;
             group.add(tripod);
         } else if (district.style === "archive") {
-            main = box(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuildingAlt, 0, district.height / 2 + 0.55, 0, 0.22);
             group.add(main);
             for (let index = -3; index <= 3; index++) {
                 detailBox(group, 0.16, district.height + 0.25, district.depth + 0.25, matRoof, index * 0.72, district.height / 2 + 0.55, 0, false);
@@ -1143,7 +1284,7 @@ async function bootCity() {
             addMiniPerson(group, -1.75, district.depth / 2 + 1.02, { seated: true, rotation: Math.PI, material: matCool });
             addRoofUnits(group, district.height + 0.55, 3, 0.72, matAccentSoft);
         } else if (district.style === "apartment") {
-            main = box(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0);
+            main = softBlock(district.width, district.height, district.depth, matBuilding, 0, district.height / 2 + 0.55, 0, 0.26);
             group.add(main);
             addBalconies(group, district.width, district.height, district.depth, 4);
             detailBox(group, district.width + 0.35, 0.34, district.depth + 0.35, matAccentSoft, 0, district.height + 0.72, 0);
@@ -1160,9 +1301,17 @@ async function bootCity() {
             detailBox(group, district.width + 0.4, 0.4, district.depth + 0.4, matAccentSoft, 0, district.height + 0.75, 0);
         }
 
+        addStoryEntrance(group, district);
+        if (district.style === "apartment") {
+            addDomeRoof(group, district.width * 0.82, district.depth * 0.78, district.height + 0.78, 0.72, matRoof);
+        } else if (district.style === "archive") {
+            addBarrelRoof(group, district.width * 0.88, district.depth * 0.92, district.height + 0.55, 0.72, matRoof);
+        } else if (district.style === "radio") {
+            addDomeRoof(group, district.width * 0.9, district.depth * 0.86, district.height + 0.58, 0.62, matAccentSoft);
+        }
+
         addOutline(main);
         addWindows(group, district, district.width, district.height, district.depth);
-        addSignboard(group, district, district.style === "tower" ? 3.45 : 3.05);
 
         const interactionPadding = state.compact ? 2.4 : 1.1;
         const interactionHeight = district.height + (state.compact ? 4 : 2.2);
@@ -1191,6 +1340,103 @@ async function bootCity() {
 
     districts.forEach(buildDistrict);
 
+    const contactShadowCanvas = document.createElement("canvas");
+    contactShadowCanvas.width = 256;
+    contactShadowCanvas.height = 256;
+    const contactShadowContext = contactShadowCanvas.getContext("2d");
+    const contactShadowGradient = contactShadowContext.createRadialGradient(128, 128, 18, 128, 128, 126);
+    contactShadowGradient.addColorStop(0, "rgba(0, 0, 0, 0.72)");
+    contactShadowGradient.addColorStop(0.58, "rgba(0, 0, 0, 0.28)");
+    contactShadowGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+    contactShadowContext.fillStyle = contactShadowGradient;
+    contactShadowContext.fillRect(0, 0, 256, 256);
+    const contactShadowTexture = new THREE.CanvasTexture(contactShadowCanvas);
+    const contactShadowMaterial = new THREE.MeshBasicMaterial({
+        map: contactShadowTexture,
+        transparent: true,
+        opacity: state.theme === "paper" ? 0.2 : 0.4,
+        depthWrite: false,
+        toneMapped: false
+    });
+    const districtContactShadows = new THREE.InstancedMesh(
+        new THREE.PlaneGeometry(1, 1),
+        contactShadowMaterial,
+        districts.length
+    );
+    const shadowDummy = new THREE.Object3D();
+    districts.forEach((district, index) => {
+        shadowDummy.position.set(district.x, 0.315, district.z + 0.4);
+        shadowDummy.rotation.set(-Math.PI / 2, 0, 0);
+        shadowDummy.scale.set(district.width + 3, district.depth + 2.6, 1);
+        shadowDummy.updateMatrix();
+        districtContactShadows.setMatrixAt(index, shadowDummy.matrix);
+    });
+    districtContactShadows.instanceMatrix.needsUpdate = true;
+    districtContactShadows.renderOrder = 2;
+    world.add(districtContactShadows);
+
+    function addInstancedAsset(geometry, material, transforms, parent = world) {
+        const instances = new THREE.InstancedMesh(geometry, material, transforms.length);
+        const dummy = new THREE.Object3D();
+        transforms.forEach(({ position, scale = [1, 1, 1], rotation = 0 }, index) => {
+            dummy.position.set(...position);
+            dummy.rotation.set(0, rotation, 0);
+            dummy.scale.set(...scale);
+            dummy.updateMatrix();
+            instances.setMatrixAt(index, dummy.matrix);
+        });
+        instances.instanceMatrix.needsUpdate = true;
+        instances.castShadow = renderer.shadowMap.enabled;
+        instances.receiveShadow = true;
+        instances.userData.decorative = true;
+        parent.add(instances);
+        return instances;
+    }
+
+    const crateTransforms = [
+        [3.1, -7.7, 0.1, 0.72], [4.0, -7.55, -0.22, 0.8], [7.6, -4.4, 0.18, 0.68],
+        [7.15, -3.65, -0.12, 0.76], [-6.2, -5.15, 0.1, 0.7], [-5.65, -5.6, -0.2, 0.64],
+        [-10.9, -1.5, 0.2, 0.72], [-11.2, -2.2, -0.12, 0.62], [-6.7, 6.8, 0.18, 0.68],
+        [10.8, 4.3, -0.1, 0.72]
+    ].map(([x, z, rotation, scale]) => ({
+        position: [x, 0.54, z],
+        scale: [scale, scale * 0.72, scale],
+        rotation
+    }));
+    addInstancedAsset(new THREE.BoxGeometry(0.8, 0.8, 0.8), matAccentSoft, crateTransforms);
+
+    const barrelTransforms = [
+        [3.55, -7.1], [4.35, -6.95], [7.75, -5.2], [7.8, -6],
+        [-7.4, -6.1], [-9.8, 3.1], [-7.4, 7], [11.2, 0.4]
+    ].map(([x, z], index) => ({
+        position: [x, 0.64, z],
+        scale: [0.42, 0.68 + (index % 2) * 0.08, 0.42],
+        rotation: index * 0.31
+    }));
+    addInstancedAsset(new THREE.CylinderGeometry(0.5, 0.56, 1, 12), matRoof, barrelTransforms);
+
+    const stoneTransforms = Array.from({ length: state.compact ? 10 : 20 }, (_, index) => {
+        const angle = index * 2.399;
+        const radius = 11.8 + (index % 4) * 0.85;
+        const scale = 0.22 + (index % 3) * 0.07;
+        return {
+            position: [Math.cos(angle) * radius, 0.36, Math.sin(angle) * radius * 0.92],
+            scale: [scale * 1.3, scale, scale],
+            rotation: angle
+        };
+    });
+    addInstancedAsset(new THREE.DodecahedronGeometry(1, 0), matAccentSoft, stoneTransforms, paperLayer);
+
+    const bollardTransforms = [
+        [-2.8, -1.7], [-2.8, 1.7], [2.8, -1.7], [2.8, 1.7],
+        [-1.7, -3.7], [1.7, -3.7], [-1.7, 3.7], [1.7, 3.7],
+        [6.4, 8.2], [8.2, 7.2], [-8.2, 8.8], [-10.2, 8.8]
+    ].map(([x, z]) => ({
+        position: [x, 0.62, z],
+        scale: [0.13, 0.72, 0.13]
+    }));
+    addInstancedAsset(new THREE.CylinderGeometry(0.5, 0.62, 1, 10), matAccent, bollardTransforms, paperLayer);
+
     const fillerGeometry = new THREE.BoxGeometry(1, 1, 1);
     const filler = [];
     const reserved = districts.map((district) => ({ x: district.x, z: district.z, radius: Math.max(district.width, district.depth) * 0.75 + 1.2 }));
@@ -1201,7 +1447,7 @@ async function bootCity() {
             return (seed - 1) / 2147483646;
         };
     })();
-    const fillerBudget = state.compact ? 24 : 46;
+    const fillerBudget = state.compact ? 16 : 30;
     for (let i = 0; i < fillerBudget; i++) {
         const x = -15 + random() * 30;
         const z = -15 + random() * 30;
@@ -1227,18 +1473,50 @@ async function bootCity() {
     world.add(fillerMesh);
 
     const treeTrunkMaterial = makeMaterial("line");
-    const treeTopMaterial = matPlant;
-    const treePositions = [
+    const plantedTrees = [
         [-6, 2.7], [-5, 4.1], [6.8, 2.7], [7.8, -1.7], [-12.5, -8.5],
-        [11.5, -8.4], [12.7, 8.5], [-6.5, 11.4], [2.6, 11.5], [-13.8, 2.2]
+        [11.5, -8.4], [12.7, 8.5], [-6.5, 11.4], [2.6, 11.5], [-13.8, 2.2],
+        [-10.8, 5.6], [10.8, -2.7], [5.9, 12.6], [-3.6, -12.8]
     ];
-    treePositions.forEach(([x, z], index) => {
-        const trunk = box(0.16, 0.8, 0.16, treeTrunkMaterial, x, 0.6, z);
-        const top = new THREE.Mesh(new THREE.ConeGeometry(0.62 + (index % 3) * 0.08, 1.5, 12), treeTopMaterial);
-        top.position.set(x, 1.65, z);
-        top.castShadow = renderer.shadowMap.enabled;
-        paperLayer.add(trunk, top);
+    const perimeterTrees = Array.from({ length: state.compact ? 14 : 28 }, (_, index) => {
+        const angle = index / (state.compact ? 14 : 28) * Math.PI * 2 + 0.13;
+        const radius = 14.4 + (index % 3) * 0.6;
+        return [Math.cos(angle) * radius, Math.sin(angle) * radius * 0.92];
     });
+    const treePositions = [...plantedTrees, ...perimeterTrees].filter(([x, z]) => (
+        !reserved.some((item) => Math.hypot(x - item.x, z - item.z) < item.radius * 0.78)
+    ));
+    const trunkTransforms = treePositions.map(([x, z], index) => ({
+        position: [x, 0.83, z],
+        scale: [0.16 + (index % 3) * 0.025, 1.05 + (index % 4) * 0.12, 0.16 + (index % 3) * 0.025],
+        rotation: index * 0.41
+    }));
+    const lowerCrownTransforms = treePositions.map(([x, z], index) => ({
+        position: [x, 1.72 + (index % 4) * 0.08, z],
+        scale: [0.62 + (index % 3) * 0.08, 0.72 + (index % 2) * 0.1, 0.6 + ((index + 1) % 3) * 0.07],
+        rotation: index * 0.73
+    }));
+    const upperCrownTransforms = treePositions.map(([x, z], index) => ({
+        position: [x + ((index % 3) - 1) * 0.11, 2.18 + (index % 4) * 0.08, z],
+        scale: [0.42 + (index % 2) * 0.06, 0.52, 0.4 + ((index + 1) % 2) * 0.06],
+        rotation: index * 0.51
+    }));
+    addInstancedAsset(new THREE.CylinderGeometry(0.5, 0.68, 1, 8), treeTrunkMaterial, trunkTransforms, paperLayer);
+    addInstancedAsset(new THREE.DodecahedronGeometry(1, 1), matPlant, lowerCrownTransforms, paperLayer);
+    addInstancedAsset(new THREE.DodecahedronGeometry(1, 0), matPlant, upperCrownTransforms, paperLayer);
+
+    const shrubPositions = [
+        [-5.2, 2.6], [-4.7, 3.1], [6.2, 2.4], [7.2, 2.3],
+        [9.8, 4.9], [10.5, 4.4], [3.2, 10.2], [4.1, 10.6],
+        [-4.8, 10.1], [-5.6, 9.8], [-11.8, 6.9], [-12.5, 6.2],
+        [-6.2, -7.8], [-5.4, -8.3], [8.5, -7.5], [9.2, -6.9]
+    ];
+    const shrubTransforms = shrubPositions.map(([x, z], index) => ({
+        position: [x, 0.54, z],
+        scale: [0.34 + (index % 3) * 0.06, 0.28 + (index % 2) * 0.06, 0.34],
+        rotation: index * 0.62
+    }));
+    addInstancedAsset(new THREE.IcosahedronGeometry(1, 1), matPlant, shrubTransforms, paperLayer);
 
     const pipeCurve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-8.5, 0.55, -3.5),
@@ -1256,8 +1534,21 @@ async function bootCity() {
         return packet;
     });
 
+    function createCozyVehicle(material, scale = 1) {
+        const vehicle = new THREE.Group();
+        const body = softBlock(0.88 * scale, 0.3 * scale, 0.48 * scale, material, 0, 0, 0, 0.12);
+        const cabin = softBlock(0.42 * scale, 0.25 * scale, 0.4 * scale, matCool, 0.08 * scale, 0.22 * scale, 0, 0.1);
+        const bumper = softBlock(0.16 * scale, 0.16 * scale, 0.5 * scale, matRoof, -0.48 * scale, -0.03, 0, 0.05);
+        body.userData.decorative = true;
+        cabin.userData.decorative = true;
+        bumper.userData.decorative = true;
+        vehicle.add(body, cabin, bumper);
+        return vehicle;
+    }
+
     const carMaterial = makeMaterial("accent");
-    const car = box(0.75, 0.34, 0.42, carMaterial, -15, 0.53, 0);
+    const car = createCozyVehicle(carMaterial);
+    car.position.set(-15, 0.53, 0);
     paperLayer.add(car);
 
     const neonCyan = new THREE.MeshBasicMaterial({ color: 0x21e6ff });
@@ -1473,19 +1764,31 @@ async function bootCity() {
         ["z", 0.58, 0.48, -Math.PI / 2], ["z", -0.58, 0.82, Math.PI / 2],
         ["x", 9.45, 0.25, 0], ["x", 10.15, 0.74, Math.PI]
     ].forEach(([axis, lane, offset, rotation], index) => {
-        const vehicle = box(0.72, 0.3, 0.4, paperCarColors[index % paperCarColors.length], 0, 0.51, 0);
+        const vehicle = createCozyVehicle(paperCarColors[index % paperCarColors.length], 0.86 + (index % 3) * 0.06);
+        vehicle.position.y = 0.51;
         vehicle.rotation.y = rotation;
         vehicle.userData.axis = axis;
         vehicle.userData.lane = lane;
         vehicle.userData.offset = offset;
+        vehicle.userData.routeStart = axis === "x" && lane > 8 ? -14.5 : -15;
+        vehicle.userData.routeEnd = axis === "x" && lane > 8 ? 10.5 : 15;
         vehicle.userData.direction = index % 2 ? -1 : 1;
         vehicle.userData.speed = 0.055 + (index % 3) * 0.008;
         paperLayer.add(vehicle);
         paperVehicles.push(vehicle);
     });
+    const parkedCamper = createCozyVehicle(matAccentSoft, 1.35);
+    parkedCamper.position.set(7.2, 0.58, 11.4);
+    parkedCamper.rotation.y = -0.34;
+    const camperRoof = softBlock(0.9, 0.22, 0.58, matGroundTop, 0.08, 0.38, 0, 0.12);
+    camperRoof.userData.decorative = true;
+    parkedCamper.add(camperRoof);
+    paperLayer.add(parkedCamper);
     car.userData.axis = "x";
     car.userData.lane = 0.58;
     car.userData.offset = 0.9;
+    car.userData.routeStart = -15;
+    car.userData.routeEnd = 15;
     car.userData.direction = 1;
     car.userData.speed = 0.06;
 
@@ -1589,6 +1892,7 @@ async function bootCity() {
     const focusLightPosition = new THREE.Vector3();
     const focusAuraPosition = new THREE.Vector3();
     const focusAuraScale = new THREE.Vector3(0.1, 0.1, 1);
+    const windowAnimationDummy = new THREE.Object3D();
 
     function pointerPosition(event) {
         const rect = canvas.getBoundingClientRect();
@@ -1623,6 +1927,11 @@ async function bootCity() {
 
     viewport.addEventListener("pointerdown", (event) => {
         if (!event.isPrimary || eventHitsInterface(event)) return;
+        introProgress = 1;
+        cameraLookTarget.y = 2.4;
+        camera.position.copy(cameraHomePosition);
+        camera.lookAt(cameraLookTarget);
+        world.scale.setScalar(1);
         dragging = true;
         activePointerId = event.pointerId;
         dragStartX = event.clientX;
@@ -1779,15 +2088,16 @@ async function bootCity() {
         outlineMaterial.opacity = paperMode ? 0.22 : 0.08;
         scene.fog.color.setHex(colors.fog);
         scene.fog.density = paperMode ? 0.008 : 0.014;
-        ambient.intensity = paperMode ? 2.25 : 0.9;
-        sun.intensity = paperMode ? 3.2 : 3;
+        ambient.intensity = paperMode ? 1.9 : 0.9;
+        sun.intensity = paperMode ? 3.6 : 3;
         sun.color.setHex(paperMode ? 0xfff7e4 : 0x9fb9ff);
         fill.color.setHex(colors.cool);
-        fill.intensity = paperMode ? 0.55 : 4.2;
+        fill.intensity = paperMode ? 0.82 : 4.2;
         rim.color.setHex(paperMode ? 0x8c806f : colors.cool);
         rim.intensity = paperMode ? 0.65 : 2.2;
         matWindow.emissiveIntensity = paperMode ? 0.16 : 2.8;
         renderer.toneMappingExposure = paperMode ? 1.08 : 1.16;
+        contactShadowMaterial.opacity = paperMode ? 0.2 : 0.4;
         cyberLayer.visible = !paperMode;
         paperLayer.visible = paperMode;
         document.body.dataset.cityWorld = paperMode ? "paper" : "cyber";
@@ -1798,10 +2108,8 @@ async function bootCity() {
         );
         if (paperMode) viewport.dataset.focusedDistrict = "";
         renderer.setClearColor(colors.background, 0);
-        signboards.forEach(drawSign);
     }
     window.addEventListener("site-theme-change", (event) => updateTheme(event.detail.theme));
-    window.addEventListener("site-language-change", () => signboards.forEach(drawSign));
     updateTheme(state.theme);
 
     function resize() {
@@ -1810,11 +2118,16 @@ async function bootCity() {
         if (!width || !height) return;
         renderer.setSize(width, height, false);
         camera.aspect = width / height;
-        camera.position.set(
+        cameraHomePosition.set(
             width < 700 ? 32 : 28,
             width < 700 ? 28 : 25,
             width < 700 ? 35 : 31
         );
+        cameraIntroPosition.copy(cameraHomePosition).multiplyScalar(1.16);
+        cameraIntroPosition.y += width < 700 ? 3.5 : 4.5;
+        if (introProgress >= 1) camera.position.copy(cameraHomePosition);
+        else camera.position.copy(cameraIntroPosition);
+        camera.lookAt(cameraLookTarget);
         camera.updateProjectionMatrix();
     }
     const resizeObserver = new ResizeObserver(resize);
@@ -1824,12 +2137,50 @@ async function bootCity() {
     const clock = new THREE.Clock();
     let running = true;
     document.addEventListener("visibilitychange", () => { running = !document.hidden; });
+    let sampledFrames = 0;
+    let sampledDuration = 0;
+    let slowFrameSamples = 0;
+    viewport.dataset.renderQuality = "high";
 
     function animate() {
         requestAnimationFrame(animate);
         if (!running || state.mode !== "city") return;
         const delta = Math.min(clock.getDelta(), 0.05);
         elapsed += delta;
+        sampledFrames += 1;
+        sampledDuration += delta;
+        if (sampledDuration >= 2.5) {
+            const frameRate = sampledFrames / sampledDuration;
+            slowFrameSamples = frameRate < 38 ? slowFrameSamples + 1 : 0;
+            if (slowFrameSamples >= 2) {
+                const minimumScale = state.compact ? 1 : 1.25;
+                const nextScale = Math.max(minimumScale, activeRenderScale - 0.25);
+                if (nextScale < activeRenderScale) {
+                    activeRenderScale = nextScale;
+                    renderer.setPixelRatio(activeRenderScale);
+                    resize();
+                    viewport.dataset.renderQuality = activeRenderScale <= minimumScale ? "low" : "balanced";
+                }
+                slowFrameSamples = 0;
+            }
+            viewport.dataset.fps = String(Math.round(frameRate));
+            viewport.dataset.renderCalls = String(renderer.info.render.calls);
+            viewport.dataset.triangles = String(renderer.info.render.triangles);
+            sampledFrames = 0;
+            sampledDuration = 0;
+        }
+        if (introProgress < 1) {
+            introProgress = Math.min(1, introProgress + delta / 1.8);
+            const eased = 1 - Math.pow(1 - introProgress, 3);
+            camera.position.lerpVectors(cameraIntroPosition, cameraHomePosition, eased);
+            cameraLookTarget.y = 2.4 + (1 - eased) * 0.9;
+            camera.lookAt(cameraLookTarget);
+            world.scale.setScalar(0.94 + eased * 0.06);
+        } else if (cameraLookTarget.y !== 2.4) {
+            cameraLookTarget.y = 2.4;
+            camera.lookAt(cameraLookTarget);
+            world.scale.setScalar(1);
+        }
         world.rotation.y += (targetRotation - world.rotation.y) * 0.055;
 
         if (state.theme === "signature") {
@@ -1900,7 +2251,9 @@ async function bootCity() {
             paperVehicles.forEach((vehicle) => {
                 const progress = (elapsed * vehicle.userData.speed + vehicle.userData.offset) % 1;
                 const travel = vehicle.userData.direction > 0 ? progress : 1 - progress;
-                const position = -15 + travel * 30;
+                const routeStart = vehicle.userData.routeStart ?? -15;
+                const routeEnd = vehicle.userData.routeEnd ?? 15;
+                const position = routeStart + travel * (routeEnd - routeStart);
                 if (vehicle.userData.axis === "x") {
                     vehicle.position.set(position, 0.51, vehicle.userData.lane);
                     vehicle.rotation.y = vehicle.userData.direction > 0 ? 0 : Math.PI;
@@ -1939,20 +2292,24 @@ async function bootCity() {
                 bird.children[0].rotation.z = 0.24 + flap;
                 bird.children[1].rotation.z = -0.24 - flap;
             });
-            sculpture.rotation.y += delta * 0.12;
         }
 
         districtGroups.forEach((group, index) => {
             const targetHover = group === hoveredGroup ? 1 : 0;
             group.userData.hover += (targetHover - group.userData.hover) * 0.12;
             group.position.y = group.userData.baseY + group.userData.hover * 0.34;
-            const windows = group.userData.windows || [];
-            windows.forEach((windowMesh, windowIndex) => {
+            const windowInstances = group.userData.windowInstances;
+            windowInstances?.transforms.forEach((transform, windowIndex) => {
                 const pulse = state.theme === "paper"
                     ? 0.92 + Math.sin(elapsed * 0.45 + index * 0.2) * 0.035
                     : 0.66 + Math.sin(elapsed * 2.8 + index + windowIndex * 0.47) * 0.28;
-                windowMesh.scale.setScalar(pulse + group.userData.hover * 0.25);
+                windowAnimationDummy.position.set(transform.x, transform.y, transform.z);
+                windowAnimationDummy.rotation.set(0, transform.rotationY, 0);
+                windowAnimationDummy.scale.setScalar(pulse + group.userData.hover * 0.25);
+                windowAnimationDummy.updateMatrix();
+                windowInstances.mesh.setMatrixAt(windowIndex, windowAnimationDummy.matrix);
             });
+            if (windowInstances) windowInstances.mesh.instanceMatrix.needsUpdate = true;
             (group.userData.signalRings || []).forEach((ring, ringIndex) => {
                 const scale = state.theme === "paper"
                     ? 0.94

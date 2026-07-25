@@ -407,6 +407,35 @@ body.room-page .page :is(.book-rating, .updated-stamp) {
     pointer-events: none;
 }
 
+.room-model-label {
+    position: absolute;
+    z-index: 7;
+    top: 1rem;
+    left: 1rem;
+    max-width: min(240px, 42%);
+    padding: 0.72rem 0.86rem 0.68rem;
+    display: grid;
+    gap: 0.28rem;
+    border: 1px solid var(--site-line);
+    border-left: 2px solid var(--room-accent);
+    background: color-mix(in srgb, var(--site-bg) 86%, transparent);
+    color: var(--site-ink);
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+}
+
+.room-model-label span {
+    color: var(--room-accent);
+    font: 700 0.55rem/1 var(--site-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.room-model-label strong {
+    font: 650 0.82rem/1.25 var(--site-display);
+    letter-spacing: 0.015em;
+}
+
 .room-canvas {
     position: absolute;
     inset: 0;
@@ -1244,6 +1273,17 @@ body[data-room="darkroom"] .room-structure-core {
     .room-inspect-controls {
         top: 0.65rem;
         right: 0.65rem;
+    }
+
+    .room-model-label {
+        top: 0.65rem;
+        left: 0.65rem;
+        max-width: 38%;
+        padding: 0.6rem 0.66rem 0.56rem;
+    }
+
+    .room-model-label strong {
+        font-size: 0.72rem;
     }
 
     .room-inspect-controls button {

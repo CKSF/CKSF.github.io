@@ -897,7 +897,7 @@
         }
     </style>
     <link rel="stylesheet" href="site-system.css">
-    <script src="site-system.js?v=20260725-system12"></script>
+    <script src="site-system.js?v=20260725-system22"></script>
 </head>
 <body>
 
@@ -930,7 +930,7 @@
                 <p class="role">
                     技术产品经理 <span class="sep">·</span> Agent 应用工程师 <span class="sep">·</span> UPenn CIS &#39;27
                 </p>
-                <div class="status"><span class="live-dot"></span>求职中 · 2027 全职</div>
+                <div class="status"><span class="live-dot"></span>开放机会 · 2026 暑期 &amp; 2027 全职</div>
             </div>
             <div class="contact-block">
                 <span class="row"><span class="k">邮箱</span><a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></span>
@@ -945,7 +945,7 @@
         <div class="objective">
             <h2>/ 求职意向</h2>
             <p>
-                关注 <span class="em">2027 全职</span> 机会——方向是<b>技术型产品经理 / Agent 应用工程师</b>。
+                关注 <span class="em">2026 暑期实习与 2027 全职</span> 机会——方向是<b>技术型产品经理 / AI Agent 工程师 / 开发工程师</b>。
                 感兴趣的行业：AI Agent 与开发者工具、企业级 SaaS、健康科技、教育科技。
                 既能写 PRD、跑用户访谈，也能自己动手把功能一路做到上线——把研究里的模型和真正能给用户用的产品之间那段距离补齐，是我一直在做的事。
             </p>
@@ -995,17 +995,18 @@
             <div class="entry">
                 <div class="entry-head">
                     <h3 class="entry-title">Agent 应用工程师</h3>
-                    <span class="entry-date">2026.05.20 → 至今</span>
+                    <span class="entry-date">2026.01 → 至今</span>
                 </div>
                 <p class="entry-sub">
-                    字节跳动 <span class="accent">· 数据平台产品线（面向数据研发同学的一站式工具 + Agent）</span>
+                    字节跳动 <span class="accent">· 数据平台方向 · AI Agent 应用</span>
                     <span class="now-badge">在职</span>
                 </p>
                 <ul>
-                    <li>配合团队维护和治理内部数据研发工作台，同时<b>独立开发</b>其中的 Agent 功能模块——减少工程师的重复操作和工具切换。</li>
-                    <li>产品定位是「数据研发专用 Agent × 一站式平台」：从写需求、写 SQL、搭数据管道，到查错、跑作业调度、看数据血缘、做质量治理，一整套下游服务都能在一个对话里串起来完成。</li>
-                    <li>根据真实用户反馈持续调优 Agent。当前在建设 <b>Skills / MCP 管理模块</b>：明确技能的开发、发布和管理入口，并探索根据使用习惯定期调整技能配置。</li>
-                    <li>另一块是<b>上下文管理</b>：通过分层组织、按重要性保留和跨会话状态管理，减少长任务中的信息丢失与前后矛盾。</li>
+                    <li>在内部数据平台 Agent 产品中承担 <b>Skill 治理、文件系统产品化、协作空间管理</b>三条线的设计与工程交付。</li>
+                    <li>参与设计 Skill 开关方案：用统一技能标识抽象用户、业务线、系统三级作用域，按优先级选择生效 Skill，并在后端执行前增加白名单边界，避免禁用 Skill 进入模型上下文或执行链路。</li>
+                    <li>参与内部文件系统产品化：撰写用户引导文档，设计 AI-First 目录结构，通过结构化元数据和确定性路径减少 Agent tool-call 次数与上下文污染。</li>
+                    <li>设计并交付协作空间「添加成员」能力：支持多 ID 解析、多匹配候选选择、未匹配 ID 红色可编辑状态，相关能力已合入上线。</li>
+                    <li>下一阶段负责打通下游数据消费平台链路，兼容更多平台进入数据中台，让数据开发 Agent 从开发入口继续延伸到消费、治理与协作场景。</li>
                 </ul>
             </div>
 
@@ -1091,12 +1092,12 @@
                     <span class="case-tag">Agent · 技能管理</span>
                     <h3 class="case-title">Skills / MCP 管理模块</h3>
                     <p class="case-thesis">
-                        将原本分散在配置中的技能能力做成<span class="em">明确的开发与管理入口</span>，并探索根据用户习惯定期调整技能配置，让 Agent 更贴近真实工作流。
+                        将 Skill 从“硬编码列表”推进到<span class="em">作用域感知、可开关、运行前可校验</span>的治理模型，为安装、更新、禁用和权限控制打下数据模型基础。
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">建设中</span>
-                        <span class="metric-chip">MCP 协议</span>
-                        <span class="metric-chip">数据研发场景</span>
+                        <span class="metric-chip">统一标识</span>
+                        <span class="metric-chip">三级作用域</span>
+                        <span class="metric-chip">运行时白名单</span>
                     </div>
                     <div class="case-foot">
                         <span class="role">// 独立负责</span>
@@ -1106,14 +1107,14 @@
 
                 <div class="case">
                     <span class="case-tag">Agent · 记忆管理</span>
-                    <h3 class="case-title">Agent 长任务记忆</h3>
+                    <h3 class="case-title">Agent 文件系统产品化</h3>
                     <p class="case-thesis">
-                        长任务容易因为历史信息堆积而丢失重点。通过<span class="em">分层组织、重要性保留和跨会话状态</span>，改善上下文的一致性与可控性。
+                        文件系统对 Agent 是 API，对用户却是陌生概念。我把它翻译成<span class="em">空间归属、权限边界、目录规范和协作方式</span>，让 Agent 能少翻上下文、用户能知道文件在哪里。
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">上下文预算</span>
-                        <span class="metric-chip">建设中</span>
-                        <span class="metric-chip">跨会话记忆</span>
+                        <span class="metric-chip">AI-First 目录</span>
+                        <span class="metric-chip">结构化元数据</span>
+                        <span class="metric-chip">用户文档</span>
                     </div>
                     <div class="case-foot">
                         <span class="role">// 独立负责</span>
@@ -1305,7 +1306,7 @@
                 <p class="role">
                     Product Manager <span class="sep">·</span> Agent Engineer <span class="sep">·</span> UPenn CIS &#39;27
                 </p>
-                <div class="status"><span class="live-dot"></span>Exploring · 2027 full-time</div>
+                <div class="status"><span class="live-dot"></span>Open · Summer 2026 &amp; 2027 full-time</div>
             </div>
             <div class="contact-block">
                 <span class="row"><span class="k">Email</span><a href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></span>
@@ -1320,7 +1321,7 @@
         <div class="objective">
             <h2>/ Objective</h2>
             <p>
-                Exploring <span class="em">2027 full-time Technical PM / Agent Engineer</span> roles.
+                Exploring <span class="em">Summer 2026 and 2027 full-time Technical PM / AI Agent Engineer / Software Engineer</span> roles.
                 Sectors: <b>AI agent platforms</b>, <b>developer tools</b>, <b>enterprise SaaS</b>, <b>health / edu tech</b>.
                 I write PRDs and push PRs — my edge is closing the gap between research-grade models and systems that actually ship.
             </p>
@@ -1365,17 +1366,18 @@
             <div class="entry">
                 <div class="entry-head">
                     <h3 class="entry-title">Agent Application Engineer</h3>
-                    <span class="entry-date">May 20, 2026 → present</span>
+                    <span class="entry-date">Jan 2026 → present</span>
                 </div>
                 <p class="entry-sub">
-                    ByteDance <span class="accent">· data platform org — internal one-stop toolkit + agent for data engineers</span>
+                    ByteDance <span class="accent">· Data platform · AI agent applications</span>
                     <span class="now-badge">Current</span>
                 </p>
                 <ul>
-                    <li>Working with the team to maintain and govern an internal data-engineering workbench, while <b>independently developing</b> specific agent modules that reduce repetitive work and tool-switching.</li>
-                    <li>Product direction: a <b>data-engineering-native agent × one-stop platform</b>. Requirements, SQL, pipelines and debugging are only the entry — the agent then stitches together downstream services like job scheduling, data-asset catalog, lineage and quality governance into one conversation.</li>
-                    <li>Iterating from real user feedback. Currently building a <b>Skills / MCP management module</b> with explicit development, publishing and governance workflows, while exploring periodic adaptation to user habits.</li>
-                    <li>Also improving <b>context management</b> through layered organization, importance-based retention and cross-session state, reducing information loss and contradictions in long-running tasks.</li>
+                    <li>Contributed to three product and engineering tracks in an internal data-platform agent product: <b>Skill governance, file-system productization, and workspace collaboration</b>.</li>
+                    <li>Helped design the Skill switch model: a unified Skill identity abstracts user, business-line and system scopes; backend resolution follows priority rules, with whitelist checks before execution so disabled Skills cannot enter model context or execution chains.</li>
+                    <li>Productized the internal file system through user-facing onboarding docs and an AI-First directory structure using structured metadata and deterministic paths to reduce unnecessary tool calls and context pollution.</li>
+                    <li>Designed and shipped the workspace "add members" flow: multi-ID parsing, selectable candidates for fuzzy matches, and red editable states for unmatched IDs.</li>
+                    <li>Next scope: connecting downstream data-consumption platforms into the data middle platform, extending the data-development agent from development entry points into consumption, governance and collaboration workflows.</li>
                 </ul>
             </div>
 
@@ -1457,12 +1459,12 @@
                     <span class="case-tag">Agent × Platform</span>
                     <h3 class="case-title">Skills / MCP module</h3>
                     <p class="case-thesis">
-                        Turns scattered skill configuration into an <span class="em">explicit development and governance surface</span>, with ongoing exploration of usage-informed adaptation.
+                        Moves Skills from a hard-coded list into a <span class="em">scope-aware, switchable and pre-execution-verifiable</span> governance model for installation, updates, disabling and permissions.
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">In progress</span>
-                        <span class="metric-chip">MCP-native</span>
-                        <span class="metric-chip">Data-eng scope</span>
+                        <span class="metric-chip">Unified identity</span>
+                        <span class="metric-chip">3 scopes</span>
+                        <span class="metric-chip">Runtime whitelist</span>
                     </div>
                     <div class="case-foot">
                         <span class="role">// Owner</span>
@@ -1471,15 +1473,15 @@
                 </div>
 
                 <div class="case">
-                    <span class="case-tag">Agent × Context</span>
-                    <h3 class="case-title">Context budgeting</h3>
+                    <span class="case-tag">Agent × File System</span>
+                    <h3 class="case-title">Agent file-system productization</h3>
                     <p class="case-thesis">
-                        Long tasks lose focus as history accumulates. Layered organization, importance-based retention and cross-session state make context more coherent and controllable.
+                        A file system is an API to agents, but a foreign concept to many users. I translated it into <span class="em">space ownership, permission boundaries, directory rules and collaboration workflows</span>.
                     </p>
                     <div class="case-metrics">
-                        <span class="metric-chip">Budgeting</span>
-                        <span class="metric-chip">In progress</span>
-                        <span class="metric-chip">Cross-session</span>
+                        <span class="metric-chip">AI-First dirs</span>
+                        <span class="metric-chip">metadata</span>
+                        <span class="metric-chip">user docs</span>
                     </div>
                     <div class="case-foot">
                         <span class="role">// Owner</span>

@@ -93,11 +93,11 @@
     if (roomPages.has(path)) {
         const roomStyles = document.createElement("link");
         roomStyles.rel = "stylesheet";
-        roomStyles.href = "room-system.css?v=20260725-inspect2";
+        roomStyles.href = "room-system.css?v=20260725-model-label1";
         document.head.append(roomStyles);
 
         const roomScript = document.createElement("script");
-        roomScript.src = "room-system.js?v=20260725-inspect2";
+        roomScript.src = "room-system.js?v=20260725-starlit-room10";
         document.head.append(roomScript);
     }
 
