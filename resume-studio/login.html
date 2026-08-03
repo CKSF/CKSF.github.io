@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Resume Studio · Access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --ink: #f4f4ec;
+            --muted: #93958d;
+            --line: rgba(255, 255, 255, 0.13);
+            --panel: #151613;
+            --void: #0b0c0a;
+            --yellow: #f4d63b;
+            --red: #ff7a70;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 50% 0%, rgba(244, 214, 59, 0.11), transparent 34rem),
+                var(--void);
+            font-family: Inter, "Noto Sans SC", sans-serif;
+        }
+
+        .login-card {
+            width: min(100%, 420px);
+            padding: 34px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(21, 22, 19, 0.96);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+        }
+
+        .eyebrow {
+            color: var(--yellow);
+            font: 600 11px/1 "JetBrains Mono", monospace;
+            letter-spacing: 0.14em;
+        }
+
+        h1 {
+            margin: 16px 0 10px;
+            font-size: clamp(28px, 8vw, 38px);
+            line-height: 1.05;
+            letter-spacing: -0.045em;
+        }
+
+        p {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            color: var(--muted);
+            font: 600 11px/1 "JetBrains Mono", monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            outline: none;
+            color: var(--ink);
+            background: #0f100e;
+            font: 500 16px/1.2 "JetBrains Mono", monospace;
+            letter-spacing: 0.12em;
+        }
+
+        input:focus { border-color: var(--yellow); }
+
+        button {
+            width: 100%;
+            margin-top: 14px;
+            padding: 13px 16px;
+            border: 1px solid var(--yellow);
+            border-radius: 8px;
+            color: #111;
+            background: var(--yellow);
+            font: 700 13px/1 Inter, sans-serif;
+            cursor: pointer;
+        }
+
+        button:disabled { cursor: wait; opacity: 0.65; }
+
+        .error {
+            min-height: 20px;
+            margin: 12px 0 0;
+            color: var(--red);
+            font-size: 12px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .back:hover { color: var(--ink); }
+    </style>
+</head>
+<body>
+    <main class="login-card">
+        <span class="eyebrow">PRIVATE WORKSPACE</span>
+        <h1>Resume Studio</h1>
+        <p>请输入访问密码。验证仅在当前浏览器标签页中有效。</p>
+        <form data-login-form>
+            <label>
+                Access password
+                <input type="password" inputmode="numeric" autocomplete="current-password" autofocus required data-password>
+            </label>
+            <button type="submit" data-submit>进入工作台</button>
+            <p class="error" role="alert" aria-live="polite" data-error></p>
+        </form>
+        <a class="back" href="../hire.html">← 返回职业档案</a>
+    </main>
+
+    <script>
+        (function () {
+            "use strict";
+
+            const expectedHash = "0c2062d2f505ba1cd2864bd4eacd9eebae71a7a5b94032b693f9e43564f51ed9";
+            const sessionKey = "resume-studio:authorized";
+            const form = document.querySelector("[data-login-form]");
+            const password = document.querySelector("[data-password]");
+            const submit = document.querySelector("[data-submit]");
+            const error = document.querySelector("[data-error]");
+
+            function safeDestination() {
+                const fallback = new URL("./", location.href);
+                const requested = new URLSearchParams(location.search).get("next");
+                if (!requested) return fallback.href;
+
+                try {
+                    const target = new URL(requested, location.origin);
+                    if (target.origin === location.origin &&
+                        target.pathname.startsWith(fallback.pathname)) {
+                        return target.href;
+                    }
+                } catch (ignored) {}
+                return fallback.href;
+            }
+
+            async function digest(value) {
+                const bytes = new TextEncoder().encode(value);
+                const hash = await crypto.subtle.digest("SHA-256", bytes);
+                return Array.from(new Uint8Array(hash))
+                    .map((byte) => byte.toString(16).padStart(2, "0"))
+                    .join("");
+            }
+
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                submit.disabled = true;
+                error.textContent = "";
+
+                try {
+                    if (await digest(password.value) !== expectedHash) {
+                        error.textContent = "密码错误，请重新输入。";
+                        password.select();
+                        return;
+                    }
+                    sessionStorage.setItem(sessionKey, "v1");
+                    location.replace(safeDestination());
+                } catch (loginError) {
+                    error.textContent = "当前浏览器无法完成验证。";
+                } finally {
+                    submit.disabled = false;
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

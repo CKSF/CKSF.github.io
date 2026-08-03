@@ -1,0 +1,415 @@
+{
+  "schemaVersion": "json-resume-compatible/bilingual-v1",
+  "version": 1,
+  "basics": {
+    "name": {
+      "zh": "冯天宁",
+      "en": "Tianning Feng"
+    },
+    "label": {
+      "zh": "技术产品经理 · AI Agent 工程师 · UPenn CIS '27",
+      "en": "Technical PM · AI Agent Engineer · UPenn CIS '27"
+    },
+    "summary": {
+      "zh": "UPenn CIS 硕士，本科 Emory CS + 心理学双专业。现在在字节跳动数据平台从事内部数据平台 AI Agent 相关工作，覆盖 Skill 治理、文件系统产品化与协作空间管理。我既写 PRD、做用户路径，也能写代码把功能推到上线。求职方向：技术型 PM / AI Agent 工程师 / 开发工程师。",
+      "en": "UPenn CIS master and Emory CS + Psychology graduate. Currently working on internal data-platform AI agents at ByteDance, covering Skill governance, file-system productization and workspace collaboration. I write PRDs and push PRs. Targeting Technical PM / AI Agent Engineer / Software Engineer roles."
+    },
+    "email": "cksamfeng@gmail.com",
+    "phone": "+86 133-3661-7876",
+    "wechat": "CKSF020325",
+    "location": {
+      "zh": "费城 · 湾区 · 北京",
+      "en": "Philadelphia · Bay Area · Beijing"
+    },
+    "status": {
+      "zh": "2026 暑期 / 2027 全职开放",
+      "en": "Open · Summer 2026 / 2027 full-time"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "CKSF",
+        "url": "https://www.linkedin.com/in/CKSF"
+      },
+      {
+        "network": "GitHub",
+        "username": "CKSF",
+        "url": "https://github.com/CKSF"
+      }
+    ]
+  },
+  "education": [
+    {
+      "institution": {
+        "zh": "University of Pennsylvania",
+        "en": "University of Pennsylvania"
+      },
+      "position": {
+        "zh": "计算机与信息科学硕士 · 机器学习与系统",
+        "en": "M.S. in Computer & Information Science · ML & Systems"
+      },
+      "location": {
+        "zh": "Philadelphia, PA",
+        "en": "Philadelphia, PA"
+      },
+      "startDate": "2025.08",
+      "endDate": "2027.05",
+      "highlights": {
+        "zh": [
+          "核心课程：Advanced ML、Deep Learning、Distributed Systems、NLP。",
+          "研究兴趣：序列建模、Agent 系统、Product × Engineering。"
+        ],
+        "en": [
+          "Core: Advanced ML, Deep Learning, Distributed Systems and NLP.",
+          "Focus: sequence modeling, agent systems and Product × Engineering."
+        ]
+      }
+    },
+    {
+      "institution": {
+        "zh": "Emory University",
+        "en": "Emory University"
+      },
+      "position": {
+        "zh": "计算机科学与心理学学士 · 双专业",
+        "en": "B.S. in Computer Science & Psychology · Double Major"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2021.08",
+      "endDate": "2025.05",
+      "highlights": {
+        "zh": [
+          "Melody Lab 深度学习研究员：SeizureFormer 共同一作，PSB 2026 口头报告（Top 10%）。",
+          "Lang-Biomarker Lab 科研助理：多模态 ETL 流水线，处理 100GB+ 语音、文本与图像。"
+        ],
+        "en": [
+          "Deep Learning Researcher at Melody Lab: SeizureFormer co-first author, PSB 2026 Oral (Top 10%).",
+          "Research Assistant at Lang-Biomarker Lab: multi-modal ETL across 100GB+ of audio, text and images."
+        ]
+      }
+    }
+  ],
+  "work": [
+    {
+      "position": {
+        "zh": "Agent 应用工程师",
+        "en": "Agent Application Engineer"
+      },
+      "organization": {
+        "zh": "字节跳动 · 数据平台 · AI Agent 应用",
+        "en": "ByteDance · Data Platform · AI Agent Applications"
+      },
+      "location": {
+        "zh": "北京",
+        "en": "Beijing"
+      },
+      "startDate": "2026.01",
+      "endDate": {
+        "zh": "至今",
+        "en": "Present"
+      },
+      "highlights": {
+        "zh": [
+          "在内部数据平台 Agent 产品中承担 Skill 治理、文件系统产品化、协作空间管理三条线的设计与工程交付。",
+          "参与 Skill 开关方案设计：以统一技能标识抽象用户、业务线、系统三级作用域，按优先级选择生效 Skill，并在后端执行前做白名单校验。",
+          "参与内部文件系统产品化，通过 AI-First 目录结构、结构化元数据与确定性路径降低 Agent tool-call 次数和上下文污染。",
+          "设计并交付协作空间添加成员能力；下一阶段负责打通下游数据消费平台链路。"
+        ],
+        "en": [
+          "Contributed to three product and engineering tracks in an internal data-platform agent product: Skill governance, file-system productization and workspace collaboration.",
+          "Helped design a Skill switch model across user, business-line and system scopes, resolving active Skills by priority with backend whitelist checks before execution.",
+          "Productized the internal file system through AI-First directory rules, structured metadata and deterministic paths to reduce tool calls and context pollution.",
+          "Designed and shipped the workspace add-member flow; next scope connects downstream data-consumption platforms into the data middle platform."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "全栈开发实习生",
+        "en": "Full-stack Engineer Intern"
+      },
+      "organization": {
+        "zh": "Liba Space",
+        "en": "Liba Space"
+      },
+      "location": {
+        "zh": "美国 · 圣何塞",
+        "en": "San Jose, CA"
+      },
+      "startDate": "2025.09",
+      "endDate": "2025.12",
+      "highlights": {
+        "zh": [
+          "基于 React + Node.js 开发简历分析与 AI 重写功能，使用异步任务队列平滑 LLM 调用高峰。",
+          "主导 Scrum 迭代与 A/B 测试，功能上线后平台 MAU 提升 50%。"
+        ],
+        "en": [
+          "Built resume analysis and AI rewrite on React + Node.js, using an async task queue to smooth LLM traffic spikes.",
+          "Led Scrum iteration and A/B testing; launch increased platform MAU by 50%."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "产品与技术负责人",
+        "en": "Product & Tech Lead"
+      },
+      "organization": {
+        "zh": "思政教育 AI Agent",
+        "en": "Ideology-Ed AI Agent"
+      },
+      "location": {
+        "zh": "北京",
+        "en": "Beijing"
+      },
+      "startDate": "2025.05",
+      "endDate": "2025.08",
+      "highlights": {
+        "zh": [
+          "设计并实现 RAG 教案生成平台，融合多源检索与向量语义匹配。",
+          "开发 PDF 解析与知识结构化模块，教师备课效率提升 70%。"
+        ],
+        "en": [
+          "Designed and built a RAG lesson-plan platform combining multi-source retrieval and semantic matching.",
+          "Shipped PDF parsing and knowledge structuring, improving teacher preparation efficiency by 70%."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "产品实习生",
+        "en": "Product Intern"
+      },
+      "organization": {
+        "zh": "神通科技集团",
+        "en": "Shentong Technology Group"
+      },
+      "location": {
+        "zh": "宁波",
+        "en": "Ningbo"
+      },
+      "startDate": "2021.06",
+      "endDate": "2021.08",
+      "highlights": {
+        "zh": [
+          "基于用户研究和行为分析重构数据看板交互，使系统可用性提升 30%。"
+        ],
+        "en": [
+          "Redesigned dashboard interactions through user research and behavioral analysis, improving usability by 30%."
+        ]
+      }
+    }
+  ],
+  "research": [
+    {
+      "position": {
+        "zh": "深度学习研究员",
+        "en": "Deep Learning Researcher"
+      },
+      "organization": {
+        "zh": "Melody Lab · Emory University",
+        "en": "Melody Lab · Emory University"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2023.09",
+      "endDate": "2025.05",
+      "highlights": {
+        "zh": [
+          "提出 SeizureFormer，在真实 RNS 数据上实现 1–14 天癫痫风险预测并达到 SOTA。",
+          "共同一作发表于 PSB 2026，受邀口头报告（Top 10%）。"
+        ],
+        "en": [
+          "Proposed SeizureFormer for 1–14-day seizure risk forecasting on real RNS data, reaching SOTA.",
+          "Co-first-author at PSB 2026 with an invited oral talk (Top 10%)."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "科研助理",
+        "en": "Research Assistant"
+      },
+      "organization": {
+        "zh": "Lang-Biomarker Lab · Emory University",
+        "en": "Lang-Biomarker Lab · Emory University"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2022.09",
+      "endDate": "2024.11",
+      "highlights": {
+        "zh": [
+          "构建文本、音频与图像多模态 ETL 流水线，处理 100GB+ 数据，人工成本降低 80%。"
+        ],
+        "en": [
+          "Built multi-modal ETL pipelines for text, audio and images, processing 100GB+ and reducing manual cost by 80%."
+        ]
+      }
+    }
+  ],
+  "projects": [
+    {
+      "name": {
+        "zh": "PhillyHome Insight",
+        "en": "PhillyHome Insight"
+      },
+      "description": {
+        "zh": "房产与社区分析平台 · Full-stack & GIS",
+        "en": "Real-estate and community analytics · Full-stack & GIS"
+      },
+      "startDate": "2025.05",
+      "endDate": {
+        "zh": "至今",
+        "en": "Present"
+      },
+      "highlights": {
+        "zh": [
+          "主导 4 人团队开发地理数据分析平台，将空间查询延迟控制在 200ms 内。",
+          "吸引 200+ 用户，并被宾大课程选为系统设计示范项目。"
+        ],
+        "en": [
+          "Led a four-person team and kept PostgreSQL spatial queries within 200ms.",
+          "Reached 200+ users and was selected as a system-design showcase in a UPenn course."
+        ]
+      }
+    },
+    {
+      "name": {
+        "zh": "OpenAPS Simulation",
+        "en": "OpenAPS Simulation"
+      },
+      "description": {
+        "zh": "嵌入式血糖调节系统",
+        "en": "Embedded glucose regulation system"
+      },
+      "startDate": "2022.09",
+      "endDate": "2024.11",
+      "highlights": {
+        "zh": [
+          "使用 FreeRTOS + C++ 实现实时 PID 控制，响应延迟低于 100ms。"
+        ],
+        "en": [
+          "Implemented real-time PID control with FreeRTOS + C++, keeping response latency below 100ms."
+        ]
+      }
+    },
+    {
+      "name": {
+        "zh": "智能家居助手",
+        "en": "Smart Home Assistant"
+      },
+      "description": {
+        "zh": "iOS × 分布式同步",
+        "en": "iOS × distributed synchronization"
+      },
+      "startDate": "2024.01",
+      "endDate": "2025.01",
+      "highlights": {
+        "zh": [
+          "使用 MongoDB Change Streams + Swift 实现 15+ 设备实时同步，端到端延迟低于 200ms。"
+        ],
+        "en": [
+          "Synchronized 15+ devices with MongoDB Change Streams + Swift at under 200ms end-to-end latency."
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "name": {
+        "zh": "产品",
+        "en": "Product"
+      },
+      "keywords": [
+        "Google PM Certified",
+        "PRD",
+        "Scrum",
+        "User Research",
+        "A/B Testing",
+        "North Star Metrics"
+      ]
+    },
+    {
+      "name": {
+        "zh": "工程",
+        "en": "Engineering"
+      },
+      "keywords": [
+        "Python",
+        "TypeScript",
+        "C++",
+        "Swift",
+        "SQL",
+        "React / Node",
+        "MongoDB",
+        "PostgreSQL / PostGIS",
+        "FreeRTOS",
+        "Docker"
+      ]
+    },
+    {
+      "name": {
+        "zh": "Agent × ML",
+        "en": "Agent × ML"
+      },
+      "keywords": [
+        "Agent",
+        "MCP",
+        "Context Management",
+        "RAG",
+        "Prompt Engineering",
+        "PyTorch",
+        "Transformers",
+        "Time-series"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "name": {
+        "zh": "SeizureFormer: A Transformer-based Model for IEA-based Seizure Risk Forecasting",
+        "en": "SeizureFormer: A Transformer-based Model for IEA-based Seizure Risk Forecasting"
+      },
+      "publisher": "PSB 2026 · Oral (Top 10%) · Co-first author",
+      "authors": "T. Feng†, J. Ni†, W. Jin, E. Gleichgerrcht"
+    },
+    {
+      "name": {
+        "zh": "EpiDHGNN: Dynamic Hypergraph Neural Networks for Epidemic Modeling",
+        "en": "EpiDHGNN: Dynamic Hypergraph Neural Networks for Epidemic Modeling"
+      },
+      "publisher": "PSB 2026",
+      "authors": "S. Liu, S. Gong, T. Feng, Z. Liu, M. S. Y. Lau, W. Jin"
+    }
+  ],
+  "languages": [
+    {
+      "language": {
+        "zh": "中文",
+        "en": "Chinese"
+      },
+      "fluency": {
+        "zh": "母语",
+        "en": "Native"
+      }
+    },
+    {
+      "language": {
+        "zh": "英语",
+        "en": "English"
+      },
+      "fluency": {
+        "zh": "流利",
+        "en": "Fluent"
+      }
+    }
+  ]
+}

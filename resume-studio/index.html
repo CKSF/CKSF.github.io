@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Resume Studio · Tianning Feng</title>
+    <meta name="description" content="Local-first bilingual resume editor and PDF workspace.">
+    <script src="auth.js?v=20260803-auth1"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="studio.css">
+</head>
+<body>
+    <header class="studio-header">
+        <div class="brand">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <div>
+                <strong>Resume Studio</strong>
+                <span>Local-first document workspace</span>
+            </div>
+        </div>
+        <div class="header-status">
+            <span class="save-state" data-save-state>正在载入</span>
+            <a href="../hire.html" class="quiet-link" data-ui="back">返回职业档案</a>
+        </div>
+    </header>
+
+    <main class="studio-shell">
+        <aside class="studio-sidebar" aria-label="简历编辑工具">
+            <section class="studio-intro">
+                <span class="eyebrow">PRIVATE DRAFT</span>
+                <h1 data-ui="introTitle">编辑内容，导出成正式 PDF。</h1>
+                <p data-ui="introBody">修改只保存在当前浏览器，不会自动发布到网站或写入 GitHub。</p>
+            </section>
+
+            <div class="toolbar" aria-label="文档操作">
+                <div class="segmented" aria-label="编辑语言">
+                    <button type="button" class="active" data-language="zh">中文</button>
+                    <button type="button" data-language="en">English</button>
+                </div>
+                <button type="button" class="primary-action" data-print data-ui="print">导出 PDF</button>
+                <button type="button" data-export data-ui="export">导出 JSON</button>
+                <label class="file-action">
+                    <span data-ui="import">导入 JSON</span>
+                    <input type="file" accept="application/json,.json" data-import>
+                </label>
+                <button type="button" class="danger-action" data-reset data-ui="reset">恢复公开版本</button>
+            </div>
+
+            <nav class="section-tabs" aria-label="简历章节" data-section-tabs></nav>
+            <div class="editor-panel" data-editor-panel>
+                <div class="loading-card">正在读取简历数据…</div>
+            </div>
+        </aside>
+
+        <section class="preview-workspace" aria-label="PDF 实时预览">
+            <div class="preview-toolbar">
+                <div>
+                    <span class="preview-label">LIVE PDF PREVIEW</span>
+                    <strong data-page-format>中文 · A4</strong>
+                </div>
+                <div class="preview-meta">
+                    <span data-item-count>0 sections</span>
+                    <span>100%</span>
+                </div>
+            </div>
+            <div class="preview-stage">
+                <iframe
+                    class="resume-preview"
+                    data-preview
+                    src="print.html?lang=zh&amp;v=20260802-single1"
+                    title="简历 PDF 预览"
+                ></iframe>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" role="status" aria-live="polite" data-toast hidden></div>
+
+    <template id="field-template">
+        <label class="field">
+            <span></span>
+            <input type="text">
+        </label>
+    </template>
+
+    <script src="studio.js"></script>
+</body>
+</html>
