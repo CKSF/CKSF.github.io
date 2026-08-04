@@ -1,8 +1,9 @@
 :root {
     --paper: #ffffff;
-    --ink: #111111;
-    --muted: #444444;
-    --line: #111111;
+    --ink: #000000;
+    --resume-font-size: 10.5pt;
+    --resume-density: 1;
+    --resume-line-height: 1.13;
 }
 
 * { box-sizing: border-box; }
@@ -17,9 +18,9 @@ body {
     margin: 0;
     color: var(--ink);
     background: transparent;
-    font-family: Arial, "Noto Sans SC", sans-serif;
-    font-size: 10pt;
-    line-height: 1.28;
+    font-family: Garamond, "EB Garamond", "Noto Serif SC", Georgia, serif;
+    font-size: var(--resume-font-size);
+    line-height: var(--resume-line-height);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -32,61 +33,33 @@ body {
 
 .resume-page {
     position: relative;
-    width: 210mm;
-    min-height: 297mm;
+    width: 8.5in;
+    height: 11in;
     overflow: hidden;
-    padding: 13mm 16mm 14mm;
+    padding: 0.53in 0.61in 0.5in;
     background: var(--paper);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.14);
 }
 
-html[data-language="en"] .resume-page {
-    width: 8.5in;
-    min-height: 11in;
-    padding: 0.5in 0.62in 0.55in;
-}
-
-.page-index {
-    position: absolute;
-    right: 16mm;
-    bottom: 7mm;
-    color: #666;
-    font-size: 8pt;
-}
-
-html[data-language="en"] .page-index {
-    right: 0.62in;
-    bottom: 0.28in;
-}
-
 .resume-header {
-    padding-bottom: 3mm;
     text-align: center;
-    border-bottom: 1.2pt solid var(--line);
 }
 
 .resume-name {
     margin: 0;
-    font-family: Georgia, "Noto Serif SC", serif;
-    font-size: 22pt;
+    font-size: 18pt;
     line-height: 1.05;
-    letter-spacing: 0.01em;
-}
-
-.resume-label {
-    margin: 1.5mm 0 0;
-    font-size: 10pt;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .contact-line {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 0 1.7mm;
-    margin-top: 1.5mm;
-    color: var(--muted);
-    font-size: 9pt;
+    gap: 0 1.5mm;
+    margin-top: calc(1.2mm * var(--resume-density));
+    font-size: var(--resume-font-size);
+    line-height: 1.1;
 }
 
 .contact-line a {
@@ -94,39 +67,40 @@ html[data-language="en"] .page-index {
     text-decoration: none;
 }
 
-.contact-line span:not(:last-child)::after,
-.contact-line a:not(:last-child)::after {
-    content: " | ";
-    margin-left: 1.7mm;
-    color: #777;
+.contact-line > *:not(:last-child)::after {
+    content: "|";
+    margin-left: 1.5mm;
+}
+
+.summary {
+    margin: calc(3.3mm * var(--resume-density)) 0 0;
+    font-size: var(--resume-font-size);
+    line-height: var(--resume-line-height);
 }
 
 .section {
-    margin-top: 3.5mm;
+    margin-top: calc(3.3mm * var(--resume-density));
 }
 
 .section-heading {
-    margin-bottom: 2mm;
-    padding-bottom: 0.7mm;
-    border-bottom: 0.9pt solid var(--line);
+    margin: 0 0 calc(2.1mm * var(--resume-density));
+    padding-bottom: calc(0.8mm * var(--resume-density));
+    border-bottom: 0.7pt solid var(--ink);
 }
 
 .section-heading h2 {
     margin: 0;
-    font-family: Arial, "Noto Sans SC", sans-serif;
-    font-size: 10.5pt;
-    line-height: 1.1;
-    letter-spacing: 0.07em;
+    font-size: calc(var(--resume-font-size) + 0.5pt);
+    line-height: 1;
+    font-weight: 700;
     text-transform: uppercase;
 }
 
 .entry {
-    break-inside: avoid;
-    margin-bottom: 2.3mm;
+    margin-bottom: calc(2.1mm * var(--resume-density));
 }
 
-.entry-head,
-.entry-subline {
+.entry-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 5mm;
@@ -135,83 +109,70 @@ html[data-language="en"] .page-index {
 
 .entry h3 {
     margin: 0;
-    font-size: 10pt;
-    line-height: 1.2;
+    font-size: var(--resume-font-size);
+    line-height: var(--resume-line-height);
+    font-weight: 400;
 }
 
-.entry-date,
-.entry-location {
+.entry-primary {
+    font-weight: 700;
+}
+
+.entry-date {
     white-space: nowrap;
     text-align: right;
-    font-size: 9.5pt;
-}
-
-.entry-subline {
-    margin-top: 0.3mm;
-    color: var(--muted);
-    font-size: 9.5pt;
-    font-style: italic;
-}
-
-.entry-sub {
-    margin: 0;
-    font-weight: 600;
+    font-size: var(--resume-font-size);
+    line-height: var(--resume-line-height);
 }
 
 .entry ul {
-    margin: 0.9mm 0 0;
-    padding-left: 4.6mm;
+    margin: calc(1mm * var(--resume-density)) 0 0;
+    padding: 0;
+    list-style: none;
 }
 
-.entry li {
-    margin: 0 0 0.65mm;
-    padding-left: 0.6mm;
-    font-size: 10pt;
-    line-height: 1.27;
+.entry li,
+.skill-row,
+.language-row,
+.publication {
+    position: relative;
+    margin: 0 0 calc(0.6mm * var(--resume-density));
+    padding-left: 5.8mm;
+    font-size: var(--resume-font-size);
+    line-height: var(--resume-line-height);
+}
+
+.entry li::before,
+.skill-row::before,
+.language-row::before,
+.publication::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    width: 4.2mm;
+    text-align: center;
 }
 
 .compact-list {
     display: grid;
-    gap: 1.2mm;
-}
-
-.skill-row,
-.language-row {
-    font-size: 10pt;
-    line-height: 1.3;
+    gap: 0;
 }
 
 .skill-row strong,
 .language-row strong {
-    display: inline;
+    font-weight: 700;
 }
 
 .publication {
-    break-inside: avoid;
-    margin-bottom: 1.5mm;
-    padding-left: 4.6mm;
-    text-indent: -4.6mm;
-    font-size: 10pt;
-    line-height: 1.28;
+    margin-bottom: calc(1mm * var(--resume-density));
 }
 
-.publication::before {
-    content: "•";
-    display: inline-block;
-    width: 4.6mm;
-    text-indent: 0;
+.publication strong {
+    font-weight: 400;
 }
 
-.second-page .resume-header {
-    padding-bottom: 2.5mm;
-}
-
-.second-page .resume-name {
-    font-size: 17pt;
-}
-
-.second-page .resume-label {
-    display: none;
+.page-two {
+    padding-top: 0.53in;
 }
 
 .loading {
@@ -229,17 +190,12 @@ html[data-language="en"] .page-index {
     }
 
     .resume-page {
-        width: 210mm;
-        min-height: 297mm;
+        width: 8.5in;
+        height: 11in;
         margin: 0;
         box-shadow: none;
         break-after: page;
         page-break-after: always;
-    }
-
-    html[data-language="en"] .resume-page {
-        width: 8.5in;
-        min-height: 11in;
     }
 
     .resume-page:last-child {

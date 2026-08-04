@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="studio.css">
+    <link rel="stylesheet" href="studio.css?v=20260803-layout3">
 </head>
 <body>
     <header class="studio-header">
@@ -60,17 +60,34 @@
                 <div>
                     <span class="preview-label">LIVE PDF PREVIEW</span>
                     <strong data-page-format>中文 · A4</strong>
+                    <span class="preview-count" data-item-count>0 sections</span>
                 </div>
-                <div class="preview-meta">
-                    <span data-item-count>0 sections</span>
-                    <span>100%</span>
+                <div class="layout-controls" aria-label="PDF 排版设置">
+                    <label>
+                        <span>版式</span>
+                        <select data-layout-mode>
+                            <option value="two">双页</option>
+                            <option value="one">单页</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>字号</span>
+                        <input type="range" min="8" max="11" step="0.25" value="10.5" data-font-size>
+                        <output data-font-size-value>10.5 pt</output>
+                    </label>
+                    <label>
+                        <span>间距</span>
+                        <input type="range" min="0.65" max="1.15" step="0.05" value="1" data-density>
+                        <output data-density-value>100%</output>
+                    </label>
+                    <span class="fit-status" data-fit-status>检查排版</span>
                 </div>
             </div>
             <div class="preview-stage">
                 <iframe
                     class="resume-preview"
                     data-preview
-                    src="print.html?lang=zh&amp;v=20260802-single1"
+                    src="print.html?lang=zh&amp;v=20260803-layout3"
                     title="简历 PDF 预览"
                 ></iframe>
             </div>
@@ -86,6 +103,6 @@
         </label>
     </template>
 
-    <script src="studio.js"></script>
+    <script src="studio.js?v=20260803-layout2"></script>
 </body>
 </html>

@@ -6,10 +6,15 @@
     const params = new URLSearchParams(location.search);
     let language = params.get("lang") === "en" ? "en" : "zh";
     let resumeData = null;
+    let layoutSettings = {
+        mode: "two",
+        fontSize: 10.5,
+        density: 1
+    };
 
     const labels = {
         zh: {
-            kicker: "职业简历",
+            summary: "个人简介",
             education: "教育背景",
             work: "工作经历",
             research: "科研经历",
@@ -19,13 +24,13 @@
             languages: "语言"
         },
         en: {
-            kicker: "Career Resume",
+            summary: "Summary",
             education: "Education",
-            work: "Work Experience",
+            work: "Professional Experience",
             research: "Research Experience",
-            projects: "Selected Projects",
-            skills: "Skills",
-            publications: "Publications",
+            projects: "Project",
+            skills: "Skill",
+            publications: "Publication",
             languages: "Languages"
         }
     };
@@ -46,10 +51,31 @@
         return value || "";
     }
 
+    function normalizeLayout(value) {
+        const next = value && typeof value === "object" ? value : {};
+        const fontSize = Number(next.fontSize);
+        const density = Number(next.density);
+        return {
+            mode: next.mode === "one" ? "one" : "two",
+            fontSize: Number.isFinite(fontSize) ? Math.min(11, Math.max(8, fontSize)) : 10.5,
+            density: Number.isFinite(density) ? Math.min(1.15, Math.max(0.65, density)) : 1
+        };
+    }
+
+    function applyLayout() {
+        document.documentElement.dataset.layout = layoutSettings.mode;
+        document.documentElement.style.setProperty("--resume-font-size", `${layoutSettings.fontSize}pt`);
+        document.documentElement.style.setProperty("--resume-density", String(layoutSettings.density));
+        document.documentElement.style.setProperty(
+            "--resume-line-height",
+            String(1 + (0.13 * layoutSettings.density))
+        );
+    }
+
     function dateRange(item) {
         const start = localized(item.startDate);
         const end = localized(item.endDate);
-        return [start, end].filter(Boolean).join(" → ");
+        return [start, end].filter(Boolean).join(" – ");
     }
 
     function sectionHeading(title) {
@@ -59,18 +85,28 @@
             </div>`;
     }
 
-    function itemTitle(item, type) {
-        if (type === "education") return localized(item.institution);
-        if (type === "projects") return localized(item.name);
-        return localized(item.position);
-    }
+    function entryHeading(item, type) {
+        let primary = "";
+        let secondary = "";
+        let location = "";
+        let separator = " – ";
 
-    function itemSubtitle(item, type) {
-        return type === "education"
-            ? localized(item.position)
-            : type === "projects"
-                ? localized(item.description)
-                : localized(item.organization);
+        if (type === "education") {
+            primary = localized(item.institution);
+            secondary = localized(item.position);
+            separator = ", ";
+        } else if (type === "projects") {
+            primary = localized(item.name);
+            secondary = localized(item.description);
+            separator = " — ";
+        } else {
+            primary = localized(item.organization);
+            secondary = localized(item.position);
+            location = localized(item.location);
+        }
+
+        return `
+            <span class="entry-primary">${escapeHtml(primary)}</span>${location ? ` (${escapeHtml(location)})` : ""}${secondary ? `${separator}${escapeHtml(secondary)}` : ""}`;
     }
 
     function renderEntries(items, type) {
@@ -82,23 +118,30 @@
             return `
                 <article class="entry">
                     <div class="entry-head">
-                        <h3>${escapeHtml(itemTitle(item, type))}</h3>
+                        <h3>${entryHeading(item, type)}</h3>
                         <span class="entry-date">${escapeHtml(dateRange(item))}</span>
-                    </div>
-                    <div class="entry-subline">
-                        <p class="entry-sub">${escapeHtml(itemSubtitle(item, type))}</p>
-                        <span class="entry-location">${escapeHtml(localized(item.location))}</span>
                     </div>
                     ${list}
                 </article>`;
         }).join("");
     }
 
-    function renderSection(title, items, type, extraClass) {
+    function renderSection(title, items, type) {
+        if (!items || !items.length) return "";
         return `
-            <section class="section ${extraClass || ""}">
+            <section class="section">
                 ${sectionHeading(title)}
                 ${renderEntries(items, type)}
+            </section>`;
+    }
+
+    function renderSummary(data) {
+        const summary = localized((data.basics || {}).summary);
+        if (!summary) return "";
+        return `
+            <section class="section summary-section">
+                ${sectionHeading(labels[language].summary)}
+                <p class="summary">${escapeHtml(summary)}</p>
             </section>`;
     }
 
@@ -108,10 +151,17 @@
                 <strong>${escapeHtml(localized(group.name))}:</strong>
                 ${group.keywords.map(escapeHtml).join(", ")}
             </div>`).join("");
+        const languageItems = (data.languages || []).map((item) =>
+            `${escapeHtml(localized(item.language))} (${escapeHtml(localized(item.fluency))})`
+        );
+        const languages = languageItems.length
+            ? `<div class="language-row"><strong>${escapeHtml(labels[language].languages)}:</strong> ${languageItems.join(", ")}</div>`
+            : "";
+        if (!skills && !languages) return "";
         return `
             <section class="section">
                 ${sectionHeading(labels[language].skills)}
-                <div class="compact-list">${skills}</div>
+                <div class="compact-list">${skills}${languages}</div>
             </section>`;
     }
 
@@ -122,21 +172,11 @@
                 <strong>${escapeHtml(localized(publication.name))}.</strong>
                 ${escapeHtml(publication.publisher)}.
             </article>`).join("");
+        if (!publications) return "";
         return `
             <section class="section">
                 ${sectionHeading(labels[language].publications)}
                 ${publications}
-            </section>`;
-    }
-
-    function renderLanguages(data) {
-        const languageItems = (data.languages || []).map((item) =>
-            `${escapeHtml(localized(item.language))} (${escapeHtml(localized(item.fluency))})`
-        );
-        return `
-            <section class="section">
-                ${sectionHeading(labels[language].languages)}
-                <div class="language-row">${languageItems.join(", ")}</div>
             </section>`;
     }
 
@@ -148,86 +188,96 @@
         return `
             <header class="resume-header">
                 <h1 class="resume-name">${escapeHtml(localized(basics.name))}</h1>
-                <p class="resume-label">${escapeHtml(localized(basics.label))}</p>
                 <div class="contact-line">
-                    <span>${escapeHtml(localized(basics.location))}</span>
                     <span>${escapeHtml(basics.phone)}</span>
                     <a href="mailto:${escapeHtml(basics.email)}">${escapeHtml(basics.email)}</a>
-                    ${linkedIn ? `<a href="${escapeHtml(linkedIn.url)}">linkedin.com/in/${escapeHtml(linkedIn.username)}</a>` : ""}
                     ${github ? `<a href="${escapeHtml(github.url)}">github.com/${escapeHtml(github.username)}</a>` : ""}
+                    ${linkedIn ? `<a href="${escapeHtml(linkedIn.url)}">linkedin.com/in/${escapeHtml(linkedIn.username)}</a>` : ""}
                 </div>
             </header>`;
     }
 
-    function page(content, index, total, extraClass) {
-        return `
-            <article class="resume-page ${extraClass || ""}">
-                ${content}
-                <span class="page-index">${String(index).padStart(2, "0")} / ${String(total).padStart(2, "0")}</span>
-            </article>`;
+    function page(content, extraClass) {
+        return `<article class="resume-page ${extraClass || ""}">${content}</article>`;
     }
 
-    function renderChinese(data) {
-        const l = labels.zh;
-        const firstPage = `
+    function renderOnePage(data) {
+        const l = labels[language];
+        const content = `
             ${renderHeader(data)}
+            ${renderSummary(data)}
             ${renderSection(l.education, data.education, "education")}
-            ${renderSection(l.work, data.work, "work")}`;
-        const secondPage = `
-            ${renderHeader(data)}
+            ${renderSection(l.work, data.work, "work")}
             ${renderSection(l.research, data.research, "research")}
             ${renderSection(l.projects, data.projects, "projects")}
-            ${renderPublications(data)}
             ${renderSkills(data)}
-            ${renderLanguages(data)}`;
-        return page(firstPage, 1, 2) + page(secondPage, 2, 2, "second-page");
+            ${renderPublications(data)}`;
+        return page(content, "page-one single-page");
     }
 
-    function renderEnglish(data) {
-        const l = labels.en;
+    function renderTwoPages(data) {
+        const l = labels[language];
+        const projects = data.projects || [];
         const firstPage = `
             ${renderHeader(data)}
+            ${renderSummary(data)}
             ${renderSection(l.education, data.education, "education")}
-            ${renderSection(l.work, data.work, "work")}`;
-        const secondPage = `
-            ${renderHeader(data)}
+            ${renderSection(l.work, data.work, "work")}
             ${renderSection(l.research, data.research, "research")}
-            ${renderSection(l.projects, data.projects, "projects")}
-            ${renderPublications(data)}
+            ${renderSection(l.projects, projects.slice(0, 2), "projects")}`;
+        const remainingProjects = projects.slice(2);
+        const secondPage = `
+            ${remainingProjects.length ? renderEntries(remainingProjects, "projects") : ""}
             ${renderSkills(data)}
-            ${renderLanguages(data)}`;
-        return page(firstPage, 1, 2) + page(secondPage, 2, 2, "second-page");
+            ${renderPublications(data)}`;
+        return page(firstPage, "page-one") + page(secondPage, "page-two");
+    }
+
+    function reportLayout() {
+        const pages = Array.from(documentRoot.querySelectorAll(".resume-page"));
+        const overflow = pages.some((page) => page.scrollHeight > page.clientHeight + 1);
+        parent.postMessage({
+            type: "resume:layout-status",
+            pageCount: pages.length,
+            overflow
+        }, location.origin);
     }
 
     function render() {
         if (!resumeData) return;
         document.documentElement.dataset.language = language;
         document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
-        pageSizeStyle.textContent = language === "zh"
-            ? "@page { size: A4; margin: 0; }"
-            : "@page { size: letter; margin: 0; }";
+        applyLayout();
+        pageSizeStyle.textContent = "@page { size: letter; margin: 0; }";
         document.title = language === "zh"
             ? "冯天宁_简历"
             : "Tianning_Feng_Resume";
-        documentRoot.innerHTML = language === "zh"
-            ? renderChinese(resumeData)
-            : renderEnglish(resumeData);
+        documentRoot.innerHTML = layoutSettings.mode === "one"
+            ? renderOnePage(resumeData)
+            : renderTwoPages(resumeData);
+        reportLayout();
+        requestAnimationFrame(reportLayout);
+        const fontsReady = document.fonts && document.fonts.ready
+            ? document.fonts.ready
+            : Promise.resolve();
+        fontsReady.then(() => requestAnimationFrame(reportLayout));
     }
 
-    function setData(data, nextLanguage) {
+    function setData(data, nextLanguage, nextLayout) {
         if (!data || typeof data !== "object") return;
         resumeData = data;
         language = nextLanguage === "en" ? "en" : "zh";
+        layoutSettings = normalizeLayout(nextLayout || layoutSettings);
         render();
     }
 
     addEventListener("message", (event) => {
         if (event.origin !== location.origin) return;
         if (event.data && event.data.type === "resume:update") {
-            setData(event.data.payload, event.data.language);
+            setData(event.data.payload, event.data.language, event.data.layout);
         }
         if (event.data && event.data.type === "resume:print") {
-            setData(event.data.payload, event.data.language);
+            setData(event.data.payload, event.data.language, event.data.layout);
             requestAnimationFrame(() => print());
         }
     });

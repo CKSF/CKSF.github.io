@@ -5,6 +5,7 @@
     const DB_NAME = "tianning-resume-studio";
     const STORE_NAME = "drafts";
     const DRAFT_KEY = "primary";
+    const LAYOUT_KEY = "resume-studio:layout";
 
     const tabs = [
         { key: "basics", zh: "基础信息", en: "Basics" },
@@ -40,7 +41,9 @@
             reset: "已恢复仓库中的公开版本",
             invalid: "无法导入：文件不是有效的简历 JSON",
             print: "打印窗口将打开；请选择“另存为 PDF”并关闭页眉页脚。",
-            format: "中文 · A4",
+            format: "中文 · Letter",
+            fit: "排版正常",
+            overflow: "内容溢出",
             confirmReset: "恢复公开版本会删除当前浏览器中的全部简历草稿，继续吗？"
         },
         en: {
@@ -66,6 +69,8 @@
             invalid: "Import failed: this is not valid resume JSON",
             print: "The print dialog will open. Choose Save as PDF and disable headers and footers.",
             format: "English · Letter",
+            fit: "Layout fits",
+            overflow: "Content overflow",
             confirmReset: "Restoring the public version will delete every resume draft in this browser. Continue?"
         }
     };
@@ -77,7 +82,12 @@
         publicData: null,
         saveTimer: 0,
         toastTimer: 0,
-        previewReady: false
+        previewReady: false,
+        layout: {
+            mode: "two",
+            fontSize: 10.5,
+            density: 1
+        }
     };
 
     const refs = {
@@ -87,6 +97,12 @@
         saveState: document.querySelector("[data-save-state]"),
         pageFormat: document.querySelector("[data-page-format]"),
         itemCount: document.querySelector("[data-item-count]"),
+        layoutMode: document.querySelector("[data-layout-mode]"),
+        fontSize: document.querySelector("[data-font-size]"),
+        fontSizeValue: document.querySelector("[data-font-size-value]"),
+        density: document.querySelector("[data-density]"),
+        densityValue: document.querySelector("[data-density-value]"),
+        fitStatus: document.querySelector("[data-fit-status]"),
         toast: document.querySelector("[data-toast]")
     };
 
@@ -101,6 +117,39 @@
 
     function clone(value) {
         return JSON.parse(JSON.stringify(value));
+    }
+
+    function loadLayout() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY));
+            if (!saved || typeof saved !== "object") return;
+            state.layout.mode = saved.mode === "one" ? "one" : "two";
+            state.layout.fontSize = Math.min(11, Math.max(8, Number(saved.fontSize) || 10.5));
+            state.layout.density = Math.min(1.15, Math.max(0.65, Number(saved.density) || 1));
+        } catch (error) {}
+    }
+
+    function saveLayout() {
+        try {
+            localStorage.setItem(LAYOUT_KEY, JSON.stringify(state.layout));
+        } catch (error) {}
+    }
+
+    function updateLayoutControls() {
+        refs.layoutMode.value = state.layout.mode;
+        refs.fontSize.value = String(state.layout.fontSize);
+        refs.fontSizeValue.value = `${state.layout.fontSize.toFixed(2).replace(/0$/, "")} pt`;
+        refs.density.value = String(state.layout.density);
+        refs.densityValue.value = `${Math.round(state.layout.density * 100)}%`;
+        refs.fitStatus.textContent = state.language === "zh" ? "检查排版" : "Checking";
+        refs.fitStatus.dataset.state = "";
+    }
+
+    function setLayoutStatus(pageCount, overflow) {
+        refs.fitStatus.textContent = overflow
+            ? copy[state.language].overflow
+            : `${pageCount} ${pageCount === 1 ? "page" : "pages"} · ${copy[state.language].fit}`;
+        refs.fitStatus.dataset.state = overflow ? "overflow" : "fit";
     }
 
     function getAtPath(root, path) {
@@ -301,6 +350,8 @@
         });
         refs.pageFormat.textContent = copy[state.language].format;
         refs.preview.title = state.language === "zh" ? "中文简历 PDF 预览" : "English resume PDF preview";
+        refs.fitStatus.textContent = state.language === "zh" ? "检查排版" : "Checking";
+        refs.fitStatus.dataset.state = "";
     }
 
     function updateCount() {
@@ -315,7 +366,8 @@
         refs.preview.contentWindow.postMessage({
             type: type || "resume:update",
             payload: state.data,
-            language: state.language
+            language: state.language,
+            layout: state.layout
         }, location.origin);
     }
 
@@ -507,6 +559,34 @@
             });
         });
 
+        refs.layoutMode.addEventListener("change", () => {
+            state.layout.mode = refs.layoutMode.value === "one" ? "one" : "two";
+            if (state.layout.mode === "one") {
+                state.layout.fontSize = 9.25;
+                state.layout.density = 0.7;
+            } else {
+                state.layout.fontSize = 10.5;
+                state.layout.density = 1;
+            }
+            updateLayoutControls();
+            saveLayout();
+            postPreview();
+        });
+
+        refs.fontSize.addEventListener("input", () => {
+            state.layout.fontSize = Number(refs.fontSize.value);
+            updateLayoutControls();
+            saveLayout();
+            postPreview();
+        });
+
+        refs.density.addEventListener("input", () => {
+            state.layout.density = Number(refs.density.value);
+            updateLayoutControls();
+            saveLayout();
+            postPreview();
+        });
+
         refs.tabs.addEventListener("click", (event) => {
             const button = event.target.closest("[data-tab]");
             if (!button) return;
@@ -548,10 +628,15 @@
                 state.previewReady = true;
                 postPreview();
             }
+            if (event.data && event.data.type === "resume:layout-status") {
+                setLayoutStatus(event.data.pageCount, Boolean(event.data.overflow));
+            }
         });
     }
 
     async function initialize() {
+        loadLayout();
+        updateLayoutControls();
         bindEvents();
         try {
             const response = await fetch(DATA_URL);
