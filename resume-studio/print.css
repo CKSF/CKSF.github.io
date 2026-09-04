@@ -41,6 +41,16 @@ body {
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.14);
 }
 
+.resume-content {
+    position: relative;
+    z-index: 2;
+}
+
+.visual-decor {
+    display: none;
+    pointer-events: none;
+}
+
 .resume-header {
     text-align: center;
 }
@@ -50,6 +60,10 @@ body {
     font-size: 18pt;
     line-height: 1.05;
     font-weight: 700;
+}
+
+.resume-label {
+    display: none;
 }
 
 .contact-line {
@@ -173,6 +187,868 @@ body {
 
 .page-two {
     padding-top: 0.53in;
+}
+
+.page-two .visual-decor {
+    display: none !important;
+}
+
+/* Modern Minimal */
+html[data-template="modern"] body {
+    color: #182330;
+    font-family: Inter, "Noto Sans SC", Arial, sans-serif;
+}
+
+html[data-template="modern"] .resume-page {
+    padding-right: 0.58in;
+    padding-left: 0.58in;
+}
+
+html[data-template="modern"] .resume-header {
+    padding: 1.5mm 0 1.5mm 4mm;
+    border-left: 4pt solid #236c9f;
+    text-align: left;
+}
+
+html[data-template="modern"] .resume-name {
+    color: #123d5a;
+    font-size: 21pt;
+    letter-spacing: -0.02em;
+}
+
+html[data-template="modern"] .resume-label {
+    display: block;
+    margin: calc(1mm * var(--resume-density)) 0 0;
+    color: #38576d;
+    font-size: calc(var(--resume-font-size) - 0.25pt);
+    font-weight: 600;
+}
+
+html[data-template="modern"] .contact-line {
+    justify-content: flex-start;
+    color: #4c5e6b;
+    font-size: calc(var(--resume-font-size) - 0.5pt);
+}
+
+html[data-template="modern"] .section {
+    margin-top: calc(2.8mm * var(--resume-density));
+}
+
+html[data-template="modern"] .entry {
+    margin-bottom: calc(1.7mm * var(--resume-density));
+}
+
+html[data-template="modern"] .section-heading {
+    border-bottom-color: #afc3d1;
+}
+
+html[data-template="modern"] .section-heading h2 {
+    color: #236c9f;
+    font-size: calc(var(--resume-font-size) + 0.25pt);
+    letter-spacing: 0.08em;
+}
+
+html[data-template="modern"] .entry-primary,
+html[data-template="modern"] .skill-row strong,
+html[data-template="modern"] .language-row strong {
+    color: #123d5a;
+}
+
+html[data-template="modern"] .entry li::before,
+html[data-template="modern"] .skill-row::before,
+html[data-template="modern"] .language-row::before,
+html[data-template="modern"] .publication::before {
+    color: #236c9f;
+}
+
+/* Executive */
+html[data-template="executive"] body {
+    color: #1c2a36;
+    font-family: Merriweather, "Noto Serif SC", Georgia, serif;
+}
+
+html[data-template="executive"] .resume-header {
+    margin: -0.53in -0.61in 0;
+    padding: 0.3in 0.61in 0.2in;
+    color: #ffffff;
+    background: #17324d;
+    text-align: left;
+}
+
+html[data-template="executive"] .resume-name {
+    font-size: 21pt;
+    letter-spacing: 0.025em;
+}
+
+html[data-template="executive"] .resume-label {
+    display: block;
+    margin: calc(0.8mm * var(--resume-density)) 0 0;
+    color: #c9d9e7;
+    font-family: Inter, "Noto Sans SC", sans-serif;
+    font-size: calc(var(--resume-font-size) - 0.2pt);
+    font-weight: 600;
+}
+
+html[data-template="executive"] .contact-line {
+    justify-content: flex-start;
+    color: #dbe6ee;
+    font-family: Inter, "Noto Sans SC", sans-serif;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="executive"] .section {
+    margin-top: calc(2.7mm * var(--resume-density));
+}
+
+html[data-template="executive"] .section-heading {
+    margin-bottom: calc(1.6mm * var(--resume-density));
+    padding-bottom: calc(0.5mm * var(--resume-density));
+    border-bottom-color: #9cafbf;
+}
+
+html[data-template="executive"] .section-heading h2 {
+    color: #17324d;
+    font-family: Inter, "Noto Sans SC", sans-serif;
+    font-size: calc(var(--resume-font-size) + 0.2pt);
+    letter-spacing: 0.09em;
+}
+
+html[data-template="executive"] .entry {
+    margin-bottom: calc(1.7mm * var(--resume-density));
+}
+
+html[data-template="executive"] .entry-primary {
+    color: #17324d;
+}
+
+html[data-template="executive"] .page-two {
+    padding-top: 0.53in;
+}
+
+/* Swiss Grid */
+html[data-template="swiss"] body {
+    color: #121212;
+    font-family: Helvetica, Arial, "Noto Sans SC", sans-serif;
+}
+
+html[data-template="swiss"] .resume-page {
+    padding: 0.5in 0.58in 0.48in 0.78in;
+    border-left: 10pt solid #e3352f;
+}
+
+html[data-template="swiss"] .resume-header {
+    position: relative;
+    text-align: left;
+}
+
+html[data-template="swiss"] .resume-header::before {
+    content: "01";
+    position: absolute;
+    top: 2px;
+    left: -0.5in;
+    color: #e3352f;
+    font-size: 11pt;
+    font-weight: 700;
+    transform: rotate(-90deg);
+}
+
+html[data-template="swiss"] .resume-name {
+    font-size: 23pt;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+html[data-template="swiss"] .resume-label {
+    display: block;
+    margin: calc(0.8mm * var(--resume-density)) 0 0;
+    color: #e3352f;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    font-weight: 700;
+}
+
+html[data-template="swiss"] .contact-line {
+    justify-content: flex-start;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="swiss"] .section {
+    position: relative;
+    margin-top: calc(2.7mm * var(--resume-density));
+}
+
+html[data-template="swiss"] .section-heading {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+    padding: 0;
+    border: 0;
+}
+
+html[data-template="swiss"] .section-heading h2 {
+    display: inline-block;
+    padding: 1mm 2.2mm 0.8mm;
+    color: #ffffff;
+    background: #e3352f;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    letter-spacing: 0.04em;
+}
+
+html[data-template="swiss"] .entry {
+    margin-bottom: calc(1.7mm * var(--resume-density));
+}
+
+html[data-template="swiss"] .entry-primary {
+    font-weight: 700;
+}
+
+html[data-template="swiss"] .entry li::before,
+html[data-template="swiss"] .skill-row::before,
+html[data-template="swiss"] .language-row::before,
+html[data-template="swiss"] .publication::before {
+    color: #e3352f;
+}
+
+/* Terminal */
+html[data-template="terminal"] body {
+    color: #142319;
+    font-family: "IBM Plex Mono", "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+html[data-template="terminal"] .resume-page {
+    padding-right: 0.55in;
+    padding-left: 0.55in;
+    border-top: 6pt solid #238a4b;
+}
+
+html[data-template="terminal"] .resume-header {
+    text-align: left;
+}
+
+html[data-template="terminal"] .resume-name {
+    color: #0f5e31;
+    font-size: 18.5pt;
+}
+
+html[data-template="terminal"] .resume-name::before {
+    content: "> ";
+    color: #238a4b;
+}
+
+html[data-template="terminal"] .resume-label {
+    display: block;
+    margin: calc(0.8mm * var(--resume-density)) 0 0;
+    font-size: calc(var(--resume-font-size) - 0.6pt);
+}
+
+html[data-template="terminal"] .contact-line {
+    justify-content: flex-start;
+    color: #42604b;
+    font-size: calc(var(--resume-font-size) - 1pt);
+}
+
+html[data-template="terminal"] .section {
+    margin-top: calc(2.5mm * var(--resume-density));
+}
+
+html[data-template="terminal"] .section-heading {
+    margin-bottom: calc(1.4mm * var(--resume-density));
+    padding-bottom: calc(0.45mm * var(--resume-density));
+    border-bottom: 1pt dashed #79aa88;
+}
+
+html[data-template="terminal"] .section-heading h2 {
+    color: #0f5e31;
+    font-size: calc(var(--resume-font-size) - 0.2pt);
+    letter-spacing: 0;
+}
+
+html[data-template="terminal"] .section-heading h2::before {
+    content: "./";
+    color: #238a4b;
+}
+
+html[data-template="terminal"] .entry {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+}
+
+html[data-template="terminal"] .entry-date {
+    color: #526a59;
+    font-size: calc(var(--resume-font-size) - 0.6pt);
+}
+
+html[data-template="terminal"] .entry li,
+html[data-template="terminal"] .skill-row,
+html[data-template="terminal"] .language-row,
+html[data-template="terminal"] .publication {
+    padding-left: 4.8mm;
+    font-size: calc(var(--resume-font-size) - 0.35pt);
+}
+
+html[data-template="terminal"] .entry li::before,
+html[data-template="terminal"] .skill-row::before,
+html[data-template="terminal"] .language-row::before,
+html[data-template="terminal"] .publication::before {
+    content: ">";
+    color: #238a4b;
+}
+
+/* Warm Editorial */
+html[data-template="editorial"] body {
+    color: #493b37;
+    font-family: "Libre Baskerville", "Noto Serif SC", Georgia, serif;
+}
+
+html[data-template="editorial"] .resume-page {
+    padding: 0.57in 0.67in 0.52in;
+    background: #fbf7f0;
+}
+
+html[data-template="editorial"] .resume-header {
+    text-align: left;
+}
+
+html[data-template="editorial"] .resume-name {
+    color: #532f29;
+    font-size: 23pt;
+    line-height: 1;
+}
+
+html[data-template="editorial"] .resume-label {
+    display: block;
+    margin: calc(1mm * var(--resume-density)) 0 0;
+    color: #b85f45;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    font-style: italic;
+}
+
+html[data-template="editorial"] .contact-line {
+    justify-content: flex-start;
+    color: #806b64;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="editorial"] .section {
+    margin-top: calc(2.8mm * var(--resume-density));
+}
+
+html[data-template="editorial"] .section-heading {
+    margin-bottom: calc(1.7mm * var(--resume-density));
+    padding-bottom: calc(0.5mm * var(--resume-density));
+    border-bottom-color: #c98a76;
+}
+
+html[data-template="editorial"] .section-heading h2 {
+    color: #8e4938;
+    font-size: calc(var(--resume-font-size) + 0.2pt);
+    letter-spacing: 0.08em;
+}
+
+html[data-template="editorial"] .entry {
+    margin-bottom: calc(1.7mm * var(--resume-density));
+}
+
+html[data-template="editorial"] .entry-primary {
+    color: #532f29;
+}
+
+html[data-template="editorial"] .entry li::before,
+html[data-template="editorial"] .skill-row::before,
+html[data-template="editorial"] .language-row::before,
+html[data-template="editorial"] .publication::before {
+    color: #b85f45;
+}
+
+/* Bold Header */
+html[data-template="bold"] body {
+    color: #111111;
+    font-family: Inter, "Noto Sans SC", Arial, sans-serif;
+}
+
+html[data-template="bold"] .resume-header {
+    margin: -0.53in -0.61in 0;
+    padding: 0.28in 0.61in 0.2in;
+    color: #ffffff;
+    background: #111111;
+    text-align: left;
+}
+
+html[data-template="bold"] .resume-name {
+    font-size: 26pt;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+html[data-template="bold"] .resume-label {
+    display: block;
+    margin: calc(0.7mm * var(--resume-density)) 0 0;
+    color: #dddddd;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    font-weight: 600;
+}
+
+html[data-template="bold"] .contact-line {
+    justify-content: flex-start;
+    color: #d0d0d0;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="bold"] .section {
+    margin-top: calc(2.6mm * var(--resume-density));
+}
+
+html[data-template="bold"] .section-heading {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+    padding: 0;
+    border: 0;
+}
+
+html[data-template="bold"] .section-heading h2 {
+    display: inline-block;
+    padding: 0.7mm 2mm 0.6mm;
+    color: #ffffff;
+    background: #111111;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    letter-spacing: 0.06em;
+}
+
+html[data-template="bold"] .entry {
+    margin-bottom: calc(1.6mm * var(--resume-density));
+}
+
+html[data-template="bold"] .entry-primary {
+    font-weight: 800;
+}
+
+/* Orbit */
+html[data-template="orbit"] body {
+    color: #172033;
+    font-family: Inter, "Noto Sans SC", Arial, sans-serif;
+}
+
+html[data-template="orbit"] .resume-page {
+    padding: 0.62in 0.62in 0.5in;
+    background:
+        radial-gradient(circle at 90% 4%, rgba(115, 91, 255, 0.1), transparent 24%),
+        #ffffff;
+}
+
+html[data-template="orbit"] .visual-decor {
+    position: absolute;
+    z-index: 1;
+    top: -0.54in;
+    right: -0.32in;
+    width: 2.45in;
+    height: 2.45in;
+    display: block;
+}
+
+html[data-template="orbit"] .visual-decor span {
+    position: absolute;
+    border-radius: 50%;
+}
+
+html[data-template="orbit"] .visual-decor span:nth-child(1) {
+    inset: 0;
+    border: 18pt solid rgba(104, 79, 255, 0.14);
+}
+
+html[data-template="orbit"] .visual-decor span:nth-child(2) {
+    inset: 0.36in;
+    border: 7pt solid rgba(18, 181, 185, 0.3);
+}
+
+html[data-template="orbit"] .visual-decor span:nth-child(3) {
+    top: 0.92in;
+    left: 0.92in;
+    width: 0.62in;
+    height: 0.62in;
+    background: linear-gradient(135deg, #735bff, #16b6b8);
+}
+
+html[data-template="orbit"] .visual-decor span:nth-child(4) {
+    top: 0.34in;
+    left: 0.26in;
+    width: 0.16in;
+    height: 0.16in;
+    background: #ff9c5b;
+}
+
+html[data-template="orbit"] .resume-header {
+    min-height: 0.86in;
+    padding-right: 1.55in;
+    text-align: left;
+}
+
+html[data-template="orbit"] .resume-name {
+    color: #332484;
+    font-size: 24pt;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+}
+
+html[data-template="orbit"] .resume-label {
+    display: block;
+    margin: calc(1mm * var(--resume-density)) 0 0;
+    color: #16898c;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    font-weight: 700;
+}
+
+html[data-template="orbit"] .contact-line {
+    justify-content: flex-start;
+    color: #586175;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="orbit"] .section {
+    margin-top: calc(2.6mm * var(--resume-density));
+}
+
+html[data-template="orbit"] .section-heading {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+    padding: 0;
+    border: 0;
+}
+
+html[data-template="orbit"] .section-heading h2 {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    color: #332484;
+    font-size: calc(var(--resume-font-size) + 0.1pt);
+    letter-spacing: 0.06em;
+}
+
+html[data-template="orbit"] .section-heading h2::before {
+    content: "";
+    width: 4mm;
+    height: 4mm;
+    flex: 0 0 auto;
+    border: 1.5pt solid #735bff;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2pt #ffffff;
+    background: #16b6b8;
+}
+
+html[data-template="orbit"] .entry {
+    margin-bottom: calc(1.55mm * var(--resume-density));
+}
+
+html[data-template="orbit"] .entry li::before,
+html[data-template="orbit"] .skill-row::before,
+html[data-template="orbit"] .language-row::before,
+html[data-template="orbit"] .publication::before {
+    color: #735bff;
+}
+
+/* Blueprint */
+html[data-template="blueprint"] body {
+    color: #173654;
+    font-family: "IBM Plex Sans", Inter, "Noto Sans SC", sans-serif;
+}
+
+html[data-template="blueprint"] .resume-page {
+    padding: 0.56in 0.6in 0.5in;
+    background-color: #f8fbfd;
+    background-image:
+        linear-gradient(rgba(37, 111, 164, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 111, 164, 0.055) 1px, transparent 1px);
+    background-size: 12px 12px;
+}
+
+html[data-template="blueprint"] .visual-decor {
+    position: absolute;
+    z-index: 1;
+    top: 0.28in;
+    right: 0.42in;
+    width: 1.6in;
+    height: 0.82in;
+    display: block;
+    border-top: 1pt solid #66a2c8;
+    border-bottom: 1pt solid #66a2c8;
+}
+
+html[data-template="blueprint"] .visual-decor span {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border: 1.5pt solid #287db7;
+    border-radius: 50%;
+    background: #f8fbfd;
+}
+
+html[data-template="blueprint"] .visual-decor span:nth-child(1) { top: -5px; left: 4px; }
+html[data-template="blueprint"] .visual-decor span:nth-child(2) { top: -5px; right: 4px; }
+html[data-template="blueprint"] .visual-decor span:nth-child(3) { bottom: -5px; left: 42%; }
+html[data-template="blueprint"] .visual-decor span:nth-child(4) { bottom: -5px; right: 4px; }
+
+html[data-template="blueprint"] .resume-header {
+    min-height: 0.76in;
+    padding-right: 1.75in;
+    text-align: left;
+}
+
+html[data-template="blueprint"] .resume-name {
+    color: #105b8d;
+    font-size: 21pt;
+    letter-spacing: -0.02em;
+}
+
+html[data-template="blueprint"] .resume-label {
+    display: block;
+    margin: calc(0.8mm * var(--resume-density)) 0 0;
+    color: #4381a9;
+    font-size: calc(var(--resume-font-size) - 0.25pt);
+    font-weight: 600;
+}
+
+html[data-template="blueprint"] .contact-line {
+    justify-content: flex-start;
+    color: #56768c;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="blueprint"] .section {
+    margin-top: calc(2.5mm * var(--resume-density));
+}
+
+html[data-template="blueprint"] .section-heading {
+    margin-bottom: calc(1.4mm * var(--resume-density));
+    padding: 0 0 calc(0.4mm * var(--resume-density));
+    border-bottom: 1.2pt solid #287db7;
+}
+
+html[data-template="blueprint"] .section-heading h2 {
+    color: #105b8d;
+    font-size: calc(var(--resume-font-size) + 0.1pt);
+    letter-spacing: 0.06em;
+}
+
+html[data-template="blueprint"] .section-heading h2::before {
+    content: "[ ";
+    color: #68a7ce;
+}
+
+html[data-template="blueprint"] .section-heading h2::after {
+    content: " ]";
+    color: #68a7ce;
+}
+
+html[data-template="blueprint"] .entry {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+}
+
+html[data-template="blueprint"] .entry li::before,
+html[data-template="blueprint"] .skill-row::before,
+html[data-template="blueprint"] .language-row::before,
+html[data-template="blueprint"] .publication::before {
+    color: #287db7;
+}
+
+/* Career Timeline */
+html[data-template="timeline"] body {
+    color: #252b32;
+    font-family: Inter, "Noto Sans SC", Arial, sans-serif;
+}
+
+html[data-template="timeline"] .resume-page {
+    padding: 0.56in 0.62in 0.5in;
+    background: linear-gradient(90deg, #f1f4f6 0 0.36in, #ffffff 0.36in);
+}
+
+html[data-template="timeline"] .resume-header {
+    padding: 0 0 calc(2mm * var(--resume-density)) 0.16in;
+    border-bottom: 2pt solid #303b45;
+    text-align: left;
+}
+
+html[data-template="timeline"] .resume-name {
+    color: #1d2933;
+    font-size: 22pt;
+}
+
+html[data-template="timeline"] .resume-label {
+    display: block;
+    margin: calc(0.8mm * var(--resume-density)) 0 0;
+    color: #e26443;
+    font-size: calc(var(--resume-font-size) - 0.1pt);
+    font-weight: 700;
+}
+
+html[data-template="timeline"] .contact-line {
+    justify-content: flex-start;
+    color: #69747d;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="timeline"] .section {
+    position: relative;
+    margin-top: calc(2.6mm * var(--resume-density));
+    padding-left: 0.16in;
+}
+
+html[data-template="timeline"] .section-heading {
+    margin: 0 0 calc(1.5mm * var(--resume-density));
+    padding: 0;
+    border: 0;
+}
+
+html[data-template="timeline"] .section-heading h2 {
+    color: #e26443;
+    font-size: calc(var(--resume-font-size) + 0.1pt);
+    letter-spacing: 0.08em;
+}
+
+html[data-template="timeline"] .entry {
+    position: relative;
+    margin: 0 0 calc(1.7mm * var(--resume-density));
+    padding-left: 4mm;
+    border-left: 1.2pt solid #bdc6cc;
+}
+
+html[data-template="timeline"] .entry::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: -3.2px;
+    width: 6px;
+    height: 6px;
+    border: 1.5pt solid #ffffff;
+    border-radius: 50%;
+    background: #e26443;
+    box-shadow: 0 0 0 1pt #e26443;
+}
+
+html[data-template="timeline"] .entry-primary {
+    color: #1d2933;
+}
+
+html[data-template="timeline"] .entry-date {
+    color: #68747d;
+    font-size: calc(var(--resume-font-size) - 0.5pt);
+}
+
+/* Bauhaus */
+html[data-template="bauhaus"] body {
+    color: #171717;
+    font-family: Futura, "Avenir Next", Inter, "Noto Sans SC", sans-serif;
+}
+
+html[data-template="bauhaus"] .resume-page {
+    padding: 0.62in 0.62in 0.5in;
+    background: #f7f2e8;
+}
+
+html[data-template="bauhaus"] .visual-decor {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    width: 2.55in;
+    height: 1.65in;
+    display: block;
+}
+
+html[data-template="bauhaus"] .visual-decor span {
+    position: absolute;
+}
+
+html[data-template="bauhaus"] .visual-decor span:nth-child(1) {
+    top: -0.5in;
+    right: -0.35in;
+    width: 1.45in;
+    height: 1.45in;
+    border-radius: 50%;
+    background: #e33d2e;
+}
+
+html[data-template="bauhaus"] .visual-decor span:nth-child(2) {
+    top: 0;
+    right: 0.85in;
+    width: 0.55in;
+    height: 1.05in;
+    background: #f2c230;
+    transform: rotate(45deg);
+}
+
+html[data-template="bauhaus"] .visual-decor span:nth-child(3) {
+    top: 0.86in;
+    right: 0.18in;
+    width: 0.72in;
+    height: 0.72in;
+    background: #1769aa;
+}
+
+html[data-template="bauhaus"] .visual-decor span:nth-child(4) {
+    top: 0.73in;
+    right: 1.37in;
+    width: 0.36in;
+    height: 0.36in;
+    border: 6pt solid #171717;
+    border-radius: 50%;
+}
+
+html[data-template="bauhaus"] .resume-header {
+    min-height: 0.9in;
+    padding-right: 1.7in;
+    text-align: left;
+}
+
+html[data-template="bauhaus"] .resume-name {
+    font-size: 25pt;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+}
+
+html[data-template="bauhaus"] .resume-label {
+    display: inline-block;
+    margin: calc(1mm * var(--resume-density)) 0 0;
+    padding: 0.7mm 1.8mm;
+    color: #ffffff;
+    background: #1769aa;
+    font-size: calc(var(--resume-font-size) - 0.3pt);
+    font-weight: 700;
+}
+
+html[data-template="bauhaus"] .contact-line {
+    justify-content: flex-start;
+    font-size: calc(var(--resume-font-size) - 0.7pt);
+}
+
+html[data-template="bauhaus"] .section {
+    margin-top: calc(2.5mm * var(--resume-density));
+}
+
+html[data-template="bauhaus"] .section-heading {
+    margin-bottom: calc(1.4mm * var(--resume-density));
+    padding: 0;
+    border: 0;
+}
+
+html[data-template="bauhaus"] .section-heading h2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 2mm;
+    font-size: calc(var(--resume-font-size) + 0.1pt);
+    letter-spacing: 0.05em;
+}
+
+html[data-template="bauhaus"] .section-heading h2::before {
+    content: "";
+    width: 4mm;
+    height: 4mm;
+    background: #e33d2e;
+    transform: rotate(45deg);
+}
+
+html[data-template="bauhaus"] .entry {
+    margin-bottom: calc(1.5mm * var(--resume-density));
+}
+
+html[data-template="bauhaus"] .entry li::before,
+html[data-template="bauhaus"] .skill-row::before,
+html[data-template="bauhaus"] .language-row::before,
+html[data-template="bauhaus"] .publication::before {
+    color: #1769aa;
 }
 
 .loading {

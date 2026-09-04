@@ -6,423 +6,9 @@
     <title>简历｜冯天宁</title>
     <meta name="description" content="冯天宁 Tianning Feng — 求职方向 Product Manager · UPenn CIS 硕士 · Google PM 认证 · SeizureFormer / EpiDHGNN 合作发表 (PSB 2026)。" />
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-void:    #05070d;
-            --bg-panel:   rgba(10, 14, 22, 0.72);
-            --accent:     #fce94f;
-            --accent-dim: #b8a634;
-            --cyan:       #24e0ff;
-            --magenta:    #ff003c;
-            --text:       #e5e7ee;
-            --text-mute:  #7d8494;
-            --border:     rgba(252, 233, 79, 0.35);
-            --border-dim: rgba(255, 255, 255, 0.08);
-        }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; background: #05070d; margin: 0; padding: 0; }
-        body {
-            margin: 0; padding: 0;
-            background: transparent;
-            color: var(--text);
-            font-family: 'Rajdhani', 'Chakra Petch', 'PingFang SC', -apple-system, sans-serif;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-            z-index: 0;
-        }
-        ::selection { background: var(--accent); color: #000; }
-        a { color: var(--accent); text-decoration: none; transition: color .15s; }
-        a:hover { color: #fff; }
-
-        /* ===== 背景层：数字雨 + 蒙版 ===== */
-        .matrix-rain {
-            position: fixed; inset: 0; z-index: -5;
-            width: 100%; height: 100%; display: block;
-            background: #05070d;
-        }
-        .bg-veil {
-            position: fixed; inset: 0; z-index: -4; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%);
-        }
-        .bg-grid {
-            position: fixed; inset: 0; z-index: -3; pointer-events: none;
-            background:
-                radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
-                radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%);
-        }
-        .bg-grid::before {
-            content: ''; position: absolute; inset: 0;
-            background-image:
-                linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
-            background-size: 64px 64px;
-            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-        }
-        .scanlines {
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px);
-        }
-        .noise {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            opacity: 0.05; mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-        }
-
-        /* ===== 顶部导航（简化版） ===== */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 2rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
-            backdrop-filter: blur(6px);
-        }
-        .nav-brand {
-            color: var(--accent); font-weight: 500;
-            display: flex; align-items: center; gap: 0.6rem;
-        }
-        .nav-brand .dot {
-            width: 6px; height: 6px; background: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-        }
-        .nav-back {
-            color: var(--text-mute);
-            display: flex; align-items: center; gap: 0.5rem;
-            transition: color 0.15s;
-        }
-        .nav-back:hover { color: var(--text); }
-        .nav-lang { display: flex; gap: 0.4rem; }
-        .nav-lang button {
-            font-family: inherit; font-size: 0.7rem; letter-spacing: 0.2em;
-            padding: 0.35em 0.75em; background: transparent;
-            color: var(--text-mute); border: 1px solid var(--border-dim);
-            cursor: pointer; text-transform: uppercase; transition: all 0.15s;
-        }
-        .nav-lang button.active {
-            color: var(--accent); border-color: var(--accent);
-        }
-        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
-
-        /* ===== 页面容器 ===== */
-        .page {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 7rem 6vw 4rem;
-            position: relative;
-        }
-        /* 中央蒙版：让内容清晰、两侧透出数字雨 */
-        .page::before {
-            content: '';
-            position: fixed;
-            top: 0; bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(1080px, 92%);
-            background: linear-gradient(90deg,
-                rgba(5,7,13,0)    0%,
-                rgba(5,7,13,0.85) 8%,
-                rgba(5,7,13,0.93) 50%,
-                rgba(5,7,13,0.85) 92%,
-                rgba(5,7,13,0)    100%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* ===== 头部：姓名 / 联系方式 / 概要 ===== */
-        .resume-header {
-            padding-bottom: 2.5rem;
-            border-bottom: 1px solid var(--border-dim);
-            margin-bottom: 3rem;
-            position: relative;
-        }
-        .resume-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            color: var(--accent);
-            text-transform: uppercase;
-            display: inline-block;
-            padding: 0.35em 0.9em;
-            border: 1px solid var(--border);
-            margin-bottom: 1.2rem;
-        }
-        .resume-name {
-            font-family: 'Chakra Petch', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            margin: 0 0 0.3rem;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-        .resume-role {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            letter-spacing: 0.15em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-        }
-        .resume-role .sep { color: var(--accent); margin: 0 0.6rem; }
-        .resume-contact {
-            display: flex; flex-wrap: wrap; gap: 1.5rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem; letter-spacing: 0.1em;
-        }
-        .resume-contact .item {
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .resume-contact .key { color: var(--text-mute); text-transform: uppercase; }
-        .resume-contact .val { color: var(--text); }
-        .resume-contact a.val:hover { color: var(--accent); }
-
-        .resume-summary {
-            margin-top: 2rem;
-            font-size: 1.05rem;
-            line-height: 1.75;
-            color: #c8ccd6;
-            max-width: 800px;
-        }
-        .resume-summary .accent { color: var(--accent); }
-
-        /* ===== 章节 ===== */
-        .r-section { margin-bottom: 3rem; position: relative; }
-        .r-section-head {
-            display: flex; align-items: baseline; gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.7rem;
-            border-bottom: 1px solid var(--border-dim);
-        }
-        .r-section-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--accent);
-            letter-spacing: 0.2em;
-        }
-        .r-section-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600;
-            font-size: 1.4rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin: 0;
-        }
-        .r-section-meta {
-            margin-left: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-        }
-
-        /* ===== 经历卡片 ===== */
-        .entry {
-            padding: 1.2rem 1.4rem 1.2rem 1.6rem;
-            border-left: 3px solid var(--accent);
-            background: rgba(15, 18, 26, 0.5);
-            margin-bottom: 1rem;
-            position: relative;
-            transition: background 0.2s;
-        }
-        .entry:hover { background: rgba(20, 24, 34, 0.65); }
-        .entry-head {
-            display: flex; justify-content: space-between; align-items: baseline;
-            flex-wrap: wrap;
-            margin-bottom: 0.35rem;
-            gap: 0.5rem;
-        }
-        .entry-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600; font-size: 1.05rem;
-            margin: 0;
-            letter-spacing: 0.03em;
-        }
-        .entry-sub {
-            font-size: 0.9rem;
-            color: var(--text-mute);
-            margin: 0 0 0.6rem;
-        }
-        .entry-sub .accent { color: var(--accent-dim); }
-        .entry-date {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--cyan);
-            white-space: nowrap;
-        }
-        .entry ul {
-            margin: 0.6rem 0 0;
-            padding-left: 1.1rem;
-            font-size: 0.92rem;
-            line-height: 1.7;
-            color: #c8ccd6;
-        }
-        .entry ul li { margin-bottom: 0.35rem; }
-        .entry ul li::marker { color: var(--accent); }
-
-        /* ===== 教育 & 技能 & 荣誉：2 栏布局 ===== */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        @media (max-width: 780px) {
-            .two-col { grid-template-columns: 1fr; }
-        }
-
-        /* 技能标签 */
-        .skill-group { margin-bottom: 1.2rem; }
-        .skill-group-title {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-        }
-        .tags {
-            display: flex; flex-wrap: wrap; gap: 0.4rem;
-        }
-        .tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.05em;
-            padding: 0.3em 0.7em;
-            border: 1px solid var(--border-dim);
-            color: var(--text);
-            background: rgba(255,255,255,0.02);
-        }
-        .tag.hot { border-color: var(--border); color: var(--accent); }
-
-        /* 荣誉 / 出版 列表 */
-        .simple-list li {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: #c8ccd6;
-            margin-bottom: 0.5rem;
-            padding-left: 1.2rem;
-            position: relative;
-        }
-        .simple-list li::before {
-            content: '▸';
-            position: absolute; left: 0;
-            color: var(--accent);
-        }
-
-        /* ===== 底部 CTA ===== */
-        .r-footer {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-dim);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        /* ===== Site Footer（全站统一）===== */
-        .site-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-dim);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: baseline;
-        }
-        @media (max-width: 640px) {
-            .footer-grid { grid-template-columns: 1fr; }
-        }
-        .footer-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 0.6rem;
-        }
-        .footer-links {
-            display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            letter-spacing: 0.05em;
-        }
-        .footer-links a {
-            color: var(--text);
-            border-bottom: 1px dashed transparent;
-            transition: color 0.15s, border-color 0.15s;
-        }
-        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-        .footer-links .sep { color: var(--text-mute); }
-        .footer-meta {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            text-align: right;
-            line-height: 1.8;
-        }
-        @media (max-width: 640px) {
-            .footer-meta { text-align: left; }
-        }
-        .btn {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            padding: 0.85rem 1.5rem;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            cursor: pointer;
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-            transition: transform 0.15s, filter 0.15s;
-        }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); color: #000; }
-        .btn.ghost {
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-        .btn.ghost:hover { background: var(--accent); color: #000; }
-        .btn .arrow { transition: transform 0.15s; }
-        .btn:hover .arrow { transform: translateX(4px); }
-
-        /* 打印样式：一份可打印/PDF 友好的简历 */
-        @media print {
-            .matrix-rain, .bg-veil, .bg-grid, .scanlines, .noise, .nav, .r-footer, .site-footer { display: none !important; }
-            body { background: #fff !important; color: #000 !important; }
-            .page { padding: 2rem; }
-            .page::before { display: none !important; }
-            .resume-name, .entry-title, .r-section-title { color: #000 !important; }
-            .entry { background: transparent !important; border-left-color: #000 !important; }
-            .tag { color: #000 !important; border-color: #888 !important; }
-            a { color: #000 !important; text-decoration: underline; }
-        }
-
-        /* 语言切换 */
-        .lang-block { display: none; }
-        .lang-block.active { display: block; }
-
-        @media (max-width: 820px) {
-            .nav { padding: 0.9rem 1.2rem; }
-            .nav-back span.hide-sm { display: none; }
-            .page { padding: 6rem 5vw 3rem; }
-            .resume-header { padding-bottom: 1.5rem; }
-        }
-    </style>
-    <link rel="stylesheet" href="site-system.css">
-    <script src="site-system.js?v=20260725-system22"></script>
+    <link rel="stylesheet" href="assets/styles/pages/resume.css?v=20260904-release">
+    <link rel="stylesheet" href="site-system.css?v=20260904-release">
+    <script src="site-system.js?v=20260904-release"></script>
 </head>
 <body>
 
@@ -439,8 +25,8 @@
             <span>←</span><span class="hide-sm">Back to Home</span>
         </a>
         <div class="nav-lang">
-            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
-            <button id="btn-en" onclick="showLang('en')">EN</button>
+            <button id="btn-zh" class="active">ZH</button>
+            <button id="btn-en">EN</button>
         </div>
     </nav>
 
@@ -457,16 +43,16 @@
             </div>
             <div class="resume-contact">
                 <div class="item"><span class="key">邮箱</span><a class="val" href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></div>
-                <div class="item"><span class="key">电话</span><a class="val" href="tel:+8613336617876">+86 133-3661-7876</a></div>
+                <div class="item"><span class="key">电话</span><a class="val" href="tel:+14045191450">+1 (404) 519-1450</a></div>
                 <div class="item"><span class="key">微信</span><span class="val">CKSF020325</span></div>
                 <div class="item"><span class="key">GITHUB</span><a class="val" href="https://github.com/CKSF" target="_blank">github.com/CKSF</a></div>
                 <div class="item"><span class="key">地点</span><span class="val">费城 · 湾区 · 北京</span></div>
                 <div class="item"><span class="key">状态</span><span class="val" style="color:var(--accent)">◉ 2026 暑期 / 2027 全职开放</span></div>
             </div>
             <p class="resume-summary">
-                UPenn CIS 硕士，本科 Emory CS + 心理学双专业。现在在字节跳动数据平台做
-                <span class="accent">内部数据平台 AI Agent</span> 相关工作，覆盖 Skill 治理、文件系统产品化与协作空间管理。
-                我既写 PRD、做用户路径，也能写代码把功能推到上线。求职方向：<span class="accent">技术型 PM / AI Agent 工程师 / 开发工程师</span>。
+                UPenn CIS 硕士，本科 Emory CS + 心理学双专业。聚焦
+                <span class="accent">端到端 Agent 工作流、跨端信息管线和 Skill 运行时控制</span>，
+                从产品问题出发，将分散能力组织成用户可完成、系统可验证的产品闭环。求职方向：<span class="accent">技术型 PM / AI Agent 工程师 / 开发工程师</span>。
             </p>
         </header>
 
@@ -511,15 +97,14 @@
 
             <div class="entry">
                 <div class="entry-head">
-                    <h3 class="entry-title">Agent 应用工程师</h3>
+                    <h3 class="entry-title">Agent 应用工程师实习生</h3>
                     <span class="entry-date">2026.01 → 至今</span>
                 </div>
                 <p class="entry-sub">字节跳动 <span class="accent">·</span> 数据平台方向 · AI Agent 应用</p>
                 <ul>
-                    <li>在内部数据平台 Agent 产品中承担 <b>Skill 治理、文件系统产品化、协作空间管理</b>三条线的设计与工程交付。</li>
-                    <li>参与 Skill 开关方案设计：用统一技能标识抽象用户、业务线、系统三级作用域，按优先级选择生效 Skill，并在后端执行前做白名单校验。</li>
-                    <li>参与内部文件系统产品化，设计 AI-First 目录结构和用户引导文档，通过结构化元数据与确定性路径降低 Agent tool-call 次数与上下文污染。</li>
-                    <li>设计并交付协作空间「添加成员」能力：多 ID 解析、多匹配候选选择、未匹配 ID 红色可编辑状态；后续负责打通下游数据消费平台链路。</li>
+                    <li><b>端到端数据工作流 Skills：</b>以“让用户在一个产品内完成完整开发”为目标，参与数据集、实验工单和服务接入 Skill 的开发、适配与验证，编排跨端能力并在执行前校验；数据集 Skill 成功调用量上线次周相对增长 <b>+520%</b>。</li>
+                    <li><b>Changelog 跨端信息管线：</b>主动发现用户难以感知产品更新的问题，独立推动代码变化、AI 草稿、人工审核到跨仓展示的完整链路，实现 <b>0 → 1</b>，并在上线后将重复记录重构为每周快照。</li>
+                    <li><b>Skill 运行时开关：</b>跨团队共同负责方案到上线，支持多来源版本的启停、切换和比较；通过统一解析与运行时校验，只向 Agent 提供必要且获准的 Skill，精简上下文并阻止停用能力被调用。</li>
                 </ul>
             </div>
 
@@ -708,7 +293,7 @@
         </section>
 
         <div class="r-footer">
-            <a href="FTN简历.pdf" target="_blank" class="btn">下载 PDF 版本 <span class="arrow">↓</span></a>
+            <a href="TianningFeng_Official_Resume_ZH.pdf" target="_blank" class="btn">下载 PDF 版本 <span class="arrow">↓</span></a>
             <a href="index.html" class="btn ghost">返回主页 <span class="arrow">←</span></a>
         </div>
 
@@ -740,16 +325,16 @@
             </div>
             <div class="resume-contact">
                 <div class="item"><span class="key">EMAIL</span><a class="val" href="mailto:cksamfeng@gmail.com">cksamfeng@gmail.com</a></div>
-                <div class="item"><span class="key">PHONE</span><a class="val" href="tel:+8613336617876">+86 133-3661-7876</a></div>
+                <div class="item"><span class="key">PHONE</span><a class="val" href="tel:+14045191450">+1 (404) 519-1450</a></div>
                 <div class="item"><span class="key">WECHAT</span><span class="val">CKSF020325</span></div>
                 <div class="item"><span class="key">GITHUB</span><a class="val" href="https://github.com/CKSF" target="_blank">github.com/CKSF</a></div>
                 <div class="item"><span class="key">LOC</span><span class="val">Philadelphia · Bay Area · Beijing</span></div>
                 <div class="item"><span class="key">STATUS</span><span class="val" style="color:var(--accent)">◉ OPEN SUMMER 2026 / 2027 FT</span></div>
             </div>
             <p class="resume-summary">
-                UPenn CIS master and Emory CS + Psychology graduate. Currently working on
-                <span class="accent">internal data-platform AI agents</span> at ByteDance, covering Skill governance,
-                file-system productization and workspace collaboration. I write PRDs and push PRs.
+                UPenn CIS master's student and Emory CS + Psychology graduate, focused on
+                <span class="accent">end-to-end agent workflows, cross-system information pipelines, and Skill runtime controls</span>.
+                I turn product problems and scattered capabilities into complete, verifiable user workflows.
                 Targeting <span class="accent">Technical PM / AI Agent Engineer / Software Engineer</span> roles.
             </p>
         </header>
@@ -792,15 +377,14 @@
 
             <div class="entry">
                 <div class="entry-head">
-                    <h3 class="entry-title">Agent Application Engineer</h3>
+                    <h3 class="entry-title">Agent Application Engineer Intern</h3>
                     <span class="entry-date">Jan 2026 → present</span>
                 </div>
                 <p class="entry-sub">ByteDance <span class="accent">·</span> Data Platform · AI Agent Applications</p>
                 <ul>
-                    <li>Contributed to three product and engineering tracks in an internal data-platform agent product: <b>Skill governance, file-system productization and workspace collaboration</b>.</li>
-                    <li>Helped design the Skill switch model using unified Skill identity across user, business-line and system scopes, resolving active Skills by priority with backend whitelist checks before execution.</li>
-                    <li>Productized the internal file system through user-facing onboarding docs and AI-First directory rules using structured metadata and deterministic paths to reduce tool calls and context pollution.</li>
-                    <li>Designed and shipped the workspace add-member flow with multi-ID parsing, candidate selection and editable unmatched-ID states; next scope connects downstream data-consumption platforms into the data middle platform.</li>
+                    <li><b>End-to-End Data Workflow Skills:</b> aimed to keep the full development loop in one product; contributed to dataset, experiment, and service Skills that orchestrate cross-product capabilities and validate before execution, growing successful dataset Skill calls <b>520%</b> in week two.</li>
+                    <li><b>Cross-System Changelog Pipeline:</b> identified a user-facing product information gap and independently delivered the <b>0-to-1</b> path from code changes and AI drafts through human review to cross-repository display, then rebuilt repetitive records as weekly snapshots.</li>
+                    <li><b>Skill Runtime Controls:</b> co-owned design through launch across teams, enabling users to switch and compare versions while unified resolution and runtime checks give the agent only necessary, authorized Skills and prevent disabled capabilities from being invoked.</li>
                 </ul>
             </div>
 
@@ -986,7 +570,7 @@
         </section>
 
         <div class="r-footer">
-            <a href="TianningFeng_SWE_Eng_2625.pdf" target="_blank" class="btn">Download PDF <span class="arrow">↓</span></a>
+            <a href="TianningFeng_Official_Resume.pdf" target="_blank" class="btn">Download PDF <span class="arrow">↓</span></a>
             <a href="index.html" class="btn ghost">Back to Home <span class="arrow">←</span></a>
         </div>
 
@@ -1009,99 +593,6 @@
 
     </main>
 
-    <script>
-        /* ================================================
-           Matrix 数字雨 —— 复用主页配置
-           ================================================ */
-        (function initMatrixRain() {
-            const canvas = document.getElementById('matrixRain');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d', { alpha: false });
-
-            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
-            const FONT_SIZE = 15;
-            let cols = 0, drops = [], speeds = [], leaders = [];
-
-            function resize() {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                canvas.width  = Math.floor(window.innerWidth  * dpr);
-                canvas.height = Math.floor(window.innerHeight * dpr);
-                canvas.style.width  = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                cols = Math.floor(window.innerWidth / FONT_SIZE);
-                drops   = new Array(cols).fill(0).map(() => Math.random() * -50);
-                speeds  = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
-                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
-            }
-            resize();
-            window.addEventListener('resize', resize);
-
-            const COLOR_TRAIL  = 'rgba(180, 160, 40, 0.75)';
-            const COLOR_MID    = 'rgba(252, 233, 79, 0.85)';
-            const COLOR_LEADER = 'rgba(255, 255, 220, 1)';
-            const COLOR_CYAN   = 'rgba(36, 224, 255, 0.9)';
-
-            function draw() {
-                ctx.fillStyle = 'rgba(5, 7, 13, 0.08)';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
-                ctx.textBaseline = 'top';
-
-                for (let i = 0; i < cols; i++) {
-                    const x = i * FONT_SIZE;
-                    const y = drops[i] * FONT_SIZE;
-
-                    if (Math.random() < 0.02) leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
-                    ctx.fillText(leaders[i], x, y);
-
-                    ctx.fillStyle = COLOR_MID;
-                    for (let k = 1; k <= 3; k++) {
-                        ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    }
-                    ctx.fillStyle = COLOR_TRAIL;
-                    for (let k = 4; k <= 8; k++) {
-                        ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    }
-                    drops[i] += speeds[i];
-
-                    if (y > window.innerHeight && Math.random() > 0.985) {
-                        drops[i] = Math.random() * -20;
-                        speeds[i] = 0.12 + Math.random() * 0.28;
-                    }
-                }
-                requestAnimationFrame(draw);
-            }
-            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                ctx.fillStyle = '#05070d';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-            } else {
-                requestAnimationFrame(draw);
-            }
-        })();
-
-        /* 语言切换 */
-        function showLang(lang) {
-            const zh = document.getElementById('zh');
-            const en = document.getElementById('en');
-            const bZ = document.getElementById('btn-zh');
-            const bE = document.getElementById('btn-en');
-            if (lang === 'zh') {
-                zh.classList.add('active'); en.classList.remove('active');
-                bZ.classList.add('active'); bE.classList.remove('active');
-                document.documentElement.lang = 'zh-CN';
-            } else {
-                en.classList.add('active'); zh.classList.remove('active');
-                bE.classList.add('active'); bZ.classList.remove('active');
-                document.documentElement.lang = 'en';
-            }
-            try { localStorage.setItem('lang', lang); } catch (e) {}
-        }
-        try {
-            const saved = localStorage.getItem('lang');
-            if (saved === 'en') showLang('en');
-        } catch (e) {}
-    </script>
+    <script type="module" src="assets/scripts/pages/resume.js?v=20260904-release"></script>
 </body>
 </html>

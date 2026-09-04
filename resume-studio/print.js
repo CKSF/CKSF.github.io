@@ -5,11 +5,19 @@
     const pageSizeStyle = document.getElementById("page-size");
     const params = new URLSearchParams(location.search);
     let language = params.get("lang") === "en" ? "en" : "zh";
+    const requestedDataUrl = params.get("data");
+    const dataUrl = requestedDataUrl
+        ? new URL(requestedDataUrl, location.href)
+        : new URL("../data/resume-official.json", location.href);
+    if (dataUrl.origin !== location.origin) {
+        dataUrl.href = new URL("../data/resume-official.json", location.href).href;
+    }
     let resumeData = null;
     let layoutSettings = {
         mode: "two",
         fontSize: 10.5,
-        density: 1
+        density: 1,
+        template: "classic"
     };
 
     const labels = {
@@ -55,15 +63,21 @@
         const next = value && typeof value === "object" ? value : {};
         const fontSize = Number(next.fontSize);
         const density = Number(next.density);
+        const templates = [
+            "classic", "modern", "executive", "swiss", "terminal", "editorial", "bold",
+            "orbit", "blueprint", "timeline", "bauhaus"
+        ];
         return {
             mode: next.mode === "one" ? "one" : "two",
-            fontSize: Number.isFinite(fontSize) ? Math.min(11, Math.max(8, fontSize)) : 10.5,
-            density: Number.isFinite(density) ? Math.min(1.15, Math.max(0.65, density)) : 1
+            fontSize: Number.isFinite(fontSize) ? Math.min(11, Math.max(9, fontSize)) : 10.5,
+            density: Number.isFinite(density) ? Math.min(1.15, Math.max(0.65, density)) : 1,
+            template: templates.includes(next.template) ? next.template : "classic"
         };
     }
 
     function applyLayout() {
         document.documentElement.dataset.layout = layoutSettings.mode;
+        document.documentElement.dataset.template = layoutSettings.template;
         document.documentElement.style.setProperty("--resume-font-size", `${layoutSettings.fontSize}pt`);
         document.documentElement.style.setProperty("--resume-density", String(layoutSettings.density));
         document.documentElement.style.setProperty(
@@ -188,6 +202,7 @@
         return `
             <header class="resume-header">
                 <h1 class="resume-name">${escapeHtml(localized(basics.name))}</h1>
+                <p class="resume-label">${escapeHtml(localized(basics.label))}</p>
                 <div class="contact-line">
                     <span>${escapeHtml(basics.phone)}</span>
                     <a href="mailto:${escapeHtml(basics.email)}">${escapeHtml(basics.email)}</a>
@@ -198,7 +213,13 @@
     }
 
     function page(content, extraClass) {
-        return `<article class="resume-page ${extraClass || ""}">${content}</article>`;
+        return `
+            <article class="resume-page ${extraClass || ""}">
+                <div class="visual-decor" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="resume-content">${content}</div>
+            </article>`;
     }
 
     function renderOnePage(data) {
@@ -217,17 +238,14 @@
 
     function renderTwoPages(data) {
         const l = labels[language];
-        const projects = data.projects || [];
         const firstPage = `
             ${renderHeader(data)}
             ${renderSummary(data)}
             ${renderSection(l.education, data.education, "education")}
-            ${renderSection(l.work, data.work, "work")}
-            ${renderSection(l.research, data.research, "research")}
-            ${renderSection(l.projects, projects.slice(0, 2), "projects")}`;
-        const remainingProjects = projects.slice(2);
+            ${renderSection(l.work, data.work, "work")}`;
         const secondPage = `
-            ${remainingProjects.length ? renderEntries(remainingProjects, "projects") : ""}
+            ${renderSection(l.research, data.research, "research")}
+            ${renderSection(l.projects, data.projects, "projects")}
             ${renderSkills(data)}
             ${renderPublications(data)}`;
         return page(firstPage, "page-one") + page(secondPage, "page-two");
@@ -236,6 +254,9 @@
     function reportLayout() {
         const pages = Array.from(documentRoot.querySelectorAll(".resume-page"));
         const overflow = pages.some((page) => page.scrollHeight > page.clientHeight + 1);
+        document.documentElement.dataset.resumeReady = "true";
+        document.documentElement.dataset.resumeOverflow = String(overflow);
+        document.documentElement.dataset.resumePages = String(pages.length);
         parent.postMessage({
             type: "resume:layout-status",
             pageCount: pages.length,
@@ -282,12 +303,19 @@
         }
     });
 
-    fetch("../data/resume.json")
+    const queryLayout = {
+        mode: params.has("mode") ? params.get("mode") : undefined,
+        fontSize: params.has("fontSize") ? params.get("fontSize") : undefined,
+        density: params.has("density") ? params.get("density") : undefined,
+        template: params.has("template") ? params.get("template") : undefined
+    };
+
+    fetch(dataUrl)
         .then((response) => {
             if (!response.ok) throw new Error("Resume data request failed");
             return response.json();
         })
-        .then((data) => setData(data, language))
+        .then((data) => setData(data, language, queryLayout))
         .catch(() => {
             documentRoot.innerHTML = '<div class="loading">Unable to load resume data.</div>';
         })

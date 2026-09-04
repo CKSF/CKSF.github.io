@@ -199,6 +199,54 @@ html[lang^="zh"] .city-title {
 
 @keyframes city-depart { to { opacity: 1; } }
 
+body.city-entering-building {
+    overflow: hidden;
+}
+
+body.city-entering-building .global-nav,
+body.city-entering-building .site-progress {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: opacity 140ms ease, transform 180ms ease;
+}
+
+.city-viewport.entering-building {
+    --entry-x: 50%;
+    --entry-y: 50%;
+    --entry-hole: 62%;
+    --entry-shade: 0;
+    position: fixed;
+    z-index: 1000;
+    min-height: 0;
+    margin: 0;
+    cursor: progress;
+    transition: clip-path 420ms cubic-bezier(.2,.76,.2,1);
+}
+
+.city-viewport.entering-building::after {
+    content: "";
+    position: absolute;
+    z-index: 30;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+        circle at var(--entry-x) var(--entry-y),
+        transparent 0 var(--entry-hole),
+        rgba(3, 4, 7, 0.98) calc(var(--entry-hole) + 9%)
+    );
+    opacity: var(--entry-shade);
+}
+
+.city-viewport.entering-building .city-overlay-top,
+.city-viewport.entering-building .city-controls-panel,
+.city-viewport.entering-building .city-hint,
+.city-viewport.entering-building .city-tooltip {
+    opacity: 0 !important;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+}
+
 .city-viewport::before {
     content: "";
     position: absolute;
@@ -245,6 +293,10 @@ body[data-city-world="paper"] .city-viewport::before {
 
 body[data-city-world="paper"] .city-canvas {
     filter: saturate(0.9) contrast(0.98);
+}
+
+body[data-city-world="paper"] .city-viewport.entering-building .city-canvas {
+    filter: saturate(0.82) contrast(1.02);
 }
 
 .city-overlay-top {
@@ -478,6 +530,7 @@ body[data-city-world="paper"] .city-canvas {
     display: none;
     padding: 2rem;
     background: var(--site-bg);
+    overflow: auto;
 }
 
 .city-fallback-grid {
@@ -823,6 +876,17 @@ html[data-site-theme="paper"] .city-title .outline {
     .city-tooltip.tour-mode .city-tour-nav {
         display: grid;
     }
+    .city-fallback {
+        padding: 0.75rem;
+    }
+    .city-fallback-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .city-fallback-grid a {
+        min-height: 82px;
+        padding: 0.75rem;
+        font-size: 0.7rem;
+    }
     .city-viewport.touring .city-hint {
         opacity: 0;
         visibility: hidden;
@@ -893,4 +957,7 @@ html[data-site-theme="paper"] .city-title .outline {
 
 @media (prefers-reduced-motion: reduce) {
     .city-loader::before { animation: none; }
+    .city-viewport.entering-building {
+        transition-duration: 80ms;
+    }
 }

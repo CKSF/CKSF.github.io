@@ -1,0 +1,1034 @@
+.darkroom-entry-pending body {
+    visibility: hidden;
+}
+
+.darkroom-interior {
+    --darkroom-red: #ff493d;
+    --darkroom-cyan: #5be6e9;
+    --darkroom-paper: #f4efe6;
+    min-height: 100svh;
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+    color: var(--darkroom-paper);
+    background: #030407;
+}
+
+body.darkroom-experience-page {
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #030407 !important;
+}
+
+body.darkroom-experience-page > .nav,
+body.darkroom-experience-page > .topbar,
+body.darkroom-experience-page .global-nav,
+body.darkroom-experience-page .site-progress {
+    display: none !important;
+}
+
+body.darkroom-experience-page > main.page,
+body.darkroom-experience-page > footer {
+    display: none !important;
+}
+
+.darkroom-scene {
+    width: 100%;
+    height: calc(100svh - 112px);
+    min-height: 560px;
+    position: relative;
+    overflow: hidden;
+    background: #080307;
+}
+
+.darkroom-scene-image,
+.darkroom-scene-grade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.darkroom-scene-image {
+    object-fit: cover;
+    object-position: center 48%;
+    filter: saturate(0.86) contrast(1.08) brightness(0.68);
+    transform: scale(1.015);
+}
+
+.darkroom-scene-grade {
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(3, 4, 7, 0.9) 0%, rgba(3, 4, 7, 0.48) 30%, transparent 62%),
+        linear-gradient(180deg, rgba(3, 4, 7, 0.34), transparent 34%, rgba(3, 4, 7, 0.9) 100%),
+        radial-gradient(circle at 78% 38%, rgba(91, 230, 233, 0.08), transparent 22rem),
+        repeating-linear-gradient(180deg, transparent 0 3px, rgba(255, 255, 255, 0.02) 4px);
+}
+
+.darkroom-city-link {
+    position: absolute;
+    z-index: 5;
+    top: 1.2rem;
+    left: max(1.5rem, calc((100vw - 1380px) / 2));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: rgba(244, 239, 230, 0.58) !important;
+    font: 600 0.56rem/1 var(--site-mono);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.darkroom-city-link:hover {
+    color: var(--darkroom-cyan) !important;
+}
+
+.darkroom-tools {
+    position: absolute;
+    z-index: 5;
+    top: 1rem;
+    right: max(1.5rem, calc((100vw - 1380px) / 2));
+    display: flex;
+    border: 1px solid rgba(244, 239, 230, 0.22);
+}
+
+.darkroom-tools button {
+    width: 38px;
+    height: 34px;
+    border: 0;
+    color: rgba(244, 239, 230, 0.74);
+    background: rgba(3, 4, 7, 0.46);
+    font: 650 0.58rem/1 var(--site-mono);
+    cursor: pointer;
+}
+
+.darkroom-tools button + button {
+    border-left: 1px solid rgba(244, 239, 230, 0.22);
+}
+
+.darkroom-tools button:hover,
+.darkroom-tools button:focus-visible {
+    color: var(--darkroom-cyan);
+    background: rgba(3, 4, 7, 0.76);
+}
+
+.darkroom-scene-copy {
+    width: min(480px, calc(100% - 3rem));
+    position: absolute;
+    z-index: 4;
+    top: clamp(4.4rem, 11vh, 7.4rem);
+    left: max(1.5rem, calc((100vw - 1380px) / 2));
+}
+
+.darkroom-scene-copy > span {
+    color: var(--darkroom-red);
+    font: 700 0.62rem/1.4 var(--site-mono);
+    letter-spacing: 0.14em;
+}
+
+.darkroom-scene-copy h2 {
+    margin: 0.7rem 0 0;
+    color: var(--darkroom-paper);
+    font: 700 clamp(3.2rem, 5.8vw, 6rem)/0.9 var(--site-display);
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: 0 5px 30px rgba(0, 0, 0, 0.75);
+}
+
+.darkroom-scene-copy p {
+    max-width: 370px;
+    margin: 1rem 0 0;
+    color: rgba(244, 239, 230, 0.68);
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.darkroom-workbench {
+    position: absolute;
+    z-index: 4;
+    top: clamp(7rem, 14vh, 9rem);
+    right: max(1.5rem, calc((100vw - 1380px) / 2));
+    bottom: 2rem;
+    left: max(39vw, calc((100vw - 1380px) / 2 + 510px));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(168px, 210px);
+    gap: 0.75rem;
+}
+
+.darkroom-workbench,
+.darkroom-workbench * {
+    box-sizing: border-box;
+}
+
+.darkroom-bench-display {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border: 1px solid rgba(255, 73, 61, 0.5);
+    background:
+        linear-gradient(135deg, rgba(38, 5, 8, 0.94), rgba(8, 5, 7, 0.9)),
+        repeating-linear-gradient(0deg, transparent 0 5px, rgba(255, 73, 61, 0.035) 6px);
+    box-shadow: inset 0 0 50px rgba(255, 73, 61, 0.05), 0 22px 70px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.darkroom-bench-display header,
+.darkroom-bench-display footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+}
+
+.darkroom-bench-display header {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 73, 61, 0.25);
+}
+
+.darkroom-bench-display header span,
+.darkroom-bench-display code,
+.darkroom-bench-display footer strong {
+    color: rgba(244, 239, 230, 0.55);
+    font: 650 0.47rem/1.3 var(--site-mono);
+    letter-spacing: 0.09em;
+}
+
+.darkroom-bench-display header span {
+    color: var(--darkroom-red);
+}
+
+.darkroom-bench-display h3 {
+    margin: clamp(1rem, 2.6vh, 1.7rem) 0 0;
+    color: var(--darkroom-paper);
+    font: 700 clamp(1.5rem, 2.3vw, 2.45rem)/1 var(--site-display);
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.darkroom-bench-display > p {
+    max-width: 44ch;
+    margin: 0.7rem 0 1rem;
+    color: rgba(244, 239, 230, 0.68);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+.darkroom-bench-flow {
+    min-height: 74px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+    align-items: end;
+    margin: auto 0 0.8rem;
+    padding: 0.65rem;
+    border: 8px solid #1b0b0e;
+    background: rgba(91, 16, 17, 0.56);
+    box-shadow: inset 0 0 24px rgba(255, 73, 61, 0.28);
+    transform: perspective(500px) rotateX(4deg);
+}
+
+.darkroom-bench-flow span {
+    min-width: 0;
+    padding: 0.45rem;
+    border: 1px solid rgba(255, 146, 133, 0.24);
+    color: rgba(244, 239, 230, 0.68);
+    background: rgba(255, 73, 61, 0.08);
+    font: 650 0.46rem/1.2 var(--site-mono);
+}
+
+.darkroom-bench-flow b {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--darkroom-red);
+}
+
+.darkroom-bench-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid rgba(255, 73, 61, 0.25);
+    border-bottom: 1px solid rgba(255, 73, 61, 0.25);
+}
+
+.darkroom-bench-stats > span {
+    min-width: 0;
+    padding: 0.65rem;
+}
+
+.darkroom-bench-stats > span + span {
+    border-left: 1px solid rgba(255, 73, 61, 0.25);
+}
+
+.darkroom-bench-stats small,
+.darkroom-bench-stats strong {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.darkroom-bench-stats small {
+    color: rgba(244, 239, 230, 0.42);
+    font: 600 0.4rem/1 var(--site-mono);
+}
+
+.darkroom-bench-stats strong {
+    margin-top: 0.38rem;
+    color: var(--darkroom-red);
+    font: 700 0.6rem/1.15 var(--site-mono);
+}
+
+.darkroom-bench-display footer {
+    margin-top: 0.75rem;
+}
+
+.darkroom-bench-display [data-darkroom-open] {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--darkroom-red);
+    color: #fff5ed;
+    background: #a92422;
+    font: 750 0.52rem/1 var(--site-mono);
+    letter-spacing: 0.06em;
+    cursor: pointer;
+}
+
+.darkroom-bench-display [data-darkroom-open]:hover,
+.darkroom-bench-display [data-darkroom-open]:focus-visible {
+    color: var(--darkroom-red);
+    background: #090608;
+}
+
+.darkroom-bench-strips {
+    min-width: 0;
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+}
+
+.darkroom-bench-strips button {
+    min-width: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: center;
+    padding: 0.7rem;
+    border: 1px solid rgba(255, 73, 61, 0.34);
+    color: rgba(244, 239, 230, 0.7);
+    background:
+        linear-gradient(90deg, rgba(255, 73, 61, 0.15) 0 2rem, transparent 2rem),
+        rgba(7, 5, 7, 0.92);
+    text-align: left;
+    cursor: pointer;
+}
+
+.darkroom-bench-strips button::before,
+.darkroom-bench-strips button::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    left: 0.32rem;
+    border-radius: 50%;
+    background: #050405;
+}
+
+.darkroom-bench-strips button::before {
+    top: 0.32rem;
+}
+
+.darkroom-bench-strips button::after {
+    bottom: 0.32rem;
+}
+
+.darkroom-bench-strips button:hover,
+.darkroom-bench-strips button:focus-visible,
+.darkroom-bench-strips button.active {
+    color: #fff8f0;
+    border-color: var(--darkroom-red);
+    background:
+        linear-gradient(90deg, rgba(255, 73, 61, 0.38) 0 2rem, transparent 2rem),
+        rgba(40, 7, 10, 0.96);
+}
+
+.darkroom-bench-strips b {
+    color: var(--darkroom-red);
+    font: 700 0.54rem/1 var(--site-mono);
+}
+
+.darkroom-bench-strips span,
+.darkroom-bench-strips strong,
+.darkroom-bench-strips small {
+    min-width: 0;
+    display: block;
+}
+
+.darkroom-bench-strips strong {
+    overflow-wrap: anywhere;
+    font: 650 0.68rem/1.05 var(--site-display);
+}
+
+.darkroom-bench-strips small {
+    margin-top: 0.2rem;
+    overflow: hidden;
+    color: rgba(244, 239, 230, 0.38);
+    font: 600 0.38rem/1 var(--site-mono);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.darkroom-section-index {
+    position: sticky;
+    z-index: 12;
+    top: 0;
+    padding: 0 max(1.5rem, calc((100vw - 1380px) / 2));
+    border-top: 1px solid rgba(244, 239, 230, 0.32);
+    border-bottom: 1px solid rgba(244, 239, 230, 0.16);
+    background: rgba(5, 6, 9, 0.96);
+    backdrop-filter: blur(18px);
+}
+
+.darkroom-section-index > span {
+    display: block;
+    padding: 0.62rem 0;
+    color: rgba(244, 239, 230, 0.48);
+    font: 600 0.5rem/1 var(--site-mono);
+    letter-spacing: 0.14em;
+}
+
+.darkroom-section-index > div {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.darkroom-section-index button {
+    min-width: 0;
+    min-height: 78px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 0.75rem;
+    align-content: center;
+    padding: 0.8rem 1rem;
+    border: 0;
+    border-left: 1px solid rgba(244, 239, 230, 0.2);
+    color: rgba(244, 239, 230, 0.78);
+    background: rgba(3, 4, 7, 0.46);
+    text-align: left;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+}
+
+.darkroom-section-index button:last-child {
+    border-right: 1px solid rgba(244, 239, 230, 0.2);
+}
+
+.darkroom-section-index button:hover,
+.darkroom-section-index button:focus-visible,
+.darkroom-section-index button.active {
+    color: var(--darkroom-paper);
+    background: rgba(255, 73, 61, 0.22);
+}
+
+.darkroom-section-index b {
+    grid-row: 1 / 3;
+    align-self: start;
+    color: var(--darkroom-red);
+    font: 700 0.58rem/1.3 var(--site-mono);
+}
+
+.darkroom-section-index strong,
+.darkroom-section-index small {
+    min-width: 0;
+    display: block;
+}
+
+.darkroom-section-index strong {
+    overflow-wrap: anywhere;
+    font: 650 0.8rem/1.15 var(--site-display);
+}
+
+.darkroom-section-index small {
+    overflow: hidden;
+    color: rgba(244, 239, 230, 0.42);
+    font: 600 0.46rem/1.2 var(--site-mono);
+    letter-spacing: 0.08em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.darkroom-credit {
+    position: absolute;
+    z-index: 4;
+    top: 1.1rem;
+    right: 1.2rem;
+    color: rgba(244, 239, 230, 0.32) !important;
+    font: 500 0.43rem/1.3 var(--site-mono);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+}
+
+.darkroom-content {
+    min-height: calc(100svh - 112px);
+    padding: clamp(3.5rem, 7vw, 7rem) max(1.5rem, calc((100vw - 1180px) / 2));
+    color: var(--darkroom-paper);
+    background:
+        linear-gradient(180deg, rgba(255, 73, 61, 0.055), transparent 18rem),
+        #08090c;
+    scroll-margin-top: 112px;
+}
+
+.darkroom-panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.darkroom-panel-head span {
+    color: var(--darkroom-red);
+    font: 700 0.58rem/1.3 var(--site-mono);
+    letter-spacing: 0.13em;
+}
+
+.darkroom-panel-head h2 {
+    margin: 0.55rem 0 0;
+    color: var(--darkroom-paper);
+    font: 700 clamp(2.2rem, 4vw, 4rem)/0.95 var(--site-display);
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.darkroom-panel-head button {
+    min-height: 40px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: var(--darkroom-paper);
+    background: transparent;
+    font: 600 0.58rem/1 var(--site-mono);
+    letter-spacing: 0.08em;
+    cursor: pointer;
+}
+
+.darkroom-panel-head button:hover {
+    border-color: var(--darkroom-cyan);
+    color: var(--darkroom-cyan);
+}
+
+.darkroom-content > p {
+    max-width: 700px;
+    margin: 1.2rem 0 2rem;
+    color: rgba(244, 239, 230, 0.65);
+    line-height: 1.65;
+}
+
+.darkroom-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+.darkroom-gallery figure {
+    min-width: 0;
+    margin: 0;
+}
+
+.darkroom-photo {
+    aspect-ratio: 3 / 2;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: #101216;
+}
+
+.darkroom-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: saturate(0.85) contrast(1.06);
+}
+
+.darkroom-photo span {
+    position: absolute;
+    right: 0.55rem;
+    bottom: 0.48rem;
+    color: white;
+    font: 600 0.56rem/1 var(--site-mono);
+    text-shadow: 0 1px 5px black;
+}
+
+.darkroom-gallery figcaption {
+    margin-top: 0.65rem;
+}
+
+.darkroom-gallery figcaption strong,
+.darkroom-gallery figcaption small {
+    display: block;
+}
+
+.darkroom-gallery figcaption strong {
+    font-size: 0.9rem;
+}
+
+.darkroom-gallery figcaption small {
+    margin-top: 0.28rem;
+    color: rgba(244, 239, 230, 0.46);
+    font: 500 0.52rem/1.3 var(--site-mono);
+    letter-spacing: 0.08em;
+}
+
+.darkroom-gallery.is-album {
+    padding: 1rem;
+    gap: 1rem;
+    background: #25130f;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 24px 50px rgba(0, 0, 0, 0.35);
+}
+
+.darkroom-gallery.is-album figure {
+    padding: 0.7rem;
+    color: #18130f;
+    background: #d8cfb9;
+}
+
+.darkroom-file-index {
+    display: grid;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.darkroom-file-index > div {
+    min-height: 74px;
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.darkroom-file-index span,
+.darkroom-file-index small {
+    font: 600 0.58rem/1 var(--site-mono);
+    letter-spacing: 0.08em;
+}
+
+.darkroom-file-index span {
+    color: var(--darkroom-red);
+}
+
+.darkroom-file-index small {
+    color: rgba(244, 239, 230, 0.44);
+}
+
+.darkroom-developing {
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+    border: 8px solid #23171a;
+    background: #39110f;
+    transform: perspective(700px) rotateX(8deg);
+}
+
+.darkroom-developing img {
+    width: 78%;
+    height: 78%;
+    position: absolute;
+    inset: 11%;
+    object-fit: cover;
+    filter: grayscale(1);
+    opacity: 0.68;
+}
+
+.darkroom-developing span {
+    position: absolute;
+    inset: -35%;
+    background: linear-gradient(115deg, transparent 38%, rgba(255, 83, 70, 0.58) 50%, transparent 62%);
+    animation: darkroom-liquid 4s ease-in-out infinite;
+}
+
+.darkroom-process-note {
+    color: rgba(244, 239, 230, 0.42);
+    font: 600 0.58rem/1.5 var(--site-mono);
+    letter-spacing: 0.1em;
+}
+
+html[data-site-theme="paper"] .darkroom-interior {
+    --darkroom-red: #b33c34;
+    --darkroom-cyan: #176f73;
+    --darkroom-paper: #121519;
+    color: var(--darkroom-paper);
+    background: #f3f5f3;
+}
+
+html[data-site-theme="paper"] body.darkroom-experience-page {
+    background: #f3f5f3 !important;
+}
+
+html[data-site-theme="paper"] .darkroom-scene {
+    background: #eef1ef;
+}
+
+html[data-site-theme="paper"] .darkroom-scene-image {
+    filter: grayscale(0.72) sepia(0.06) contrast(0.97) brightness(1.02);
+}
+
+html[data-site-theme="paper"] .darkroom-scene-grade {
+    background:
+        linear-gradient(90deg, rgba(248, 249, 246, 0.9), rgba(248, 249, 246, 0.56) 30%, rgba(248, 249, 246, 0.04) 64%),
+        linear-gradient(180deg, rgba(248, 249, 246, 0.12), transparent 42%, rgba(248, 249, 246, 0.34) 100%),
+        repeating-linear-gradient(0deg, transparent 0 9px, rgba(17, 21, 25, 0.025) 10px);
+}
+
+html[data-site-theme="paper"] .darkroom-city-link,
+html[data-site-theme="paper"] .darkroom-scene-copy p,
+html[data-site-theme="paper"] .darkroom-credit {
+    color: rgba(18, 21, 25, 0.66) !important;
+    text-shadow: none;
+}
+
+html[data-site-theme="paper"] .darkroom-tools {
+    border-color: rgba(18, 21, 25, 0.22);
+}
+
+html[data-site-theme="paper"] .darkroom-tools button {
+    color: rgba(18, 21, 25, 0.76);
+    background: rgba(248, 249, 246, 0.74);
+}
+
+html[data-site-theme="paper"] .darkroom-tools button + button {
+    border-color: rgba(18, 21, 25, 0.22);
+}
+
+html[data-site-theme="paper"] .darkroom-scene-copy h2,
+html[data-site-theme="paper"] .darkroom-panel-head h2 {
+    color: #121519;
+    text-shadow: none;
+}
+
+html[data-site-theme="paper"] .darkroom-section-index {
+    border-color: rgba(18, 21, 25, 0.18);
+    background: rgba(248, 249, 246, 0.97);
+}
+
+html[data-site-theme="paper"] .darkroom-section-index > span,
+html[data-site-theme="paper"] .darkroom-section-index small,
+html[data-site-theme="paper"] .darkroom-gallery figcaption small,
+html[data-site-theme="paper"] .darkroom-file-index small,
+html[data-site-theme="paper"] .darkroom-process-note {
+    color: rgba(18, 21, 25, 0.48);
+}
+
+html[data-site-theme="paper"] .darkroom-section-index button {
+    border-color: rgba(18, 21, 25, 0.17);
+    color: rgba(18, 21, 25, 0.78);
+    background: transparent;
+}
+
+html[data-site-theme="paper"] .darkroom-section-index button:hover,
+html[data-site-theme="paper"] .darkroom-section-index button:focus-visible,
+html[data-site-theme="paper"] .darkroom-section-index button.active {
+    color: #121519;
+    background: rgba(179, 60, 52, 0.13);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-display {
+    border-color: rgba(18, 21, 25, 0.25);
+    color: #121519;
+    background: rgba(248, 249, 246, 0.94);
+    box-shadow: 0 18px 50px rgba(18, 21, 25, 0.1);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-display h3 {
+    color: #121519;
+}
+
+html[data-site-theme="paper"] .darkroom-bench-display > p,
+html[data-site-theme="paper"] .darkroom-bench-display header span,
+html[data-site-theme="paper"] .darkroom-bench-display code,
+html[data-site-theme="paper"] .darkroom-bench-display footer strong,
+html[data-site-theme="paper"] .darkroom-bench-stats small {
+    color: rgba(18, 21, 25, 0.6);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-flow {
+    border-color: #d6d2c9;
+    background: #e8e4da;
+    box-shadow: inset 0 0 22px rgba(179, 60, 52, 0.1);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-flow span {
+    color: rgba(18, 21, 25, 0.72);
+    background: rgba(179, 60, 52, 0.07);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-strips button {
+    color: rgba(18, 21, 25, 0.72);
+    background:
+        linear-gradient(90deg, rgba(179, 60, 52, 0.12) 0 2rem, transparent 2rem),
+        rgba(248, 249, 246, 0.94);
+}
+
+html[data-site-theme="paper"] .darkroom-bench-strips button:hover,
+html[data-site-theme="paper"] .darkroom-bench-strips button:focus-visible,
+html[data-site-theme="paper"] .darkroom-bench-strips button.active {
+    color: #121519;
+    background:
+        linear-gradient(90deg, rgba(179, 60, 52, 0.22) 0 2rem, transparent 2rem),
+        #fff;
+}
+
+html[data-site-theme="paper"] .darkroom-bench-strips small {
+    color: rgba(18, 21, 25, 0.45);
+}
+
+html[data-site-theme="paper"] .darkroom-content {
+    color: #121519;
+    background:
+        linear-gradient(180deg, rgba(179, 60, 52, 0.045), transparent 18rem),
+        #f3f5f3;
+}
+
+html[data-site-theme="paper"] .darkroom-content > p {
+    color: rgba(18, 21, 25, 0.68);
+}
+
+html[data-site-theme="paper"] .darkroom-panel-head button {
+    border-color: rgba(18, 21, 25, 0.24);
+    color: #121519;
+}
+
+html[data-site-theme="paper"] .darkroom-file-index,
+html[data-site-theme="paper"] .darkroom-file-index > div {
+    border-color: rgba(18, 21, 25, 0.16);
+}
+
+@keyframes darkroom-liquid {
+    0%, 100% { transform: translateX(-16%) rotate(-2deg); }
+    50% { transform: translateX(16%) rotate(2deg); }
+}
+
+body.darkroom-city-arrival {
+    background: #030407 !important;
+}
+
+.darkroom-interior.city-entry-awaiting {
+    clip-path: circle(0.7% at 50% 52%);
+    pointer-events: none;
+}
+
+.darkroom-interior.city-entry-awaiting .darkroom-scene {
+    transform: scale(1.1);
+}
+
+.darkroom-interior.city-entry-revealing {
+    animation: darkroom-entry-reveal 980ms cubic-bezier(.16,.76,.18,1) forwards;
+}
+
+.darkroom-interior.city-entry-revealing .darkroom-scene {
+    transform: scale(1);
+    transition: transform 980ms cubic-bezier(.16,.76,.18,1);
+}
+
+@keyframes darkroom-entry-reveal {
+    from { clip-path: circle(0.7% at 50% 52%); }
+    to { clip-path: circle(150vmax at 50% 52%); }
+}
+
+@media (max-width: 760px) {
+    .darkroom-scene {
+        height: calc(100svh - 154px);
+        min-height: 720px;
+    }
+
+    .darkroom-scene-image {
+        object-position: center 48%;
+    }
+
+    .darkroom-scene-grade {
+        background:
+            linear-gradient(180deg, rgba(3, 4, 7, 0.66), transparent 38%, rgba(3, 4, 7, 0.94) 100%),
+            repeating-linear-gradient(180deg, transparent 0 3px, rgba(255, 255, 255, 0.02) 4px);
+    }
+
+    .darkroom-city-link {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .darkroom-tools {
+        top: 0.75rem;
+        right: 1rem;
+    }
+
+    .darkroom-credit {
+        display: none;
+    }
+
+    .darkroom-scene-copy {
+        top: 4.1rem;
+        left: 1rem;
+        width: calc(100% - 2rem);
+    }
+
+    .darkroom-scene-copy h2 {
+        font-size: clamp(2.6rem, 13vw, 4rem);
+    }
+
+    .darkroom-scene-copy p {
+        display: none;
+    }
+
+    .darkroom-workbench {
+        top: 12.3rem;
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: 0.5rem;
+    }
+
+    .darkroom-bench-display {
+        min-height: 0;
+        position: relative;
+        padding: 0.8rem;
+        padding-bottom: 3.8rem;
+        overflow: hidden;
+    }
+
+    .darkroom-bench-display h3 {
+        margin-top: 0.65rem;
+        font-size: 1.15rem;
+    }
+
+    .darkroom-bench-display > p {
+        margin: 0.45rem 0;
+        font-size: 0.62rem;
+    }
+
+    .darkroom-bench-flow {
+        min-height: 48px;
+        margin-bottom: 0.45rem;
+        padding: 0.35rem;
+        border-width: 4px;
+    }
+
+    .darkroom-bench-flow span {
+        padding: 0.3rem;
+        font-size: 0.38rem;
+    }
+
+    .darkroom-bench-stats > span {
+        padding: 0.4rem;
+    }
+
+    .darkroom-bench-stats small {
+        font-size: 0.34rem;
+    }
+
+    .darkroom-bench-stats strong {
+        margin-top: 0.22rem;
+        font-size: 0.48rem;
+    }
+
+    .darkroom-bench-display footer {
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.65rem;
+        left: 0.8rem;
+    }
+
+    .darkroom-bench-display [data-darkroom-open] {
+        min-height: 34px;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .darkroom-bench-strips {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(2, 50px);
+        gap: 1px;
+    }
+
+    .darkroom-bench-strips button {
+        padding: 0.45rem;
+    }
+
+    .darkroom-bench-strips small {
+        display: none;
+    }
+
+    .darkroom-section-index {
+        right: auto;
+        bottom: auto;
+        left: auto;
+        padding: 0 1rem;
+    }
+
+    .darkroom-section-index > div {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .darkroom-section-index button {
+        min-height: 62px;
+        padding: 0.6rem;
+    }
+
+    .darkroom-section-index button:nth-child(odd) {
+        border-left: 1px solid rgba(244, 239, 230, 0.2);
+    }
+
+    .darkroom-section-index button:nth-child(even) {
+        border-right: 1px solid rgba(244, 239, 230, 0.2);
+    }
+
+    .darkroom-section-index button:nth-child(n + 3) {
+        border-top: 1px solid rgba(244, 239, 230, 0.2);
+    }
+
+    .darkroom-content {
+        min-height: calc(100svh - 154px);
+        padding: 3rem 1rem 5rem;
+        scroll-margin-top: 154px;
+    }
+
+    .darkroom-panel-head {
+        align-items: center;
+    }
+
+    .darkroom-panel-head h2 {
+        font-size: clamp(2.2rem, 12vw, 3.4rem);
+    }
+
+    .darkroom-panel-head button [data-content-back] {
+        display: none;
+    }
+
+    .darkroom-gallery {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .darkroom-developing span {
+        animation: none;
+    }
+
+    .darkroom-interior.city-entry-revealing,
+    .darkroom-interior.city-entry-revealing .darkroom-scene {
+        animation-duration: 180ms;
+        transition-duration: 180ms;
+    }
+}
+
+@media print {
+    .darkroom-interior {
+        display: none !important;
+    }
+}

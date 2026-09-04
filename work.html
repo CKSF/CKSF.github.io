@@ -6,426 +6,9 @@
     <title>作品与研究｜冯天宁</title>
     <meta name="description" content="Publications &amp; independent projects by 冯天宁 Tianning Feng — SeizureFormer (co-first author, PSB 2026 Oral), EpiDHGNN (PSB 2026), PhillyHome Insight, OpenAPS, Smart Home Assistant." />
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-void:    #05070d;
-            --bg-panel:   rgba(10, 14, 22, 0.72);
-            --accent:     #fce94f;
-            --accent-dim: #b8a634;
-            --cyan:       #24e0ff;
-            --magenta:    #ff003c;
-            --text:       #e5e7ee;
-            --text-mute:  #7d8494;
-            --border:     rgba(252, 233, 79, 0.35);
-            --border-dim: rgba(255, 255, 255, 0.08);
-        }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; background: #05070d; margin: 0; padding: 0; }
-        body {
-            margin: 0; padding: 0;
-            background: transparent;
-            color: var(--text);
-            font-family: 'Rajdhani', 'Chakra Petch', 'PingFang SC', -apple-system, sans-serif;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-            z-index: 0;
-        }
-        ::selection { background: var(--accent); color: #000; }
-        a { color: var(--accent); text-decoration: none; transition: color .15s; }
-        a:hover { color: #fff; }
-
-        /* ===== 背景层 ===== */
-        .matrix-rain {
-            position: fixed; inset: 0; z-index: -5;
-            width: 100%; height: 100%; display: block;
-            background: #05070d;
-        }
-        .bg-veil {
-            position: fixed; inset: 0; z-index: -4; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 40%, rgba(5,7,13,0.15) 0%, rgba(5,7,13,0.45) 80%, rgba(5,7,13,0.6) 100%);
-        }
-        .bg-grid {
-            position: fixed; inset: 0; z-index: -3; pointer-events: none;
-            background:
-                radial-gradient(ellipse at 50% -10%, rgba(252,233,79,0.08), transparent 60%),
-                radial-gradient(ellipse at 100% 100%, rgba(255,0,60,0.05), transparent 55%);
-        }
-        .bg-grid::before {
-            content: ''; position: absolute; inset: 0;
-            background-image:
-                linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px);
-            background-size: 64px 64px;
-            mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-            -webkit-mask-image: radial-gradient(ellipse at 50% 40%, #000 0%, transparent 85%);
-        }
-        .scanlines {
-            position: fixed; inset: 0; z-index: -2; pointer-events: none;
-            background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(255,255,255,0.018) 3px, transparent 4px);
-        }
-        .noise {
-            position: fixed; inset: 0; z-index: -1; pointer-events: none;
-            opacity: 0.05; mix-blend-mode: overlay;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-        }
-
-        /* ===== 导航 ===== */
-        .nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1rem 2rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-            background: linear-gradient(180deg, rgba(5,7,13,0.9), rgba(5,7,13,0.6) 70%, transparent);
-            backdrop-filter: blur(6px);
-        }
-        .nav-brand {
-            color: var(--accent); font-weight: 500;
-            display: flex; align-items: center; gap: 0.6rem;
-        }
-        .nav-brand .dot {
-            width: 6px; height: 6px; background: var(--accent);
-            box-shadow: 0 0 8px var(--accent);
-        }
-        .nav-back {
-            color: var(--text-mute);
-            display: flex; align-items: center; gap: 0.5rem;
-            transition: color 0.15s;
-        }
-        .nav-back:hover { color: var(--text); }
-        .nav-lang { display: flex; gap: 0.4rem; }
-        .nav-lang button {
-            font-family: inherit; font-size: 0.7rem; letter-spacing: 0.2em;
-            padding: 0.35em 0.75em; background: transparent;
-            color: var(--text-mute); border: 1px solid var(--border-dim);
-            cursor: pointer; text-transform: uppercase; transition: all 0.15s;
-        }
-        .nav-lang button.active { color: var(--accent); border-color: var(--accent); }
-        .nav-lang button:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
-
-        /* ===== 页面容器 + 中央蒙版 ===== */
-        .page {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 7rem 6vw 4rem;
-            position: relative;
-        }
-        .page::before {
-            content: '';
-            position: fixed;
-            top: 0; bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: min(1100px, 92%);
-            background: linear-gradient(90deg,
-                rgba(5,7,13,0)    0%,
-                rgba(5,7,13,0.85) 8%,
-                rgba(5,7,13,0.93) 50%,
-                rgba(5,7,13,0.85) 92%,
-                rgba(5,7,13,0)    100%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* ===== 页面头 ===== */
-        .page-header {
-            padding-bottom: 2.5rem;
-            border-bottom: 1px solid var(--border-dim);
-            margin-bottom: 3rem;
-        }
-        .page-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem; letter-spacing: 0.3em;
-            color: var(--accent); text-transform: uppercase;
-            display: inline-block;
-            padding: 0.35em 0.9em;
-            border: 1px solid var(--border);
-            margin-bottom: 1.2rem;
-        }
-        .page-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 700; letter-spacing: 0.02em;
-            margin: 0 0 0.6rem;
-            text-transform: uppercase;
-            line-height: 1;
-        }
-        .page-lede {
-            font-size: 1.05rem;
-            line-height: 1.75;
-            color: #c8ccd6;
-            max-width: 780px;
-            margin: 0;
-        }
-        .page-lede .accent { color: var(--accent); }
-
-        /* ===== 章节头 ===== */
-        .w-section { margin-bottom: 3.5rem; }
-        .w-section-head {
-            display: flex; align-items: baseline; gap: 1rem;
-            margin-bottom: 1.8rem;
-            padding-bottom: 0.7rem;
-            border-bottom: 1px solid var(--border-dim);
-        }
-        .w-section-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem; color: var(--accent);
-            letter-spacing: 0.2em;
-        }
-        .w-section-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600; font-size: 1.5rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin: 0;
-        }
-        .w-section-meta {
-            margin-left: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-        }
-
-        /* ===== Publication 卡片 ===== */
-        .pub {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 1.5rem;
-            padding: 1.6rem 1.6rem 1.6rem 1.6rem;
-            background: rgba(15, 18, 26, 0.55);
-            border: 1px solid var(--border-dim);
-            border-left: 3px solid var(--accent);
-            margin-bottom: 1.4rem;
-            position: relative;
-            transition: background 0.2s, transform 0.2s;
-        }
-        .pub:hover {
-            background: rgba(20, 24, 34, 0.7);
-            transform: translateX(3px);
-        }
-        .pub-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            color: #000;
-            background: var(--accent);
-            padding: 0.4em 0.8em;
-            align-self: start;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-        .pub-tag.review { background: var(--cyan); }
-        .pub-tag.preprint { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-        .pub-body { min-width: 0; }
-        .pub-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600;
-            font-size: 1.15rem;
-            color: var(--text);
-            margin: 0 0 0.4rem;
-            letter-spacing: 0.02em;
-            line-height: 1.3;
-        }
-        .pub-authors {
-            font-size: 0.9rem;
-            color: var(--text-mute);
-            margin: 0 0 0.5rem;
-            line-height: 1.55;
-        }
-        .pub-authors .me { color: var(--accent); font-weight: 600; }
-        .pub-venue {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.12em;
-            color: var(--cyan);
-            margin: 0 0 0.8rem;
-            text-transform: uppercase;
-        }
-        .pub-abstract {
-            font-size: 0.92rem;
-            line-height: 1.7;
-            color: #c8ccd6;
-            margin: 0 0 0.9rem;
-        }
-        .pub-links {
-            display: flex; flex-wrap: wrap; gap: 0.5rem;
-            margin-top: 0.6rem;
-        }
-        .pub-link {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            padding: 0.4em 0.85em;
-            border: 1px solid var(--border-dim);
-            color: var(--text);
-            text-transform: uppercase;
-            transition: all 0.15s;
-        }
-        .pub-link:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(252,233,79,0.05);
-        }
-        .pub-link .arrow { margin-left: 0.4em; }
-
-        /* ===== Project 卡片：2 栏 ===== */
-        .proj-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.2rem;
-        }
-        .proj {
-            background: rgba(15, 18, 26, 0.55);
-            border: 1px solid var(--border-dim);
-            padding: 1.4rem;
-            position: relative;
-            display: flex; flex-direction: column;
-            transition: background 0.2s, border-color 0.2s;
-            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
-        }
-        .proj:hover {
-            background: rgba(20, 24, 34, 0.7);
-            border-color: var(--border);
-        }
-        .proj-cat {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.2em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 0.7rem;
-        }
-        .proj-title {
-            font-family: 'Chakra Petch', sans-serif;
-            font-weight: 600; font-size: 1.1rem;
-            margin: 0 0 0.5rem;
-            letter-spacing: 0.02em;
-        }
-        .proj-desc {
-            font-size: 0.9rem;
-            line-height: 1.65;
-            color: #c8ccd6;
-            margin: 0 0 1rem;
-            flex-grow: 1;
-        }
-        .proj-stack {
-            display: flex; flex-wrap: wrap; gap: 0.35rem;
-            margin-top: 0.4rem;
-        }
-        .proj-stack .tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.05em;
-            padding: 0.25em 0.55em;
-            border: 1px solid var(--border-dim);
-            color: var(--text-mute);
-        }
-        .proj-link {
-            display: inline-block;
-            margin-top: 0.9rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-        .proj-link:hover { color: #fff; }
-
-        /* ===== Footer ===== */
-        .w-footer {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-dim);
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 1rem;
-        }
-        /* ===== Site Footer（全站统一）===== */
-        .site-footer {
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-dim);
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: baseline;
-        }
-        @media (max-width: 640px) {
-            .footer-grid { grid-template-columns: 1fr; }
-        }
-        .footer-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.25em;
-            color: var(--accent);
-            text-transform: uppercase;
-            margin-bottom: 0.6rem;
-        }
-        .footer-links {
-            display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            letter-spacing: 0.05em;
-        }
-        .footer-links a {
-            color: var(--text);
-            border-bottom: 1px dashed transparent;
-            transition: color 0.15s, border-color 0.15s;
-        }
-        .footer-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-        .footer-links .sep { color: var(--text-mute); }
-        .footer-meta {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.2em;
-            color: var(--text-mute);
-            text-transform: uppercase;
-            text-align: right;
-            line-height: 1.8;
-        }
-        @media (max-width: 640px) {
-            .footer-meta { text-align: left; }
-        }
-        .btn {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            padding: 0.85rem 1.5rem;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            cursor: pointer;
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-            transition: transform 0.15s, filter 0.15s;
-        }
-        .btn:hover { transform: translateY(-2px); filter: brightness(1.1); color: #000; }
-        .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-        .btn.ghost:hover { background: var(--accent); color: #000; }
-        .btn .arrow { transition: transform 0.15s; }
-        .btn:hover .arrow { transform: translateX(4px); }
-
-        /* 语言块 */
-        .lang-block { display: none; }
-        .lang-block.active { display: block; }
-
-        @media (max-width: 820px) {
-            .nav { padding: 0.9rem 1.2rem; }
-            .nav-back span.hide-sm { display: none; }
-            .page { padding: 6rem 5vw 3rem; }
-            .pub { grid-template-columns: 1fr; }
-            .pub-tag { justify-self: start; }
-        }
-    </style>
-    <link rel="stylesheet" href="site-system.css">
-    <script src="site-system.js?v=20260725-system22"></script>
+    <link rel="stylesheet" href="assets/styles/pages/work.css?v=20260904-release">
+    <link rel="stylesheet" href="site-system.css?v=20260904-release">
+    <script src="site-system.js?v=20260904-release"></script>
 </head>
 <body>
 
@@ -442,8 +25,8 @@
             <span>←</span><span class="hide-sm">Back to Home</span>
         </a>
         <div class="nav-lang">
-            <button id="btn-zh" onclick="showLang('zh')" class="active">ZH</button>
-            <button id="btn-en" onclick="showLang('en')">EN</button>
+            <button id="btn-zh" class="active">ZH</button>
+            <button id="btn-en">EN</button>
         </div>
     </nav>
 
@@ -454,16 +37,16 @@
 
         <header class="page-header">
             <span class="page-eyebrow">/ 作品与研究</span>
-            <h1 class="page-title">论文与项目</h1>
+            <h1 class="page-title">研究实验室与工程工坊</h1>
             <p class="page-lede">
-                这一页是我做过的东西——包括<span class="accent">合作发表的学术论文</span>与<span class="accent">独立工程项目</span>。
-                我相信最好的方式去理解一个人不是通过简历里的头衔，而是通过他真正花时间构建过的东西。
-                下面每一项，都是我作为共同一作 / 合作作者深度参与、写过大量代码、经过<span class="accent">同行评审</span>、或最后交付给了真实用户。
+                <span class="accent">实验室</span>记录论文、研究方法与研究系统；
+                <span class="accent">工坊</span>记录公开脱敏的工程交付与独立作品。
+                两类内容按稳定标识独立组织，也可以在这里作为一份完整档案连续阅读。
             </p>
         </header>
 
         <!-- ============ Publications ============ -->
-        <section class="w-section" id="publications">
+        <section class="w-section" id="publications" data-room-content="lab" data-content-id="publications">
             <div class="w-section-head">
                 <span class="w-section-num">/ 01</span>
                 <h2 class="w-section-title">论文</h2>
@@ -517,148 +100,248 @@
             </div>
         </section>
 
-        <!-- ============ Projects ============ -->
-        <section class="w-section" id="projects">
+        <section class="w-section" id="research-projects" data-room-content="lab" data-content-id="research-projects">
             <div class="w-section-head">
                 <span class="w-section-num">/ 02</span>
-                <h2 class="w-section-title">精选项目</h2>
-                <span class="w-section-meta">// 工程实践</span>
+                <h2 class="w-section-title">研究项目</h2>
+                <span class="w-section-meta">// 方法与系统</span>
             </div>
 
             <div class="proj-grid">
-
                 <div class="proj">
-                    <div class="proj-cat">// Agent 平台 · 2026</div>
-                    <h3 class="proj-title">Data Platform Agent · Skill 治理</h3>
+                    <div class="proj-cat">// 临床时序研究</div>
+                    <h3 class="proj-title">长周期风险建模</h3>
                     <p class="proj-desc">
-                        字节跳动数据平台 Agent 应用中的 Skill 开关与运行时控制设计：
-                        用统一技能标识抽象用户、业务线、系统三级作用域，按优先级选择生效 Skill，
-                        并在后端执行前做白名单校验，防止被禁用 Skill 进入模型上下文或执行链路。
+                        围绕结构化生物标志物建立可复现实验流程，比较不同时间窗口、变量交互与注意力机制，
+                        并以临床相关指标检验模型是否真正改善长周期风险预测。
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">Agent</span>
-                        <span class="tag">MCP</span>
-                        <span class="tag">Skill Governance</span>
-                        <span class="tag">Runtime Control</span>
+                        <span class="tag">Time-series</span>
+                        <span class="tag">Transformer</span>
+                        <span class="tag">Reproducibility</span>
                     </div>
-                    <a class="proj-link" href="hire.html#zh">职业档案 →</a>
                 </div>
 
                 <div class="proj">
-                    <div class="proj-cat">// 数据平台 · 2026</div>
-                    <h3 class="proj-title">Agent 文件系统产品化</h3>
+                    <div class="proj-cat">// 研究数据系统</div>
+                    <h3 class="proj-title">多模态研究数据流水线</h3>
                     <p class="proj-desc">
-                        将底层文件系统转化为面向 Agent 和用户都可理解的产品能力：
-                        撰写用户引导文档，参与 AI-First 目录结构设计，通过结构化元数据
-                        和确定性路径减少 Agent tool-call 次数与上下文污染。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">AI-First FS</span>
-                        <span class="tag">Manifest</span>
-                        <span class="tag">Context Mgmt</span>
-                        <span class="tag">Product Docs</span>
-                    </div>
-                    <a class="proj-link" href="hire.html#zh">职业档案 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// 全栈 · 2025</div>
-                    <h3 class="proj-title">PhillyHome Insight</h3>
-                    <p class="proj-desc">
-                        主导 <b>4 人团队</b>开发的费城房产 &amp; 社区分析平台。PostgreSQL + PostGIS 空间索引优化，空间查询延迟 <b>≤ 200ms</b>。
-                        目前吸引 <b>200+ 用户</b>，被宾大课程选为系统设计示范项目。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">Next.js</span>
-                        <span class="tag">FastAPI</span>
-                        <span class="tag">PostgreSQL</span>
-                        <span class="tag">PostGIS</span>
-                        <span class="tag">Mapbox</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">项目案例 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// 嵌入式 · 2022 — 2024</div>
-                    <h3 class="proj-title">OpenAPS Simulation</h3>
-                    <p class="proj-desc">
-                        嵌入式血糖调节系统模拟：<b>FreeRTOS + C++</b> 实现实时 <b>PID</b> 控制回路，
-                        系统响应延迟 <b>&lt; 100ms</b>，满足医疗级实时性要求。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">C++</span>
-                        <span class="tag">FreeRTOS</span>
-                        <span class="tag">PID</span>
-                        <span class="tag">Real-time</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">代码 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// iOS · 2024 — 2025</div>
-                    <h3 class="proj-title">智能家居助手</h3>
-                    <p class="proj-desc">
-                        跨设备实时同步的 iOS 家居助手：<b>MongoDB + Swift</b> + Change Streams 实现多设备实时同步，
-                        端到端延迟 <b>&lt; 200ms</b>，同一账户下支持 <b>15+ 设备</b>协作。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">Swift</span>
-                        <span class="tag">MongoDB</span>
-                        <span class="tag">Change Streams</span>
-                        <span class="tag">iOS</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">技术说明 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// 产品 · 2025</div>
-                    <h3 class="proj-title">简历分析与改写</h3>
-                    <p class="proj-desc">
-                        Liba Space 实习期间从 0-1 主导的功能：LLM 分析用户简历、给出结构化修改建议并批量重写。
-                        通过异步任务调度 + prompt 路由让 token 成本下降 35%，上线后 MAU +50%。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">LLM</span>
-                        <span class="tag">TypeScript</span>
-                        <span class="tag">Redis</span>
-                        <span class="tag">Queue</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">详情 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// RAG · 2025</div>
-                    <h3 class="proj-title">思政智能体 · RAG 教案平台</h3>
-                    <p class="proj-desc">
-                        政府主导 AI 教育项目：融合 BM25 + Vector 双通道检索的教案生成平台，
-                        含自研 PDF 解析与知识结构化流水线，让区域教师备课效率提升 70%。
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">RAG</span>
-                        <span class="tag">BM25</span>
-                        <span class="tag">Vector DB</span>
-                        <span class="tag">PDF Parse</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">案例 →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// 工具 · 2024</div>
-                    <h3 class="proj-title">多模态 ETL 流水线</h3>
-                    <p class="proj-desc">
-                        为 Language Biomarker Lab 构建的多模态语音 &amp; 转录 ETL 流水线：
-                        100GB+ 原始数据 → 结构化特征表，人工处理成本降低 80%，
-                        为后续阿尔茨海默症早筛研究提供数据底座。
+                        为语言生物标志物研究整理文本、音频与图像数据，将重复的清洗和特征整理步骤自动化，
+                        让后续实验使用一致、可追踪的数据输入。
                     </p>
                     <div class="proj-stack">
                         <span class="tag">Python</span>
-                        <span class="tag">Whisper</span>
-                        <span class="tag">Airflow</span>
-                        <span class="tag">Pandas</span>
+                        <span class="tag">Multimodal Data</span>
+                        <span class="tag">ETL</span>
                     </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">详情 →</a>
                 </div>
+            </div>
+        </section>
 
+        <section class="w-section" id="product-delivery" data-room-content="workshop" data-content-id="product-delivery">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 02</span>
+                <h2 class="w-section-title">Changelog 跨端信息管线</h2>
+                <span class="w-section-meta">// 独立推动并交付</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// CROSS-SYSTEM CHANGELOG PIPELINE</div>
+                    <h3 class="proj-title">让用户每周看懂产品更新</h3>
+                    <p class="proj-summary">代码每天都在变化，但用户真正关心的是：产品新增了什么、为什么值得使用。</p>
+                    <div class="case-highlights" aria-label="项目关键信息">
+                        <section><span>产品判断</span><strong>主动发现信息断层</strong><p>开发持续发生，用户却感知不到产品变化。</p></section>
+                        <section><span>个人职责</span><strong>独立完成 0 → 1</strong><p>从问题定义一直负责到上线与后续迭代。</p></section>
+                        <section><span>工程范围</span><strong>跨仓打通完整闭环</strong><p>数据、审核和用户展示可以独立演进。</p></section>
+                        <section><span>上线迭代</span><strong>发现缺陷并重构</strong><p>将重复记录改成面向用户的每周快照。</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="从代码变化到用户更新的流水线">
+                        <li><span>01</span><div><strong>收集变化</strong><small>CI 汇总代码差异与提交信息</small></div></li>
+                        <li><span>02</span><div><strong>转成用户语言</strong><small>AI 提取价值，只生成待审核草稿</small></div></li>
+                        <li><span>03</span><div><strong>人工把关</strong><small>开发者比较、编辑并确认内容</small></div></li>
+                        <li><span>04</span><div><strong>跨仓发布</strong><small>写入数据库，挂载到用户入口</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="交付结果">
+                        <span>自动收集变化，减少人工整理</span>
+                        <span>人工审核控制 AI 内容质量</span>
+                        <span>形成可复用的跨仓发布能力</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">CI</span>
+                        <span class="tag">AI Draft</span>
+                        <span class="tag">Human Review</span>
+                        <span class="tag">Weekly Snapshot</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="Changelog 完整开发故事">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>从信息断层到稳定发布</h3>
+                        <div class="story-progress-meta"><small>故事进度</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · 起点</b><h4>一个不在任务清单里的产品问题</h4><p>刚加入团队时，我每天查看代码变化，发现开发者很清楚本周合入了什么，但最终用户和接入方几乎感知不到产品一直在进步。</p><p>它不是数据开发的主链路，却会削弱产品完整度，也让持续投入难以形成用户认知。我主动提出在默认入口展示近期变化和核心能力。</p></section>
+                        <section><b>02 · MVP</b><h4>先解决两个仓库之间的边界</h4><p>数据和管理逻辑属于主应用，用户入口却位于另一个独立构建、独立发布的仓库。复制一套逻辑会增加维护成本，直接调用又会制造部署耦合。</p><p>我将用户入口设计成轻量展示容器，加载主应用提供的页面。这样两边职责清楚，也可以独立开发、部署和演进。</p></section>
+                        <section><b>03 · 闭环</b><h4>把人工周报变成可审核的流水线</h4><p>跨仓展示打通后，我继续解决人工整理慢且容易遗漏的问题：CI 收集代码变化，AI 把技术差异改写成用户价值，再写入待审核草稿。</p><p>AI 不拥有发布权。开发者必须先比较、编辑和确认，内容才会进入数据库并展示给用户。这让效率和内容质量同时可控。</p></section>
+                        <section><b>04 · 反馈</b><h4>上线不是结束，38 条记录暴露了模型缺陷</h4><p>上线初期运行正常，但一周后出现 38 条冗长、重复的更新。问题不在生成质量，而在我最初采用逐条追加的数据模型。</p><p>同一能力的多次修改被拆成多条记录，代码细节淹没了用户真正关心的能力变化。</p></section>
+                        <section><b>05 · 重构</b><h4>从提交记录转向每周产品快照</h4><p>我重新设计状态模型：每周维护一份正式内容和一份待审核草稿，并记录展示与删除状态。</p><p>内容按“新能力”和“新增端侧支持”重新排序，审核页也改成类似代码差异的比较方式，让开发者更容易看懂和修改变化。</p></section>
+                        <section><b>06 · 交付</b><h4>补齐一条链路长期运行所需的能力</h4><p>我继续处理 AI 输出异常、流水线失败和不同网络环境联调等问题，加入输出整理、明确日志、失败重试和测试部署流程。</p><p>最终交付的不只是一张页面，而是一条从发现产品问题、完成跨仓开发，到上线后根据真实反馈重构的完整工程闭环。</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" id="capability-governance" data-room-content="workshop" data-content-id="capability-governance">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 03</span>
+                <h2 class="w-section-title">Skill 运行时开关</h2>
+                <span class="w-section-meta">// 跨团队共同负责方案到上线</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// SKILL RUNTIME CONTROLS</div>
+                    <h3 class="proj-title">赋予用户选择权，收束 Agent 权限</h3>
+                    <p class="proj-summary">同一个 Skill 会因用户和场景出现不同版本。用户需要自由切换，Agent 则只应加载当前任务必要且允许的版本。</p>
+                    <div class="case-highlights" aria-label="项目关键信息">
+                        <section><span>真实需求</span><strong>同一能力存在多个版本</strong><p>个人、团队和系统版本服务不同用户与场景。</p></section>
+                        <section><span>用户控制</span><strong>自由启停并对比版本</strong><p>保留选择权，也能验证哪个版本更适合任务。</p></section>
+                        <section><span>Agent 效率</span><strong>只加载必要且足够的能力</strong><p>减少上下文占用，也减少无关能力的干扰。</p></section>
+                        <section><span>安全边界</span><strong>关闭后任何入口都不可调用</strong><p>阻止 Agent 自行找到未授权或已停用版本。</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="Skill 选择与运行链路">
+                        <li><span>01</span><div><strong>发现候选</strong><small>汇总不同来源和版本的 Skill</small></div></li>
+                        <li><span>02</span><div><strong>规范身份</strong><small>兼容名称差异，处理同名冲突</small></div></li>
+                        <li><span>03</span><div><strong>用户选择</strong><small>启停、切换并对比不同版本</small></div></li>
+                        <li><span>04</span><div><strong>限制运行</strong><small>只向 Agent 提供允许且必要的能力</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="交付结果">
+                        <span>减少无关 Skill 占用上下文</span>
+                        <span>降低错误选择，提高执行效率</span>
+                        <span>用户可控制并比较不同版本</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">State Precedence</span>
+                        <span class="tag">Runtime Filtering</span>
+                        <span class="tag">Fallback</span>
+                        <span class="tag">Timeout</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="Skill 运行时开关完整开发故事">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>从版本选择到 Agent 能力边界</h3>
+                        <div class="story-progress-meta"><small>故事进度</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · 需求</b><h4>不同用户需要同一 Skill 的不同版本</h4><p>个人可以维护自己的版本，团队需要共享版本，系统也会提供默认版本。它们可能同名，但适合的任务和维护者并不相同。</p><p>用户需要自由启停，也需要并排测试不同版本，而不是被系统永久绑定到单一实现。</p></section>
+                        <section><b>02 · 原则</b><h4>给 Agent 的能力必须必要且足够</h4><p>把所有 Skill 都交给 Agent 看似功能丰富，实际会占用上下文，并增加误选能力的概率。</p><p>我们的目标是只提供完成当前任务所需、用户允许使用的版本，在能力完整和运行效率之间取得平衡。</p></section>
+                        <section><b>03 · 模型</b><h4>统一来源、版本、开关和优先级</h4><p>我们将个人、协作空间和系统能力放入同一套状态规则。同名版本按明确顺序选择，当前版本关闭后再回退到下一可用版本。</p><p>用户看到的是可选择的版本，Agent 获得的是解析后的唯一结果，两者职责分开。</p></section>
+                        <section><b>04 · 上线</b><h4>真实文件并不总符合约定</h4><p>上线后发现，一些 Skill 的目录名和文件中声明的名称并不一致；还有同名版本和路径写法不规范，导致解析冲突或能力消失。</p><p>我们继续补充名称解析兼容、同名消歧、异常提示和路径校验，让已有 Skill 不必全部重写也能稳定接入。</p></section>
+                        <section><b>05 · 防线</b><h4>不能只在页面上隐藏</h4><p>如果只改变按钮，Agent 仍可能从能力加载、文件视图或旧会话选择中找到已关闭的 Skill。</p><p>因此三个运行入口都执行同一状态校验，确保关闭后的能力不可见、不可选、不可调用。</p></section>
+                        <section><b>06 · 价值</b><h4>把用户选择转化为 Agent 效率</h4><p>用户获得了选择和比较不同版本的能力，也能为不同任务保留不同组合。</p><p>Agent 的上下文更精简，搜索范围更准确，错误调用更少；用户控制和运行效率由同一套机制同时保证。</p></section>
+                        <section><b>07 · 稳定性</b><h4>非核心控制不能拖住核心任务</h4><p>一次线上问题暴露出开关信息成为会话必等项，局部阻塞被放大成整体不可用。</p><p>我们隔离非核心请求，补充超时与降级，并持续追踪异常根因，让控制能力失效时也不影响用户继续对话。</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" id="workflow-integration" data-room-content="workshop" data-content-id="workflow-integration">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 01</span>
+                <h2 class="w-section-title">端到端数据工作流 Skills</h2>
+                <span class="w-section-meta">// 参与开发、适配和验证</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// END-TO-END DATA WORKFLOW SKILLS</div>
+                    <h3 class="proj-title">用完整开发闭环真正留住用户</h3>
+                    <p class="proj-summary">数据开发天然跨越数据集、查询、看板和实验等多个端侧。我们把这些能力组织进 Agent，让用户从提出目标到拿到结果都不必离开当前产品。</p>
+                    <div class="case-result-feature" aria-label="关键结果">
+                        <div><span>上线次周</span><strong>+520%</strong></div>
+                        <p>数据集 Skill 成功调用量相对增长，证明用户愿意留在当前产品中完成真实的数据任务。</p>
+                    </div>
+                    <div class="case-highlights" aria-label="项目关键信息">
+                        <section><span>产品洞察</span><strong>用户任务跨越多个端侧</strong><p>一次完整开发往往被拆散在不同产品中。</p></section>
+                        <section><span>产品目标</span><strong>在一个入口完成完整闭环</strong><p>从表达目标、检查条件到拿到产物不再跳出。</p></section>
+                        <section><span>Agent 价值</span><strong>编排能力，而不只是回答问题</strong><p>主动发现信息、调用下游并交付可用结果。</p></section>
+                        <section><span>我的贡献</span><strong>开发、适配与验证</strong><p>覆盖数据集、实验工单和服务三类任务。</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="Agent 数据任务执行流程">
+                        <li><span>01</span><div><strong>理解开发目标</strong><small>从对话获取任务和已有上下文</small></div></li>
+                        <li><span>02</span><div><strong>连接端侧能力</strong><small>读取下游产品的结构、目录与配置</small></div></li>
+                        <li><span>03</span><div><strong>执行前校验</strong><small>提前发现参数、权限和目录问题</small></div></li>
+                        <li><span>04</span><div><strong>交付可用结果</strong><small>执行任务并将产物返回当前对话</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="交付结果">
+                        <span>减少多个端侧之间的来回切换</span>
+                        <span>在当前产品内完成开发与确认</span>
+                        <span>让 Agent 从建议工具变成交付入口</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">Schema Discovery</span>
+                        <span class="tag">Dry Run</span>
+                        <span class="tag">Platform Adaptation</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="数据工作流完整开发故事">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>把跨端开发收进一个产品闭环</h3>
+                        <div class="story-progress-meta"><small>故事进度</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · 产品问题</b><h4>用户的任务完整，产品体验却是断开的</h4><p>数据开发不是一个页面内的动作。用户会在数据集、查询、看板、实验和服务等端侧之间切换，反复搬运上下文和配置。</p><p>真正的问题不只是步骤多，而是当前产品只能回答一小段，无法陪用户完成整个开发任务。</p></section>
+                        <section><b>02 · 产品目标</b><h4>让用户不离开当前入口也能完成开发</h4><p>我们希望 Agent 成为统一入口：理解目标、连接下游能力、检查执行条件，并把结果带回当前对话。</p><p>这意味着不能只做一个快捷表单，而要把多个端侧重新组织成连续、可完成的用户路径。</p></section>
+                        <section><b>03 · 路径拆解</b><h4>先从高频的数据集创建切入</h4><p>我完整走查真实网页流程，记录每个请求、参数和依赖，区分哪些信息必须由用户决定，哪些可以由 Agent 自动获得。</p><p>用户只需提供最关键的表和项目，Agent 自动读取结构与可写目录，再让用户确认字段。</p></section>
+                        <section><b>04 · 可信执行</b><h4>让 Agent 真正做事，也让结果可控</h4><p>创建前先进行 dry-run，集中检查数据源、字段、目录、权限和请求参数，避免错误进入正式执行。</p><p>校验通过后直接创建，并把结果链接送回对话。用户可以原地确认产物，而不是再去另一个产品中寻找。</p></section>
+                        <section><b>05 · 完整闭环</b><h4>一次创建不是流程终点</h4><p>能力继续支持修改字段与指标、通过 SQL 创建，并衔接后续使用场景。</p><p>这样用户能在同一产品里持续完善数据产物，而不是完成第一步后又回到跨端操作。</p></section>
+                        <section><b>06 · 能力扩展</b><h4>从数据集扩展到更多开发任务</h4><p>在数据集之外，我还参与实验工单和服务接入的开发与适配，让需求、配置、执行和结果逐步汇入同一入口。</p><p>数据集 Skill 上线次周成功调用量相对增长 +520%，证明用户开始采用这条完整路径处理真实工作。</p></section>
+                        <section><b>07 · 平台适配</b><h4>用户留在产品里，Skill 就要理解产品</h4><p>通用 Skill 会自行获取权限和参数，但当前产品已经维护这些信息。重复获取会增加工具调用、推理轮次和失败点。</p><p>我将能力改为复用平台现有上下文，让执行更快、更稳定，也让跨端能力真正融入产品，而不是外挂在产品旁边。</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" id="other-works" data-room-content="workshop" data-content-id="other-works">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 04</span>
+                <h2 class="w-section-title">其他作品</h2>
+                <span class="w-section-meta">// 独立项目 · 次级档案</span>
+            </div>
+            <div class="proj-grid">
+                <div class="proj">
+                    <div class="proj-cat">// 全栈 · 地理数据</div>
+                    <h3 class="proj-title">PhillyHome Insight</h3>
+                    <p class="proj-desc">
+                        面向费城房产与社区信息的分析工具，将地图检索、空间查询和社区指标组织成一条清晰的探索路径。
+                    </p>
+                    <div class="proj-stack">
+                        <span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">PostGIS</span>
+                    </div>
+                </div>
+                <div class="proj">
+                    <div class="proj-cat">// 嵌入式 · 控制系统</div>
+                    <h3 class="proj-title">OpenAPS Simulation</h3>
+                    <p class="proj-desc">
+                        使用实时任务与 PID 控制回路模拟血糖调节过程，重点验证调度、反馈和故障边界。
+                    </p>
+                    <div class="proj-stack">
+                        <span class="tag">C++</span><span class="tag">FreeRTOS</span><span class="tag">PID</span>
+                    </div>
+                </div>
+                <div class="proj">
+                    <div class="proj-cat">// iOS · 多设备同步</div>
+                    <h3 class="proj-title">智能家居助手</h3>
+                    <p class="proj-desc">
+                        探索家庭设备状态的实时同步与一致性，让同一账户下的多个终端共享可理解的设备状态。
+                    </p>
+                    <div class="proj-stack">
+                        <span class="tag">Swift</span><span class="tag">MongoDB</span><span class="tag">Change Streams</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -689,16 +372,15 @@
 
         <header class="page-header">
             <span class="page-eyebrow">/ Work</span>
-            <h1 class="page-title">Publications &amp; Projects</h1>
+            <h1 class="page-title">Research Lab &amp; Engineering Workshop</h1>
             <p class="page-lede">
-                This page is the stuff I've built — <span class="accent">peer-reviewed papers I co-authored</span> and
-                <span class="accent">independent engineering projects</span>.
-                The best way to know someone isn't through titles on a résumé, but through what they've actually spent time building.
-                Every item below is something I authored or co-authored, wrote a lot of code for, was reviewed on, or shipped to real users.
+                The <span class="accent">lab</span> holds papers, research methods, and research systems.
+                The <span class="accent">workshop</span> holds public, sanitized engineering deliveries and independent work.
+                Each room has stable semantic targets, while this page keeps both available as one continuous archive.
             </p>
         </header>
 
-        <section class="w-section">
+        <section class="w-section" data-room-content="lab" data-content-id="publications">
             <div class="w-section-head">
                 <span class="w-section-num">/ 01</span>
                 <h2 class="w-section-title">Publications</h2>
@@ -753,120 +435,240 @@
             </div>
         </section>
 
-        <section class="w-section">
+        <section class="w-section" data-room-content="lab" data-content-id="research-projects">
             <div class="w-section-head">
                 <span class="w-section-num">/ 02</span>
-                <h2 class="w-section-title">Selected Projects</h2>
-                <span class="w-section-meta">// engineering</span>
+                <h2 class="w-section-title">Research Projects</h2>
+                <span class="w-section-meta">// methods &amp; systems</span>
             </div>
 
             <div class="proj-grid">
                 <div class="proj">
-                    <div class="proj-cat">// AGENT PLATFORM · 2026</div>
-                    <h3 class="proj-title">Data Platform Agent · Skill Governance</h3>
+                    <div class="proj-cat">// CLINICAL TIME-SERIES RESEARCH</div>
+                    <h3 class="proj-title">Long-horizon Risk Modeling</h3>
                     <p class="proj-desc">
-                        Skill switch and runtime-control design for ByteDance data-platform agents:
-                        a unified Skill identity abstracts user, business-line and system scopes, resolves active Skills by
-                        priority rules, and adds backend whitelist checks before execution
-                        so disabled Skills cannot enter model context or execution chains.
+                        Built a reproducible experiment workflow around structured biomarkers, comparing time windows,
+                        cross-variable interactions, and attention mechanisms against clinically relevant outcomes.
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">Agent</span><span class="tag">MCP</span><span class="tag">Skill Governance</span><span class="tag">Runtime Control</span>
+                        <span class="tag">Time-series</span><span class="tag">Transformer</span><span class="tag">Reproducibility</span>
                     </div>
-                    <a class="proj-link" href="hire.html#en">CAREER PORTFOLIO →</a>
                 </div>
 
                 <div class="proj">
-                    <div class="proj-cat">// DATA PLATFORM · 2026</div>
-                    <h3 class="proj-title">Agent File-System Productization</h3>
+                    <div class="proj-cat">// RESEARCH DATA SYSTEM</div>
+                    <h3 class="proj-title">Multimodal Research Pipeline</h3>
                     <p class="proj-desc">
-                        Productized an internal file system into something both agents and users can reason about:
-                        onboarding docs, AI-First directory rules, structured metadata and deterministic paths
-                        to reduce tool calls and context pollution.
+                        Automated recurring cleanup and feature-preparation steps across text, audio, and image data,
+                        giving downstream experiments consistent and traceable inputs.
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">AI-First FS</span><span class="tag">Manifest</span><span class="tag">Context Mgmt</span><span class="tag">Product Docs</span>
+                        <span class="tag">Python</span><span class="tag">Multimodal Data</span><span class="tag">ETL</span>
                     </div>
-                    <a class="proj-link" href="hire.html#en">CAREER PORTFOLIO →</a>
                 </div>
+            </div>
+        </section>
 
+        <section class="w-section" data-room-content="workshop" data-content-id="product-delivery">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 02</span>
+                <h2 class="w-section-title">Cross-System Changelog Pipeline</h2>
+                <span class="w-section-meta">// independently drove and delivered</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// CROSS-SYSTEM CHANGELOG PIPELINE</div>
+                    <h3 class="proj-title">Help Users Understand Weekly Product Updates</h3>
+                    <p class="proj-summary">Code changed every day, but users needed a clear answer to what improved and why it mattered.</p>
+                    <div class="case-highlights" aria-label="Project highlights">
+                        <section><span>Product Judgment</span><strong>Found the information gap</strong><p>Development moved quickly, but users could not see the change.</p></section>
+                        <section><span>Ownership</span><strong>Delivered 0 → 1</strong><p>Owned the path from problem framing through launch and iteration.</p></section>
+                        <section><span>Engineering Scope</span><strong>Closed a cross-repository loop</strong><p>Data, review, and display could evolve independently.</p></section>
+                        <section><span>Post-launch Work</span><strong>Found the flaw and rebuilt it</strong><p>Replaced repetitive records with one user-focused weekly snapshot.</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="Pipeline from code changes to user updates">
+                        <li><span>01</span><div><strong>Collect Change</strong><small>CI gathers code differences and commits</small></div></li>
+                        <li><span>02</span><div><strong>Translate Value</strong><small>AI extracts user value into a review draft</small></div></li>
+                        <li><span>03</span><div><strong>Human Gate</strong><small>Developers compare, edit, and approve</small></div></li>
+                        <li><span>04</span><div><strong>Cross-repo Release</strong><small>Publish to the database and user entry point</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="Delivery outcomes">
+                        <span>Automated change collection and reduced manual summaries</span>
+                        <span>Kept AI content quality behind human review</span>
+                        <span>Created a reusable cross-repository release path</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">CI</span><span class="tag">AI Draft</span><span class="tag">Human Review</span>
+                        <span class="tag">Weekly Snapshot</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="Complete Changelog development story">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>From an Information Gap to Reliable Release</h3>
+                        <div class="story-progress-meta"><small>Story progress</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · ORIGIN</b><h4>A Product Problem Outside the Task List</h4><p>When I joined, I followed code changes every day. Developers knew what shipped, but users and integration partners could barely see that the product kept improving.</p><p>It was outside the core data workflow, yet it weakened product completeness. I proposed using the default entry point to show recent changes and key capabilities.</p></section>
+                        <section><b>02 · MVP</b><h4>Define the Boundary Between Two Repositories</h4><p>Data and management belonged to the main app, while the user entry point lived in a separately built and deployed repository. Copying logic would raise maintenance cost; direct coupling would tie deployments together.</p><p>I made the user entry point a lightweight display container for a page served by the main app. Each side kept a clear role and could evolve independently.</p></section>
+                        <section><b>03 · LOOP</b><h4>Turn Manual Notes into a Reviewed Pipeline</h4><p>After the cross-repository display worked, I addressed slow and incomplete manual summaries. CI collects changes, AI translates technical differences into user value, and writes a review draft.</p><p>AI never receives publishing rights. A developer compares, edits, and approves the draft before it reaches the database and users.</p></section>
+                        <section><b>04 · FEEDBACK</b><h4>Thirty-eight Entries Exposed a Model Flaw</h4><p>The first release looked healthy, but one week later it produced 38 long, repetitive updates. Generation quality was not the root cause; my append-only model was.</p><p>Repeated changes to one capability became separate records, and code-level detail buried the product changes users cared about.</p></section>
+                        <section><b>05 · REBUILD</b><h4>Move from Commit Records to a Weekly Product Snapshot</h4><p>I redesigned the state model around one published version and one review draft per week, with display and deletion state.</p><p>Content was reordered around new capabilities and newly supported clients. The review page adopted a difference view so developers could understand and edit changes quickly.</p></section>
+                        <section><b>06 · DELIVERY</b><h4>Make the Whole Path Sustainable</h4><p>I then handled malformed AI output, pipeline failures, and testing across network environments through cleanup, clear logs, retries, and deployment procedures.</p><p>The final delivery was not a page. It was a complete product-engineering loop from discovering the problem and crossing repository boundaries to rebuilding the system after real feedback.</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" data-room-content="workshop" data-content-id="capability-governance">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 03</span>
+                <h2 class="w-section-title">Skill Runtime Controls</h2>
+                <span class="w-section-meta">// cross-team ownership from design through launch</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// SKILL RUNTIME CONTROLS</div>
+                    <h3 class="proj-title">Give Users Control, Constrain Agent Access</h3>
+                    <p class="proj-summary">The same Skill can have different versions for different users and scenarios. Users choose the version; the agent receives only what is needed and allowed.</p>
+                    <div class="case-highlights" aria-label="Project highlights">
+                        <section><span>Real Need</span><strong>One capability, multiple versions</strong><p>User, workspace, and system versions serve different scenarios.</p></section>
+                        <section><span>User Control</span><strong>Enable, switch, and compare</strong><p>Users can test which version fits a task instead of being locked in.</p></section>
+                        <section><span>Agent Efficiency</span><strong>Sufficient and necessary context</strong><p>Only relevant capabilities consume context or enter selection.</p></section>
+                        <section><span>Safety Boundary</span><strong>Disabled means unreachable</strong><p>The agent cannot rediscover a disabled or disallowed version.</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="Skill selection and runtime path">
+                        <li><span>01</span><div><strong>Find Candidates</strong><small>Collect Skills from different sources and versions</small></div></li>
+                        <li><span>02</span><div><strong>Normalize Identity</strong><small>Handle name differences and same-name conflicts</small></div></li>
+                        <li><span>03</span><div><strong>User Chooses</strong><small>Enable, switch, and compare versions</small></div></li>
+                        <li><span>04</span><div><strong>Restrict Runtime</strong><small>Give the agent only allowed, necessary capabilities</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="Delivery outcomes">
+                        <span>Less unrelated Skill context</span>
+                        <span>Fewer wrong selections and faster execution</span>
+                        <span>User-controlled version comparison</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">State Precedence</span>
+                        <span class="tag">Runtime Filtering</span><span class="tag">Fallback</span><span class="tag">Timeout</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="Complete Skill runtime controls development story">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>From Version Choice to an Agent Capability Boundary</h3>
+                        <div class="story-progress-meta"><small>Story progress</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · NEED</b><h4>Different Users Need Different Versions of One Skill</h4><p>Individuals can maintain their own version, teams share another, and the system provides a default. They may share a name while serving different tasks and owners.</p><p>Users need to enable and disable them freely and compare versions instead of being locked into one implementation.</p></section>
+                        <section><b>02 · PRINCIPLE</b><h4>Agent Context Must Be Sufficient and Necessary</h4><p>Giving the agent every Skill looks powerful but consumes context and increases the chance of choosing the wrong capability.</p><p>Our goal was to provide enough to complete the task, but only from versions the user allowed.</p></section>
+                        <section><b>03 · MODEL</b><h4>Unify Source, Version, State, and Priority</h4><p>User, workspace, and system capabilities follow one state model. Same-name versions resolve in a clear order and fall back when the active layer is disabled.</p><p>Users see choices, while the agent receives one resolved result. Those responsibilities stay separate.</p></section>
+                        <section><b>04 · LAUNCH</b><h4>Real Skill Files Do Not Always Follow Conventions</h4><p>After launch, some folder names differed from names declared inside Skill files. Same-name versions and irregular paths caused conflicts or missing capabilities.</p><p>We added parsing compatibility, same-name disambiguation, clearer errors, and path validation so existing Skills could connect without a full rewrite.</p></section>
+                        <section><b>05 · DEFENSE</b><h4>Hiding a Button Is Not Enforcement</h4><p>If only the UI changes, the agent can still find a disabled Skill during loading, through the file view, or from an older conversation selection.</p><p>All three runtime entry points enforce the same state so disabled capabilities are invisible, unselectable, and unreachable.</p></section>
+                        <section><b>06 · VALUE</b><h4>Turn User Choice into Agent Efficiency</h4><p>Users can choose and compare versions and keep different combinations for different tasks.</p><p>The agent receives a smaller context, searches a cleaner capability set, and makes fewer wrong calls. One mechanism improves both control and speed.</p></section>
+                        <section><b>07 · RELIABILITY</b><h4>Non-core Control Must Not Block Core Work</h4><p>A production issue showed that waiting for control data could turn a local block into a stalled conversation.</p><p>We isolated the dependency, added timeout and fallback behavior, and continued root-cause tracing so users could keep working even when control data failed.</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" data-room-content="workshop" data-content-id="workflow-integration">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 01</span>
+                <h2 class="w-section-title">End-to-End Data Workflow Skills</h2>
+                <span class="w-section-meta">// development, adaptation, and validation</span>
+            </div>
+            <div class="proj-grid workshop-case-grid">
+                <article class="proj">
+                    <div class="proj-cat">// END-TO-END DATA WORKFLOW SKILLS</div>
+                    <h3 class="proj-title">Retain Users Through a Complete Development Loop</h3>
+                    <p class="proj-summary">Data work naturally spans datasets, queries, dashboards, experiments, and services. We organized those capabilities behind the agent so users could move from intent to result without leaving the product.</p>
+                    <div class="case-result-feature" aria-label="Key result">
+                        <div><span>Week two</span><strong>+520%</strong></div>
+                        <p>Relative growth in successful dataset Skill calls, showing that users adopted the product for real end-to-end data work.</p>
+                    </div>
+                    <div class="case-highlights" aria-label="Project highlights">
+                        <section><span>Product Insight</span><strong>User tasks span multiple products</strong><p>One development workflow was fragmented across separate endpoints.</p></section>
+                        <section><span>Product Goal</span><strong>Complete the loop in one entry point</strong><p>Move from intent and checks to a usable asset without leaving.</p></section>
+                        <section><span>Agent Value</span><strong>Orchestrate work, not only answer</strong><p>Discover context, call downstream systems, and deliver results.</p></section>
+                        <section><span>My Contribution</span><strong>Development, adaptation, validation</strong><p>Covered dataset, experiment, and service workflows.</p></section>
+                    </div>
+                    <ol class="case-pipeline" aria-label="Agent data task workflow">
+                        <li><span>01</span><div><strong>Understand Intent</strong><small>Use the task and context already in the conversation</small></div></li>
+                        <li><span>02</span><div><strong>Connect Endpoints</strong><small>Read structures, directories, and downstream setup</small></div></li>
+                        <li><span>03</span><div><strong>Validate First</strong><small>Catch parameter, permission, and directory errors</small></div></li>
+                        <li><span>04</span><div><strong>Deliver the Result</strong><small>Execute and return the artifact to the conversation</small></div></li>
+                    </ol>
+                    <div class="case-outcomes" aria-label="Delivery outcomes">
+                        <span>Less switching between endpoint products</span>
+                        <span>Development and confirmation stay in one product</span>
+                        <span>The agent becomes a delivery surface</span>
+                    </div>
+                    <div class="proj-stack">
+                        <span class="tag">Schema Discovery</span><span class="tag">Dry Run</span><span class="tag">Platform Adaptation</span>
+                    </div>
+                </article>
+                <aside class="case-brief case-brief-scrollable" aria-label="Complete data workflow development story">
+                    <header>
+                        <span>// DEVELOPMENT STORY</span>
+                        <h3>Bring Cross-product Development into One Loop</h3>
+                        <div class="story-progress-meta"><small>Story progress</small><output data-story-progress-label>0%</output></div>
+                        <div class="story-progress-track" aria-hidden="true"><i data-story-progress></i></div>
+                    </header>
+                    <div class="case-story-scroll" data-story-scroll tabindex="0">
+                        <section><b>01 · PRODUCT PROBLEM</b><h4>The User Task Was Whole, but the Experience Was Fragmented</h4><p>Data development spans dataset, query, dashboard, experiment, and service products. Users moved context and configuration between them by hand.</p><p>The deeper problem was not form length. Our product could answer one part of the task but could not stay with users until the work was complete.</p></section>
+                        <section><b>02 · PRODUCT GOAL</b><h4>Complete Development Without Leaving the Entry Point</h4><p>We wanted the agent to become one entry point that understands intent, connects downstream capabilities, checks conditions, and brings the result back.</p><p>This required redesigning separate products as one continuous user journey, not simply turning a form into chat.</p></section>
+                        <section><b>03 · PATH DESIGN</b><h4>Start with the High-frequency Dataset Workflow</h4><p>I walked the real web flow and recorded each request, parameter, and dependency. I separated decisions only users could make from context the agent could discover.</p><p>Users provide the essential table and project. The agent reads schema and writable directories, then asks them to confirm fields.</p></section>
+                        <section><b>04 · TRUSTED EXECUTION</b><h4>Let the Agent Act While Keeping Results Controlled</h4><p>A dry run checks the source, fields, directory, permissions, and request parameters before any formal action begins.</p><p>After validation, the Skill creates the asset and returns its link to the conversation. Users confirm the result without searching another product.</p></section>
+                        <section><b>05 · COMPLETE LOOP</b><h4>Initial Creation Is Not the End</h4><p>The capability also supports later field and metric edits and SQL-based creation, then connects to downstream use.</p><p>Users can keep refining the data asset inside one product instead of returning to a fragmented multi-product workflow.</p></section>
+                        <section><b>06 · EXPANSION</b><h4>Grow from Datasets to More Development Tasks</h4><p>I also contributed to experiment work orders and service integration, bringing requirements, setup, execution, and results toward the same entry point.</p><p>Successful dataset Skill calls grew 520% in week two, showing that users adopted this complete path for real work.</p></section>
+                        <section><b>07 · ADAPTATION</b><h4>To Keep Users in the Product, Skills Must Understand It</h4><p>A generic Skill fetched permissions and parameters that the host product already maintained, adding calls, reasoning turns, and failure points.</p><p>I adapted it to reuse product context, making execution faster and more reliable while integrating downstream capability into the product itself.</p></section>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="w-section" data-room-content="workshop" data-content-id="other-works">
+            <div class="w-section-head">
+                <span class="w-section-num">/ 04</span>
+                <h2 class="w-section-title">Other Work</h2>
+                <span class="w-section-meta">// independent projects · secondary archive</span>
+            </div>
+            <div class="proj-grid">
                 <div class="proj">
-                    <div class="proj-cat">// FULL-STACK · 2025</div>
+                    <div class="proj-cat">// FULL-STACK · GEOSPATIAL DATA</div>
                     <h3 class="proj-title">PhillyHome Insight</h3>
                     <p class="proj-desc">
-                        Real-estate &amp; community analytics platform for Philadelphia. Led a <b>4-person</b> team; PostgreSQL + PostGIS
-                        query optimization brings spatial queries down to <b>≤ 200ms</b>. Attracted <b>200+ users</b> and adopted as a
-                        system-design showcase in a UPenn course.
+                        A Philadelphia housing and neighborhood analysis tool that organizes map search,
+                        spatial queries, and community indicators into one exploration path.
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">PostgreSQL</span><span class="tag">PostGIS</span><span class="tag">Mapbox</span>
+                        <span class="tag">Next.js</span><span class="tag">FastAPI</span><span class="tag">PostGIS</span>
                     </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">CASE STUDY →</a>
                 </div>
-
                 <div class="proj">
-                    <div class="proj-cat">// EMBEDDED · 2022 — 2024</div>
+                    <div class="proj-cat">// EMBEDDED · CONTROL SYSTEM</div>
                     <h3 class="proj-title">OpenAPS Simulation</h3>
                     <p class="proj-desc">
-                        Embedded glucose regulation system. <b>FreeRTOS + C++</b> real-time <b>PID</b> control loop with response latency
-                        <b>&lt; 100ms</b> — meets medical-grade real-time requirements.
+                        A real-time glucose-regulation simulation focused on task scheduling,
+                        feedback control, and failure boundaries.
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">C++</span><span class="tag">FreeRTOS</span><span class="tag">PID</span><span class="tag">Real-time</span>
+                        <span class="tag">C++</span><span class="tag">FreeRTOS</span><span class="tag">PID</span>
                     </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">CODE →</a>
                 </div>
-
                 <div class="proj">
-                    <div class="proj-cat">// iOS · 2024 — 2025</div>
+                    <div class="proj-cat">// iOS · MULTI-DEVICE SYNC</div>
                     <h3 class="proj-title">Smart Home Assistant</h3>
                     <p class="proj-desc">
-                        Cross-device iOS home hub. <b>MongoDB + Swift</b> with Change Streams for multi-device real-time sync,
-                        end-to-end latency <b>&lt; 200ms</b>, supports <b>15+</b> devices per account.
+                        An exploration of real-time household device synchronization,
+                        keeping understandable device state consistent across a user's endpoints.
                     </p>
                     <div class="proj-stack">
-                        <span class="tag">Swift</span><span class="tag">MongoDB</span><span class="tag">Change Streams</span><span class="tag">iOS</span>
+                        <span class="tag">Swift</span><span class="tag">MongoDB</span><span class="tag">Change Streams</span>
                     </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">WRITE-UP →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// PRODUCT · 2025</div>
-                    <h3 class="proj-title">Resume Analysis &amp; Rewrite</h3>
-                    <p class="proj-desc">
-                        A 0-1 feature I led at Liba Space: LLM-driven resume analysis, structured suggestions,
-                        and batch rewrite. Async queue + prompt routing cut token cost 35%. +50% MAU after launch.
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">LLM</span><span class="tag">TypeScript</span><span class="tag">Redis</span><span class="tag">Queue</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">DETAILS →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// RAG · 2025</div>
-                    <h3 class="proj-title">RAG Lesson-Planning Platform</h3>
-                    <p class="proj-desc">
-                        Gov-sponsored AI education initiative. Hybrid BM25 + Vector retrieval + a custom PDF
-                        parsing pipeline. Cut teacher prep time by 70% at pilot schools.
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">RAG</span><span class="tag">BM25</span><span class="tag">Vector DB</span><span class="tag">PDF Parse</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">CASE →</a>
-                </div>
-
-                <div class="proj">
-                    <div class="proj-cat">// TOOL · 2024</div>
-                    <h3 class="proj-title">Multi-Modal ETL Pipeline</h3>
-                    <p class="proj-desc">
-                        Speech + transcript ETL for the Language Biomarker Lab. 100GB+ raw data → structured
-                        feature tables, 80% less manual processing — data foundation for Alzheimer's screening.
-                    </p>
-                    <div class="proj-stack">
-                        <span class="tag">Python</span><span class="tag">Whisper</span><span class="tag">Airflow</span><span class="tag">Pandas</span>
-                    </div>
-                    <a class="proj-link" href="https://github.com/CKSF" target="_blank">DETAILS →</a>
                 </div>
             </div>
         </section>
@@ -895,79 +697,7 @@
 
     </main>
 
-    <script>
-        /* Matrix 数字雨 —— 与其它页面配置一致 */
-        (function initMatrixRain() {
-            const canvas = document.getElementById('matrixRain');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d', { alpha: false });
-            const GLYPHS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEF<>/\\|+*=$#%'.split('');
-            const FONT_SIZE = 15;
-            let cols = 0, drops = [], speeds = [], leaders = [];
-            function resize() {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                canvas.width  = Math.floor(window.innerWidth  * dpr);
-                canvas.height = Math.floor(window.innerHeight * dpr);
-                canvas.style.width  = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                cols = Math.floor(window.innerWidth / FONT_SIZE);
-                drops   = new Array(cols).fill(0).map(() => Math.random() * -50);
-                speeds  = new Array(cols).fill(0).map(() => 0.12 + Math.random() * 0.28);
-                leaders = new Array(cols).fill(0).map(() => GLYPHS[Math.floor(Math.random() * GLYPHS.length)]);
-            }
-            resize();
-            window.addEventListener('resize', resize);
-            const COLOR_TRAIL='rgba(180,160,40,0.75)', COLOR_MID='rgba(252,233,79,0.85)',
-                  COLOR_LEADER='rgba(255,255,220,1)', COLOR_CYAN='rgba(36,224,255,0.9)';
-            function draw() {
-                ctx.fillStyle = 'rgba(5,7,13,0.08)';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-                ctx.font = FONT_SIZE + "px 'JetBrains Mono', monospace";
-                ctx.textBaseline = 'top';
-                for (let i = 0; i < cols; i++) {
-                    const x = i * FONT_SIZE, y = drops[i] * FONT_SIZE;
-                    if (Math.random() < 0.02) leaders[i] = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-                    ctx.fillStyle = (Math.random() < 0.03) ? COLOR_CYAN : COLOR_LEADER;
-                    ctx.fillText(leaders[i], x, y);
-                    ctx.fillStyle = COLOR_MID;
-                    for (let k = 1; k <= 3; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    ctx.fillStyle = COLOR_TRAIL;
-                    for (let k = 4; k <= 8; k++) ctx.fillText(GLYPHS[Math.floor(Math.random() * GLYPHS.length)], x, y - k * FONT_SIZE);
-                    drops[i] += speeds[i];
-                    if (y > window.innerHeight && Math.random() > 0.985) {
-                        drops[i] = Math.random() * -20;
-                        speeds[i] = 0.12 + Math.random() * 0.28;
-                    }
-                }
-                requestAnimationFrame(draw);
-            }
-            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                ctx.fillStyle = '#05070d';
-                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-            } else { requestAnimationFrame(draw); }
-        })();
-
-        function showLang(lang) {
-            const zh = document.getElementById('zh');
-            const en = document.getElementById('en');
-            const bZ = document.getElementById('btn-zh');
-            const bE = document.getElementById('btn-en');
-            if (lang === 'zh') {
-                zh.classList.add('active'); en.classList.remove('active');
-                bZ.classList.add('active'); bE.classList.remove('active');
-                document.documentElement.lang = 'zh-CN';
-            } else {
-                en.classList.add('active'); zh.classList.remove('active');
-                bE.classList.add('active'); bZ.classList.remove('active');
-                document.documentElement.lang = 'en';
-            }
-            try { localStorage.setItem('lang', lang); } catch (e) {}
-        }
-        try {
-            const saved = localStorage.getItem('lang');
-            if (saved === 'en') showLang('en');
-        } catch (e) {}
-    </script>
+    <script type="module" src="assets/scripts/pages/work.js?v=20260904-release"></script>
+    <script type="module" src="assets/scripts/shared/matrix-background.js?v=20260904-release"></script>
 </body>
 </html>

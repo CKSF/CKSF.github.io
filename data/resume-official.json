@@ -1,0 +1,420 @@
+{
+  "schemaVersion": "json-resume-compatible/bilingual-v1",
+  "version": 1,
+  "basics": {
+    "name": {
+      "zh": "冯天宁",
+      "en": "Tianning Feng"
+    },
+    "label": {
+      "zh": "软件工程师 · 全栈 / 机器学习系统 · UPenn CIS '27",
+      "en": "Software Engineer · Full-stack / ML Systems · UPenn CIS '27"
+    },
+    "summary": {
+      "zh": "宾夕法尼亚大学 CIS 硕士在读，聚焦 AI Agent 应用、全栈工程与机器学习系统。擅长从产品问题出发，将跨端能力组织为可执行的 Agent 工作流，并持续推进到上线、验证与迭代。",
+      "en": "UPenn CIS Master's student focused on AI agent applications, full-stack engineering, and machine learning systems. Turns product problems and cross-product capabilities into executable agent workflows, carrying them through launch, validation, and iteration."
+    },
+    "email": "cksamfeng@gmail.com",
+    "phone": "+1 (404) 519-1450",
+    "wechat": "CKSF020325",
+    "location": {
+      "zh": "Philadelphia, PA",
+      "en": "Philadelphia, PA"
+    },
+    "status": {
+      "zh": "2026 暑期 / 2027 全职开放",
+      "en": "Open · Summer 2026 / 2027 full-time"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "CKSF",
+        "url": "https://github.com/CKSF"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "cksf",
+        "url": "https://www.linkedin.com/in/cksf"
+      }
+    ]
+  },
+  "education": [
+    {
+      "institution": {
+        "zh": "University of Pennsylvania",
+        "en": "University of Pennsylvania"
+      },
+      "position": {
+        "zh": "计算机与信息科学硕士",
+        "en": "MSE in Computer & Information Science"
+      },
+      "location": {
+        "zh": "Philadelphia, PA",
+        "en": "Philadelphia, PA"
+      },
+      "startDate": "2025.08",
+      "endDate": "2027.05",
+      "highlights": {
+        "zh": [
+          "相关课程：Artificial Intelligence、Database Systems、Embedded Systems。"
+        ],
+        "en": [
+          "Relevant Coursework: Artificial Intelligence, Database Systems, Embedded Systems."
+        ]
+      }
+    },
+    {
+      "institution": {
+        "zh": "Emory University",
+        "en": "Emory University"
+      },
+      "position": {
+        "zh": "计算机科学与心理学双学士 · GPA 3.794/4.0",
+        "en": "B.S. in Computer Science & B.S. in Psychology · GPA 3.794/4.0"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2021.08",
+      "endDate": "2025.05",
+      "highlights": {
+        "zh": [
+          "荣誉：Dean's List 2024 Fall-2025 Spring、Dean's List 2024 Spring-2024 Fall。",
+          "相关课程：Data Mining、Machine Learning、Data Structures & Algorithms、Cognitive Psychology。"
+        ],
+        "en": [
+          "Honors: Dean's List 2024 Fall-2025 Spring, Dean's List 2024 Spring-2024 Fall.",
+          "Relevant Coursework: Data Mining, Machine Learning, Data Structures & Algorithms, Cognitive Psychology."
+        ]
+      }
+    }
+  ],
+  "work": [
+    {
+      "position": {
+        "zh": "Agent 应用工程师实习生",
+        "en": "Agent Application Engineer Intern"
+      },
+      "organization": {
+        "zh": "字节跳动・数据平台",
+        "en": "ByteDance · Data Platform"
+      },
+      "location": {
+        "zh": "上海",
+        "en": "Shanghai"
+      },
+      "startDate": "2026.01",
+      "endDate": {
+        "zh": "至今",
+        "en": "Present"
+      },
+      "highlights": {
+        "zh": [
+          "端到端数据工作流 Skills：以“让用户在一个产品内完成完整开发”为目标，参与数据集、实验工单和服务接入 Skill 的开发、适配与验证，编排跨端能力并在执行前校验；数据集 Skill 成功调用量上线次周相对增长 520%。",
+          "Changelog 跨端信息管线：主动发现用户难以感知产品更新的问题，独立推动代码变化、AI 草稿、人工审核到跨仓展示的完整链路，实现 0 → 1，并在上线后将重复记录重构为每周快照。",
+          "Skill 运行时开关：跨团队共同负责方案到上线，支持多来源版本的启停、切换和比较；通过统一解析与运行时校验，只向 Agent 提供必要且获准的 Skill，精简上下文并阻止停用能力被调用。"
+        ],
+        "en": [
+          "End-to-End Data Workflow Skills: aimed to keep the full development loop in one product; contributed to dataset, experiment, and service Skills that orchestrate cross-product capabilities and validate before execution, growing successful dataset Skill calls 520% in week two.",
+          "Cross-System Changelog Pipeline: identified a user-facing product information gap and independently delivered the 0-to-1 path from code changes and AI drafts through human review to cross-repository display, then rebuilt repetitive records as weekly snapshots.",
+          "Skill Runtime Controls: co-owned design through launch across teams, enabling users to switch and compare versions while unified resolution and runtime checks give the agent only necessary, authorized Skills and prevent disabled capabilities from being invoked."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "全栈开发实习生",
+        "en": "Full-stack Engineer Intern"
+      },
+      "organization": {
+        "zh": "Liba Space",
+        "en": "Liba Space"
+      },
+      "location": {
+        "zh": "美国 · 圣何塞",
+        "en": "San Jose, CA"
+      },
+      "startDate": "2025.09",
+      "endDate": "2025.12",
+      "highlights": {
+        "zh": [
+          "从 0 到 1 主导 Jobnova 简历分析与 AI 重写功能开发，将其无缝接入北美求职平台核心用户流程，功能上线后平台 MAU 提升 50%。",
+          "与产品、设计和工程团队协作，将用户需求转化为技术规格与校验逻辑，负责从初始编码到生产部署的完整开发生命周期。",
+          "优化后端 API workflow，降低 LLM token 消耗并提升回复质量；根据用户反馈持续调整系统架构，并负责最终质量验收（QA）。"
+        ],
+        "en": [
+          "Owned and led development of the Resume Analysis & Rewrite feature from 0-1 for Jobnova, a North American job platform; seamlessly integrated it into the user flow, leading to a 50% increase in MAU.",
+          "Collaborated with cross-functional teams to translate user needs into technical specifications and validation logic, leading the full development lifecycle from initial coding to production deployment.",
+          "Optimized backend API workflows to reduce LLM token consumption and improve response quality; refined the system architecture based on user feedback and managed final quality assurance (QA)."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "合同产品负责人",
+        "en": "Contract Product Leader"
+      },
+      "organization": {
+        "zh": "政府支持 AI 教育项目",
+        "en": "Government-Sponsored AI Education Initiative"
+      },
+      "location": {
+        "zh": "中国 · 北京",
+        "en": "Beijing, China"
+      },
+      "startDate": "2025.05",
+      "endDate": "2025.08",
+      "highlights": {
+        "zh": [
+          "主导 0 到 1 RAG 教案生成平台的技术执行，覆盖 SQL / Vector 数据库 schema 设计、API 集成与自动化教案生成流程。",
+          "将检索层重构为 BM25 + Vector 混合召回，提高系统响应质量，并显著提升学术与教材上下文的召回相关性。",
+          "构建 PDF 解析引擎，将原始教育材料转化为结构化内容，自动化内容生成流程，使教师手动准备 PPT 的时间减少 70%。"
+        ],
+        "en": [
+          "Led the technical execution of a 0-1 RAG platform, managing the full development lifecycle from database schema design (SQL/Vector) to API integration for automated lesson planning.",
+          "Enhanced system response quality by refactoring the retrieval layer with a hybrid BM25 + Vector approach, significantly boosting the relevance of retrieved academic contexts.",
+          "Automated content generation workflows by building a parsing engine that transformed raw educational PDFs into structured formats, reducing manual PPT preparation time by 70%."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "产品实习生",
+        "en": "Product Intern"
+      },
+      "organization": {
+        "zh": "神通科技集团有限公司",
+        "en": "Shen Tong Technology Group Co., Ltd"
+      },
+      "location": {
+        "zh": "中国 · 宁波",
+        "en": "Ningbo, China"
+      },
+      "startDate": "2021.06",
+      "endDate": "2021.08",
+      "highlights": {
+        "zh": [
+          "通过分析用户交互日志并输出技术规格，定位并解决数据看板导航瓶颈，使系统可用性评分提升约 30%。",
+          "在设计与工程团队之间建立标准化反馈流程，使设计确认效率提升 20%，有效降低跨团队沟通成本。"
+        ],
+        "en": [
+          "Improved usability scores by approximately 30% by analyzing user interaction logs and delivering technical specifications to resolve dashboard navigation bottlenecks.",
+          "Accelerated design sign-off by 20% by establishing a standardized feedback loop between Design and Engineering stakeholders, effectively reducing cross-functional communication overhead."
+        ]
+      }
+    }
+  ],
+  "research": [
+    {
+      "position": {
+        "zh": "深度学习研究员",
+        "en": "Deep Learning Researcher"
+      },
+      "organization": {
+        "zh": "Melody Lab · Emory University",
+        "en": "Melody Lab · Emory University"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2023.09",
+      "endDate": "2025.05",
+      "highlights": {
+        "zh": [
+          "使用 PyTorch 开发 SeizureFormer，一种面向时间序列预测的 Transformer 模型，基于 RNS 数据预测未来 1-14 天癫痫发作风险，并达到 SOTA 表现。",
+          "构建用于流行病建模的动态超图神经网络 EpiDHGNN，优化 message-passing 算法，使收敛速度提升 30%，准确率较基线提升 7-12%。",
+          "完成 2 篇 PSB 2026 论文，其中 SeizureFormer 获口头报告（Top 10%）。"
+        ],
+        "en": [
+          "Developed SeizureFormer, a novel Transformer-based time-series forecasting model in PyTorch to predict seizure risks using RNS data, achieving state-of-the-art performance in 1-14 day horizons.",
+          "Engineered a Dynamic Hypergraph Neural Network (EpiDHGNN) for epidemic modeling, optimizing the message-passing algorithm to achieve 30% faster convergence and 7-12% higher accuracy than baselines.",
+          "Authored 2 papers accepted at PSB 2026; SeizureFormer was selected for an oral presentation (Top 10%)."
+        ]
+      }
+    },
+    {
+      "position": {
+        "zh": "科研助理",
+        "en": "Research Assistant"
+      },
+      "organization": {
+        "zh": "Language Biomarker Lab · Emory University",
+        "en": "Language Biomarker Lab · Emory University"
+      },
+      "location": {
+        "zh": "Atlanta, GA",
+        "en": "Atlanta, GA"
+      },
+      "startDate": "2022.09",
+      "endDate": "2024.11",
+      "highlights": {
+        "zh": [
+          "使用 Hugging Face 与 PyTorch 构建文本、音频和图像多模态自动化 ETL 流水线，使人工数据处理工作量减少 80%。",
+          "将 100GB+ 原始数据标准化为面向下游机器学习任务的结构化格式，并优化数据加载策略以提升训练吞吐。"
+        ],
+        "en": [
+          "Reduced manual data processing workload by 80% by architecting automated ETL pipelines using Hugging Face and PyTorch for multi-modal data.",
+          "Standardized 100+ GB of raw data into structured formats for downstream ML tasks, implementing efficient data loading strategies to optimize training throughput."
+        ]
+      }
+    }
+  ],
+  "projects": [
+    {
+      "name": {
+        "zh": "PhillyHome Insight",
+        "en": "PhillyHome Insight"
+      },
+      "description": {
+        "zh": "住房与社区分析平台",
+        "en": "Housing & Community Analytics Platform"
+      },
+      "startDate": "2025.05",
+      "endDate": {
+        "zh": "至今",
+        "en": "Present"
+      },
+      "highlights": {
+        "zh": [
+          "主导 4 人团队完成全栈分析平台开发，通过 SQL 整合房产、人口与犯罪等异构数据，获得 200+ 早期订阅用户。",
+          "设计复合数据库索引并优化 RESTful API 响应结构，使复杂地理空间查询延迟低于 200ms。"
+        ],
+        "en": [
+          "Gained 200+ early subscriptions by leading the full-stack engineering of an analytics platform that integrates heterogeneous datasets (property, census, crime) via SQL.",
+          "Achieved sub-200ms query latency for complex geospatial queries by designing composite database indexes and optimizing RESTful API response structures."
+        ]
+      }
+    },
+    {
+      "name": {
+        "zh": "OpenAPS Simulation",
+        "en": "OpenAPS Simulation"
+      },
+      "description": {
+        "zh": "OpenAPS 模拟 · 嵌入式血糖调节系统",
+        "en": "OpenAPS Simulation"
+      },
+      "startDate": "2022.09",
+      "endDate": "2024.11",
+      "highlights": {
+        "zh": [
+          "在 FreeRTOS 上优化 C++ 任务调度与内存管理，使安全关键场景下的系统响应延迟低于 100ms。",
+          "基于实时 CGM 传感器数据构建可靠的 PID 控制回路，用于模拟医疗级胰岛素输注调节。"
+        ],
+        "en": [
+          "Achieved sub-100ms response latency in a safety-critical environment by optimizing C++ task scheduling and memory management on FreeRTOS.",
+          "Engineered a reliable PID control loop to regulate insulin delivery based on real-time CGM sensor data, simulating medical-grade device standards."
+        ]
+      }
+    },
+    {
+      "name": {
+        "zh": "Smart Home Assistant Development",
+        "en": "Smart Home Assistant Development"
+      },
+      "description": {
+        "zh": "智能家居助手开发",
+        "en": "Smart home assistant"
+      },
+      "startDate": "2024.01",
+      "endDate": "2025.01",
+      "highlights": {
+        "zh": [
+          "使用 MongoDB 与 Swift 构建可扩展后端，支持 15+ 智能设备并发控制与实时同步。",
+          "实现实时数据库观察者（Change Streams）并优化数据传输层，将数据同步延迟降至 200ms 以下。"
+        ],
+        "en": [
+          "Enabled concurrent control of 15+ smart devices by architecting a scalable backend using MongoDB and Swift with real-time synchronization.",
+          "Reduced data sync latency to under 200ms by implementing real-time database observers (Change Streams) and optimizing the data transmission layer."
+        ]
+      }
+    }
+  ],
+  "skills": [
+    {
+      "name": {
+        "zh": "编程",
+        "en": "Programming"
+      },
+      "keywords": [
+        "Python",
+        "C/C++",
+        "Java",
+        "JavaScript/TypeScript (React, Node.js)",
+        "SQL",
+        "AI Agentic Programming"
+      ]
+    },
+    {
+      "name": {
+        "zh": "机器学习",
+        "en": "Machine Learning"
+      },
+      "keywords": [
+        "PyTorch",
+        "Hugging Face",
+        "Transformers",
+        "Graph Neural Networks",
+        "Reinforcement Learning"
+      ]
+    },
+    {
+      "name": {
+        "zh": "基础设施与工具",
+        "en": "Infrastructure & Tools"
+      },
+      "keywords": [
+        "Docker",
+        "Git",
+        "AWS",
+        "MongoDB",
+        "Neo4j",
+        "Vector Databases",
+        "FreeRTOS",
+        "RESTful API"
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "name": {
+        "zh": "SeizureFormer: A Transformer Model for IEA-Based Seizure Risk Forecasting",
+        "en": "SeizureFormer: A Transformer Model for IEA-Based Seizure Risk Forecasting"
+      },
+      "publisher": "Pacific Symposium on Biocomputing (PSB 2026) · Oral presentation · Hawaii, 2026",
+      "authors": "Feng, T., Ni, J., Gleichgerrcht, E., Jin, W"
+    },
+    {
+      "name": {
+        "zh": "Higher-order Interaction Matters: Dynamic Hypergraph Neural Networks for Epidemic Modeling (EpiDHGNN)",
+        "en": "Higher-order Interaction Matters: Dynamic Hypergraph Neural Networks for Epidemic Modeling (EpiDHGNN)"
+      },
+      "publisher": "Pacific Symposium on Biocomputing (PSB 2026)",
+      "authors": "Liu, S., Gong, S., Feng, T., Liu, Z., Lau, M. S. Y., Jin, W"
+    }
+  ],
+  "languages": [
+    {
+      "language": {
+        "zh": "中文",
+        "en": "Chinese"
+      },
+      "fluency": {
+        "zh": "母语",
+        "en": "Native"
+      }
+    },
+    {
+      "language": {
+        "zh": "英语",
+        "en": "English"
+      },
+      "fluency": {
+        "zh": "流利",
+        "en": "Fluent"
+      }
+    }
+  ]
+}

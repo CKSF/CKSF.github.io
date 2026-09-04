@@ -6,11 +6,11 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Resume Studio · Tianning Feng</title>
     <meta name="description" content="Local-first bilingual resume editor and PDF workspace.">
-    <script src="auth.js?v=20260803-auth1"></script>
+    <script src="auth.js?v=20260904-release"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="studio.css?v=20260803-layout3">
+    <link rel="stylesheet" href="studio.css?v=20260904-release">
 </head>
 <body>
     <header class="studio-header">
@@ -31,8 +31,8 @@
         <aside class="studio-sidebar" aria-label="简历编辑工具">
             <section class="studio-intro">
                 <span class="eyebrow">PRIVATE DRAFT</span>
-                <h1 data-ui="introTitle">编辑内容，导出成正式 PDF。</h1>
-                <p data-ui="introBody">修改只保存在当前浏览器，不会自动发布到网站或写入 GitHub。</p>
+                <h1 data-ui="introTitle">编辑本地草稿，预览 PDF。</h1>
+                <p data-ui="introBody">正式版本只读取仓库 JSON；这里的修改仅保存在当前浏览器，不会自动发布或写入 GitHub。</p>
             </section>
 
             <div class="toolbar" aria-label="文档操作">
@@ -57,26 +57,32 @@
 
         <section class="preview-workspace" aria-label="PDF 实时预览">
             <div class="preview-toolbar">
-                <div>
-                    <span class="preview-label">LIVE PDF PREVIEW</span>
-                    <strong data-page-format>中文 · A4</strong>
-                    <span class="preview-count" data-item-count>0 sections</span>
+                <div class="preview-summary">
+                    <div>
+                        <span class="preview-label">LIVE PDF PREVIEW</span>
+                        <strong data-page-format>中文 · Letter</strong>
+                        <span class="preview-count" data-item-count>0 sections</span>
+                    </div>
+                    <button type="button" class="template-trigger" data-template-open>
+                        <span data-template-current>北美经典</span>
+                        <small data-zh="选择模板" data-en="Choose template">选择模板</small>
+                    </button>
                 </div>
                 <div class="layout-controls" aria-label="PDF 排版设置">
                     <label>
-                        <span>版式</span>
+                        <span data-zh="版式" data-en="Pages">版式</span>
                         <select data-layout-mode>
-                            <option value="two">双页</option>
-                            <option value="one">单页</option>
+                            <option value="two" data-zh="双页" data-en="Two">双页</option>
+                            <option value="one" data-zh="单页" data-en="One">单页</option>
                         </select>
                     </label>
                     <label>
-                        <span>字号</span>
-                        <input type="range" min="8" max="11" step="0.25" value="10.5" data-font-size>
+                        <span data-zh="字号" data-en="Type">字号</span>
+                        <input type="range" min="9" max="11" step="0.25" value="10.5" data-font-size>
                         <output data-font-size-value>10.5 pt</output>
                     </label>
                     <label>
-                        <span>间距</span>
+                        <span data-zh="间距" data-en="Space">间距</span>
                         <input type="range" min="0.65" max="1.15" step="0.05" value="1" data-density>
                         <output data-density-value>100%</output>
                     </label>
@@ -87,12 +93,128 @@
                 <iframe
                     class="resume-preview"
                     data-preview
-                    src="print.html?lang=zh&amp;v=20260803-layout3"
+                    src="print.html?lang=zh&amp;v=20260904-release"
                     title="简历 PDF 预览"
                 ></iframe>
             </div>
         </section>
     </main>
+
+    <dialog class="template-dialog" data-template-dialog aria-labelledby="template-dialog-title">
+        <div class="template-dialog-head">
+            <div>
+                <span class="eyebrow">PDF TEMPLATES</span>
+                <h2 id="template-dialog-title" data-zh="选择简历模板" data-en="Choose a resume template">选择简历模板</h2>
+            </div>
+            <button type="button" class="template-close" data-template-close aria-label="关闭">×</button>
+        </div>
+        <p class="template-dialog-copy" data-zh="模板只改变视觉样式，不会修改简历内容。" data-en="Templates change presentation only. Your resume content stays unchanged.">模板只改变视觉样式，不会修改简历内容。</p>
+        <div class="template-grid">
+            <button type="button" class="template-card" data-template-option="classic" aria-pressed="true">
+                <span class="template-thumb template-thumb-classic" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="北美经典" data-en="North American Classic">北美经典</strong>
+                <span data-zh="Garamond · 黑白 · 标准 ATS" data-en="Garamond · monochrome · ATS-ready">Garamond · 黑白 · 标准 ATS</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="modern" aria-pressed="false">
+                <span class="template-thumb template-thumb-modern" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="现代简洁" data-en="Modern Minimal">现代简洁</strong>
+                <span data-zh="无衬线 · 左对齐 · 蓝色强调" data-en="Sans serif · left aligned · blue accent">无衬线 · 左对齐 · 蓝色强调</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="executive" aria-pressed="false">
+                <span class="template-thumb template-thumb-executive" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Executive" data-en="Executive">Executive</strong>
+                <span data-zh="深蓝 · 稳重 · 管理与产品" data-en="Navy · refined · leadership and product">深蓝 · 稳重 · 管理与产品</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="swiss" aria-pressed="false">
+                <span class="template-thumb template-thumb-swiss" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Swiss Grid" data-en="Swiss Grid">Swiss Grid</strong>
+                <span data-zh="强网格 · 红色编号 · 设计感" data-en="Strong grid · red index · design-led">强网格 · 红色编号 · 设计感</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="terminal" aria-pressed="false">
+                <span class="template-thumb template-thumb-terminal" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Terminal" data-en="Terminal">Terminal</strong>
+                <span data-zh="等宽字体 · 绿色强调 · 开发者" data-en="Monospace · green accent · developer">等宽字体 · 绿色强调 · 开发者</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="editorial" aria-pressed="false">
+                <span class="template-thumb template-thumb-editorial" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Warm Editorial" data-en="Warm Editorial">Warm Editorial</strong>
+                <span data-zh="暖色 · 出版感 · 产品与内容" data-en="Warm tone · editorial · product and content">暖色 · 出版感 · 产品与内容</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="bold" aria-pressed="false">
+                <span class="template-thumb template-thumb-bold" aria-hidden="true">
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Bold Header" data-en="Bold Header">Bold Header</strong>
+                <span data-zh="大标题 · 黑色区块 · 强识别" data-en="Large title · black bands · high impact">大标题 · 黑色区块 · 强识别</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="orbit" aria-pressed="false">
+                <span class="template-thumb template-thumb-orbit" aria-hidden="true">
+                    <b class="thumb-graphic"></b>
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Orbit" data-en="Orbit">Orbit</strong>
+                <span data-zh="渐变圆环 · 科技视觉 · AI 岗位" data-en="Gradient orbits · tech visual · AI roles">渐变圆环 · 科技视觉 · AI 岗位</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="blueprint" aria-pressed="false">
+                <span class="template-thumb template-thumb-blueprint" aria-hidden="true">
+                    <b class="thumb-graphic"></b>
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Blueprint" data-en="Blueprint">Blueprint</strong>
+                <span data-zh="工程网格 · 节点图 · 技术架构" data-en="Engineering grid · node map · systems">工程网格 · 节点图 · 技术架构</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="timeline" aria-pressed="false">
+                <span class="template-thumb template-thumb-timeline" aria-hidden="true">
+                    <b class="thumb-graphic"></b>
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Career Timeline" data-en="Career Timeline">Career Timeline</strong>
+                <span data-zh="节点时间轴 · 经历叙事 · 职业成长" data-en="Visual timeline · career story · progression">节点时间轴 · 经历叙事 · 职业成长</span>
+            </button>
+            <button type="button" class="template-card" data-template-option="bauhaus" aria-pressed="false">
+                <span class="template-thumb template-thumb-bauhaus" aria-hidden="true">
+                    <b class="thumb-graphic"></b>
+                    <i class="thumb-name"></i><i class="thumb-contact"></i><i class="thumb-heading"></i>
+                    <i class="thumb-line"></i><i class="thumb-line short"></i><i class="thumb-heading second"></i>
+                    <i class="thumb-line"></i><i class="thumb-line medium"></i>
+                </span>
+                <strong data-zh="Bauhaus" data-en="Bauhaus">Bauhaus</strong>
+                <span data-zh="几何构成 · 原色 · 创意技术岗位" data-en="Geometric forms · primary colors · creative tech">几何构成 · 原色 · 创意技术岗位</span>
+            </button>
+        </div>
+    </dialog>
 
     <div class="toast" role="status" aria-live="polite" data-toast hidden></div>
 
@@ -103,6 +225,6 @@
         </label>
     </template>
 
-    <script src="studio.js?v=20260803-layout2"></script>
+    <script src="studio.js?v=20260904-release"></script>
 </body>
 </html>

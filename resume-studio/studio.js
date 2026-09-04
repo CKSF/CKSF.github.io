@@ -1,11 +1,11 @@
 (function () {
     "use strict";
 
-    const DATA_URL = "../data/resume.json";
+    const DATA_URL = "../data/resume-official.json";
     const DB_NAME = "tianning-resume-studio";
     const STORE_NAME = "drafts";
-    const DRAFT_KEY = "primary";
-    const LAYOUT_KEY = "resume-studio:layout";
+    const DRAFT_KEY = "official";
+    const LAYOUT_KEY = "resume-studio:official-layout";
 
     const tabs = [
         { key: "basics", zh: "基础信息", en: "Basics" },
@@ -18,15 +18,29 @@
         { key: "languages", zh: "语言", en: "Languages" }
     ];
 
+    const templateNames = {
+        classic: { zh: "北美经典", en: "North American Classic" },
+        modern: { zh: "现代简洁", en: "Modern Minimal" },
+        executive: { zh: "Executive", en: "Executive" },
+        swiss: { zh: "Swiss Grid", en: "Swiss Grid" },
+        terminal: { zh: "Terminal", en: "Terminal" },
+        editorial: { zh: "Warm Editorial", en: "Warm Editorial" },
+        bold: { zh: "Bold Header", en: "Bold Header" },
+        orbit: { zh: "Orbit", en: "Orbit" },
+        blueprint: { zh: "Blueprint", en: "Blueprint" },
+        timeline: { zh: "Career Timeline", en: "Career Timeline" },
+        bauhaus: { zh: "Bauhaus", en: "Bauhaus" }
+    };
+
     const copy = {
         zh: {
             back: "返回职业档案",
-            introTitle: "编辑内容，导出成正式 PDF。",
-            introBody: "修改只保存在当前浏览器，不会自动发布到网站或写入 GitHub。",
+            introTitle: "编辑本地草稿，预览 PDF。",
+            introBody: "正式版本只读取仓库 JSON；这里的修改仅保存在当前浏览器，不会自动发布或写入 GitHub。",
             printAction: "导出 PDF",
             exportAction: "导出 JSON",
             importAction: "导入 JSON",
-            resetAction: "恢复公开版本",
+            resetAction: "恢复 Official 版本",
             editorAria: "简历编辑工具",
             sectionAria: "简历章节",
             previewAria: "PDF 实时预览",
@@ -38,22 +52,22 @@
             basicsHint: "联系方式为双语共用，姓名、定位、简介和地点分别维护。",
             imported: "JSON 已导入并保存为本地草稿",
             exported: "JSON 已导出",
-            reset: "已恢复仓库中的公开版本",
+            reset: "已恢复仓库中的 Official 版本",
             invalid: "无法导入：文件不是有效的简历 JSON",
             print: "打印窗口将打开；请选择“另存为 PDF”并关闭页眉页脚。",
             format: "中文 · Letter",
             fit: "排版正常",
             overflow: "内容溢出",
-            confirmReset: "恢复公开版本会删除当前浏览器中的全部简历草稿，继续吗？"
+            confirmReset: "恢复 Official 版本会删除当前浏览器中的全部简历草稿，继续吗？"
         },
         en: {
             back: "Back to career portfolio",
-            introTitle: "Edit the source. Export the formal PDF.",
-            introBody: "Changes stay in this browser and are never published to the website or written to GitHub automatically.",
+            introTitle: "Edit a local draft and preview the PDF.",
+            introBody: "Official files only use the repository JSON. Changes here stay in this browser and are never published or written to GitHub automatically.",
             printAction: "Export PDF",
             exportAction: "Export JSON",
             importAction: "Import JSON",
-            resetAction: "Restore public version",
+            resetAction: "Restore official version",
             editorAria: "Resume editing tools",
             sectionAria: "Resume sections",
             previewAria: "Live PDF preview",
@@ -65,13 +79,13 @@
             basicsHint: "Contact details are shared; name, positioning, summary and location are localized.",
             imported: "JSON imported as a local draft",
             exported: "JSON exported",
-            reset: "Restored the public repository version",
+            reset: "Restored the official repository version",
             invalid: "Import failed: this is not valid resume JSON",
             print: "The print dialog will open. Choose Save as PDF and disable headers and footers.",
             format: "English · Letter",
             fit: "Layout fits",
             overflow: "Content overflow",
-            confirmReset: "Restoring the public version will delete every resume draft in this browser. Continue?"
+            confirmReset: "Restoring the official version will delete every resume draft in this browser. Continue?"
         }
     };
 
@@ -86,7 +100,8 @@
         layout: {
             mode: "two",
             fontSize: 10.5,
-            density: 1
+            density: 1,
+            template: "classic"
         }
     };
 
@@ -103,6 +118,8 @@
         density: document.querySelector("[data-density]"),
         densityValue: document.querySelector("[data-density-value]"),
         fitStatus: document.querySelector("[data-fit-status]"),
+        templateDialog: document.querySelector("[data-template-dialog]"),
+        templateCurrent: document.querySelector("[data-template-current]"),
         toast: document.querySelector("[data-toast]")
     };
 
@@ -124,8 +141,9 @@
             const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY));
             if (!saved || typeof saved !== "object") return;
             state.layout.mode = saved.mode === "one" ? "one" : "two";
-            state.layout.fontSize = Math.min(11, Math.max(8, Number(saved.fontSize) || 10.5));
+            state.layout.fontSize = Math.min(11, Math.max(9, Number(saved.fontSize) || 10.5));
             state.layout.density = Math.min(1.15, Math.max(0.65, Number(saved.density) || 1));
+            state.layout.template = templateNames[saved.template] ? saved.template : "classic";
         } catch (error) {}
     }
 
@@ -141,6 +159,10 @@
         refs.fontSizeValue.value = `${state.layout.fontSize.toFixed(2).replace(/0$/, "")} pt`;
         refs.density.value = String(state.layout.density);
         refs.densityValue.value = `${Math.round(state.layout.density * 100)}%`;
+        refs.templateCurrent.textContent = templateNames[state.layout.template][state.language];
+        document.querySelectorAll("[data-template-option]").forEach((button) => {
+            button.setAttribute("aria-pressed", String(button.dataset.templateOption === state.layout.template));
+        });
         refs.fitStatus.textContent = state.language === "zh" ? "检查排版" : "Checking";
         refs.fitStatus.dataset.state = "";
     }
@@ -342,6 +364,9 @@
             const element = document.querySelector(`[data-ui="${key}"]`);
             if (element) element.textContent = value;
         });
+        document.querySelectorAll("[data-zh][data-en]").forEach((element) => {
+            element.textContent = element.dataset[state.language];
+        });
         document.querySelector(".studio-sidebar").setAttribute("aria-label", uiCopy.editorAria);
         refs.tabs.setAttribute("aria-label", uiCopy.sectionAria);
         document.querySelector(".preview-workspace").setAttribute("aria-label", uiCopy.previewAria);
@@ -349,6 +374,11 @@
             button.classList.toggle("active", button.dataset.language === state.language);
         });
         refs.pageFormat.textContent = copy[state.language].format;
+        refs.templateCurrent.textContent = templateNames[state.layout.template][state.language];
+        document.querySelector("[data-template-close]").setAttribute(
+            "aria-label",
+            state.language === "zh" ? "关闭" : "Close"
+        );
         refs.preview.title = state.language === "zh" ? "中文简历 PDF 预览" : "English resume PDF preview";
         refs.fitStatus.textContent = state.language === "zh" ? "检查排版" : "Checking";
         refs.fitStatus.dataset.state = "";
@@ -559,6 +589,28 @@
             });
         });
 
+        document.querySelector("[data-template-open]").addEventListener("click", () => {
+            refs.templateDialog.showModal();
+        });
+
+        document.querySelector("[data-template-close]").addEventListener("click", () => {
+            refs.templateDialog.close();
+        });
+
+        refs.templateDialog.addEventListener("click", (event) => {
+            if (event.target === refs.templateDialog) refs.templateDialog.close();
+        });
+
+        document.querySelectorAll("[data-template-option]").forEach((button) => {
+            button.addEventListener("click", () => {
+                state.layout.template = button.dataset.templateOption;
+                updateLayoutControls();
+                saveLayout();
+                postPreview();
+                refs.templateDialog.close();
+            });
+        });
+
         refs.layoutMode.addEventListener("change", () => {
             state.layout.mode = refs.layoutMode.value === "one" ? "one" : "two";
             if (state.layout.mode === "one") {
@@ -654,7 +706,7 @@
             setSaveState("saved");
             postPreview();
         } catch (error) {
-            refs.panel.innerHTML = '<div class="loading-card">无法读取 data/resume.json。请通过本地服务器访问此页面。</div>';
+            refs.panel.innerHTML = '<div class="loading-card">无法读取 data/resume-official.json。请通过本地服务器访问此页面。</div>';
             setSaveState("error");
         }
     }

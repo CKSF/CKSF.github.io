@@ -6,7 +6,8 @@
         { key: "work", href: "work.html", zh: "作品", en: "Work", hint: "Research & projects" },
         { key: "blog", href: "blog.html", zh: "写作", en: "Writing", hint: "Long-form notes" },
         { key: "now", href: "now.html", zh: "现在", en: "Now", hint: "Current focus" },
-        { key: "reading", href: "reading.html", zh: "书架", en: "Library", hint: "Reading & listening" },
+        { key: "reading", href: "reading.html", zh: "书架", en: "Library", hint: "Books and reading" },
+        { key: "listening", href: "listening.html", zh: "聆听", en: "Listening", hint: "Music & podcasts" },
         { key: "photos", href: "photos.html", zh: "影像", en: "Photos", hint: "Visual notes" },
         { key: "hire", href: "hire.html?entry=recruiter", zh: "招聘档案", en: "Recruiter", hint: "Resume, experience & contact" }
     ];
@@ -18,7 +19,7 @@
         "blog.html": "blog",
         "now.html": "now",
         "reading.html": "reading",
-        "listening.html": "reading",
+        "listening.html": "listening",
         "photos.html": "photos",
         "resume.html": "hire",
         "hire.html": "hire"
@@ -54,6 +55,12 @@
             zhDescription: "正在读、读完与计划阅读的书。",
             enDescription: "Books currently reading, finished, and queued."
         },
+        listening: {
+            zhTitle: "音乐与播客｜冯天宁",
+            enTitle: "Listening | Tianning Feng",
+            zhDescription: "编码、通勤与生活中的音乐和播客。",
+            enDescription: "Music and podcasts for coding, commuting, and everyday life."
+        },
         photos: {
             zhTitle: "影像｜冯天宁",
             enTitle: "Photos | Tianning Feng",
@@ -67,14 +74,7 @@
             enDescription: "Tianning Feng's objective, experience, projects, research, publications, and contact details."
         }
     };
-    if (path === "listening.html") {
-        pageMetadata.reading = {
-            zhTitle: "音乐与播客｜冯天宁",
-            enTitle: "Listening | Tianning Feng",
-            zhDescription: "编码、通勤与生活中的音乐和播客。",
-            enDescription: "Music and podcasts for coding, commuting, and everyday life."
-        };
-    } else if (path === "resume.html") {
+    if (path === "resume.html") {
         pageMetadata.hire = {
             zhTitle: "简历｜冯天宁",
             enTitle: "Resume | Tianning Feng",
@@ -91,13 +91,27 @@
     ]);
 
     if (roomPages.has(path)) {
+        const isDarkroom = path === "photos.html";
+        if (!isDarkroom) document.documentElement.classList.add("interior-entry-pending");
+
         const roomStyles = document.createElement("link");
         roomStyles.rel = "stylesheet";
-        roomStyles.href = "room-system.css?v=20260725-model-label1";
+        roomStyles.href = "room-system.css?v=20260904-release";
         document.head.append(roomStyles);
 
+        if (!isDarkroom) {
+            const interiorStyles = document.createElement("link");
+            interiorStyles.rel = "stylesheet";
+            interiorStyles.href = "interior-system.css?v=20260904-release";
+            document.head.append(interiorStyles);
+        }
+
         const roomScript = document.createElement("script");
-        roomScript.src = "room-system.js?v=20260725-starlit-room10";
+        roomScript.type = "module";
+        roomScript.src = "room-system.js?v=20260904-release";
+        roomScript.onerror = () => {
+            document.documentElement.classList.remove("interior-entry-pending", "darkroom-entry-pending");
+        };
         document.head.append(roomScript);
     }
 
@@ -123,8 +137,7 @@
             url.searchParams.delete("theme");
         }
 
-        const filename = url.pathname.split("/").pop() || "index.html";
-        return `${filename}${url.search}${url.hash}`;
+        return `${url.pathname}${url.search}${url.hash}`;
     }
 
     function syncInternalLinks() {
