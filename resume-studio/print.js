@@ -17,7 +17,9 @@
         mode: "two",
         fontSize: 10.5,
         density: 1,
-        template: "classic"
+        template: "classic",
+        marginTop: 0,
+        marginSide: 0
     };
 
     const labels = {
@@ -63,6 +65,8 @@
         const next = value && typeof value === "object" ? value : {};
         const fontSize = Number(next.fontSize);
         const density = Number(next.density);
+        const marginTop = Number(next.marginTop);
+        const marginSide = Number(next.marginSide);
         const templates = [
             "classic", "modern", "executive", "swiss", "terminal", "editorial", "bold",
             "orbit", "blueprint", "timeline", "bauhaus"
@@ -71,7 +75,9 @@
             mode: next.mode === "one" ? "one" : "two",
             fontSize: Number.isFinite(fontSize) ? Math.min(11, Math.max(9, fontSize)) : 10.5,
             density: Number.isFinite(density) ? Math.min(1.15, Math.max(0.65, density)) : 1,
-            template: templates.includes(next.template) ? next.template : "classic"
+            template: templates.includes(next.template) ? next.template : "classic",
+            marginTop: Number.isFinite(marginTop) ? Math.min(15, Math.max(-10, marginTop)) : 0,
+            marginSide: Number.isFinite(marginSide) ? Math.min(12, Math.max(-10, marginSide)) : 0
         };
     }
 
@@ -84,6 +90,8 @@
             "--resume-line-height",
             String(1 + (0.13 * layoutSettings.density))
         );
+        document.documentElement.style.setProperty("--resume-margin-top", `${layoutSettings.marginTop}mm`);
+        document.documentElement.style.setProperty("--resume-margin-side", `${layoutSettings.marginSide}mm`);
     }
 
     function dateRange(item) {
@@ -160,22 +168,21 @@
     }
 
     function renderSkills(data) {
-        const skills = (data.skills || []).map((group) => `
+        const skills = (data.skills || []).map((group) => {
+            const body = group.description
+                ? escapeHtml(localized(group.description))
+                : (group.keywords || []).map(escapeHtml).join(", ");
+            return `
             <div class="skill-row">
                 <strong>${escapeHtml(localized(group.name))}:</strong>
-                ${group.keywords.map(escapeHtml).join(", ")}
-            </div>`).join("");
-        const languageItems = (data.languages || []).map((item) =>
-            `${escapeHtml(localized(item.language))} (${escapeHtml(localized(item.fluency))})`
-        );
-        const languages = languageItems.length
-            ? `<div class="language-row"><strong>${escapeHtml(labels[language].languages)}:</strong> ${languageItems.join(", ")}</div>`
-            : "";
-        if (!skills && !languages) return "";
+                ${body}
+            </div>`;
+        }).join("");
+        if (!skills) return "";
         return `
             <section class="section">
                 ${sectionHeading(labels[language].skills)}
-                <div class="compact-list">${skills}${languages}</div>
+                <div class="compact-list">${skills}</div>
             </section>`;
     }
 
@@ -307,7 +314,9 @@
         mode: params.has("mode") ? params.get("mode") : undefined,
         fontSize: params.has("fontSize") ? params.get("fontSize") : undefined,
         density: params.has("density") ? params.get("density") : undefined,
-        template: params.has("template") ? params.get("template") : undefined
+        template: params.has("template") ? params.get("template") : undefined,
+        marginTop: params.has("marginTop") ? params.get("marginTop") : undefined,
+        marginSide: params.has("marginSide") ? params.get("marginSide") : undefined
     };
 
     fetch(dataUrl)

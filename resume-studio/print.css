@@ -4,6 +4,8 @@
     --resume-font-size: 10.5pt;
     --resume-density: 1;
     --resume-line-height: 1.13;
+    --resume-margin-top: 0in;
+    --resume-margin-side: 0in;
 }
 
 * { box-sizing: border-box; }
@@ -36,7 +38,7 @@ body {
     width: 8.5in;
     height: 11in;
     overflow: hidden;
-    padding: 0.53in 0.61in 0.5in;
+    padding: calc(0.53in + var(--resume-margin-top)) calc(0.61in + var(--resume-margin-side)) 0.5in;
     background: var(--paper);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.14);
 }
@@ -186,7 +188,7 @@ body {
 }
 
 .page-two {
-    padding-top: 0.53in;
+    padding-top: calc(0.53in + var(--resume-margin-top));
 }
 
 .page-two .visual-decor {
@@ -200,8 +202,8 @@ html[data-template="modern"] body {
 }
 
 html[data-template="modern"] .resume-page {
-    padding-right: 0.58in;
-    padding-left: 0.58in;
+    padding-right: calc(0.58in + var(--resume-margin-side));
+    padding-left: calc(0.58in + var(--resume-margin-side));
 }
 
 html[data-template="modern"] .resume-header {
@@ -268,8 +270,8 @@ html[data-template="executive"] body {
 }
 
 html[data-template="executive"] .resume-header {
-    margin: -0.53in -0.61in 0;
-    padding: 0.3in 0.61in 0.2in;
+    margin: calc(-0.53in - var(--resume-margin-top)) calc(-0.61in - var(--resume-margin-side)) 0;
+    padding: calc(0.3in + var(--resume-margin-top)) calc(0.61in + var(--resume-margin-side)) 0.2in;
     color: #ffffff;
     background: #17324d;
     text-align: left;
@@ -322,7 +324,7 @@ html[data-template="executive"] .entry-primary {
 }
 
 html[data-template="executive"] .page-two {
-    padding-top: 0.53in;
+    padding-top: calc(0.53in + var(--resume-margin-top));
 }
 
 /* Swiss Grid */
@@ -332,7 +334,7 @@ html[data-template="swiss"] body {
 }
 
 html[data-template="swiss"] .resume-page {
-    padding: 0.5in 0.58in 0.48in 0.78in;
+    padding: calc(0.5in + var(--resume-margin-top)) calc(0.58in + var(--resume-margin-side)) 0.48in calc(0.78in + var(--resume-margin-side));
     border-left: 10pt solid #e3352f;
 }
 
@@ -413,8 +415,8 @@ html[data-template="terminal"] body {
 }
 
 html[data-template="terminal"] .resume-page {
-    padding-right: 0.55in;
-    padding-left: 0.55in;
+    padding-right: calc(0.55in + var(--resume-margin-side));
+    padding-left: calc(0.55in + var(--resume-margin-side));
     border-top: 6pt solid #238a4b;
 }
 
@@ -497,7 +499,7 @@ html[data-template="editorial"] body {
 }
 
 html[data-template="editorial"] .resume-page {
-    padding: 0.57in 0.67in 0.52in;
+    padding: calc(0.57in + var(--resume-margin-top)) calc(0.67in + var(--resume-margin-side)) 0.52in;
     background: #fbf7f0;
 }
 
@@ -563,8 +565,8 @@ html[data-template="bold"] body {
 }
 
 html[data-template="bold"] .resume-header {
-    margin: -0.53in -0.61in 0;
-    padding: 0.28in 0.61in 0.2in;
+    margin: calc(-0.53in - var(--resume-margin-top)) calc(-0.61in - var(--resume-margin-side)) 0;
+    padding: calc(0.28in + var(--resume-margin-top)) calc(0.61in + var(--resume-margin-side)) 0.2in;
     color: #ffffff;
     background: #111111;
     text-align: left;
@@ -624,7 +626,7 @@ html[data-template="orbit"] body {
 }
 
 html[data-template="orbit"] .resume-page {
-    padding: 0.62in 0.62in 0.5in;
+    padding: calc(0.62in + var(--resume-margin-top)) calc(0.62in + var(--resume-margin-side)) 0.5in;
     background:
         radial-gradient(circle at 90% 4%, rgba(115, 91, 255, 0.1), transparent 24%),
         #ffffff;
@@ -746,7 +748,7 @@ html[data-template="blueprint"] body {
 }
 
 html[data-template="blueprint"] .resume-page {
-    padding: 0.56in 0.6in 0.5in;
+    padding: calc(0.56in + var(--resume-margin-top)) calc(0.6in + var(--resume-margin-side)) 0.5in;
     background-color: #f8fbfd;
     background-image:
         linear-gradient(rgba(37, 111, 164, 0.055) 1px, transparent 1px),
@@ -850,7 +852,7 @@ html[data-template="timeline"] body {
 }
 
 html[data-template="timeline"] .resume-page {
-    padding: 0.56in 0.62in 0.5in;
+    padding: calc(0.56in + var(--resume-margin-top)) calc(0.62in + var(--resume-margin-side)) 0.5in;
     background: linear-gradient(90deg, #f1f4f6 0 0.36in, #ffffff 0.36in);
 }
 
@@ -933,7 +935,7 @@ html[data-template="bauhaus"] body {
 }
 
 html[data-template="bauhaus"] .resume-page {
-    padding: 0.62in 0.62in 0.5in;
+    padding: calc(0.62in + var(--resume-margin-top)) calc(0.62in + var(--resume-margin-side)) 0.5in;
     background: #f7f2e8;
 }
 

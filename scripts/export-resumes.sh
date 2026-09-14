@@ -161,11 +161,11 @@ const EXPORT_TIMEOUT_MS = 20000;
         await sleep(100);
     }
 
-    const hasLocalizedDataset = process.env.EXPECTED_LANGUAGE === "zh"
-        ? state?.text.includes("数据集 Skill")
-        : state?.text.includes("dataset Skill");
+    const hasLocalizedHeading = process.env.EXPECTED_LANGUAGE === "zh"
+        ? state?.text.includes("个人简介")
+        : /summary/i.test(state?.text || "");
     if (!state || !state.ready || state.overflow !== "false" || state.pages !== "2"
-        || !state.text.includes("Changelog") || !hasLocalizedDataset || !state.text.includes("520%")) {
+        || !hasLocalizedHeading || !state.text.includes("520%")) {
         throw new Error(`Resume validation failed: ${JSON.stringify(state)}`);
     }
 

@@ -417,10 +417,10 @@ button, .file-action { -webkit-tap-highlight-color: transparent; }
 
 .layout-controls {
     width: 550px;
-    display: grid;
-    grid-template-columns: 92px 158px 158px 118px;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 8px;
     color: var(--dim);
     font: 500 9px/1.4 "JetBrains Mono", monospace;
@@ -903,7 +903,6 @@ button, .file-action { -webkit-tap-highlight-color: transparent; }
     .preview-workspace { height: 78vh; border-top: 1px solid var(--line); }
     .layout-controls {
         width: 430px;
-        grid-template-columns: 66px 124px 124px 92px;
     }
     .layout-controls label { grid-template-columns: 64px 44px; }
     .layout-controls label:first-child { grid-template-columns: 60px; }
@@ -927,7 +926,6 @@ button, .file-action { -webkit-tap-highlight-color: transparent; }
     .template-trigger { width: 78px; }
     .layout-controls {
         width: 270px;
-        grid-template-columns: 60px 95px 95px;
         gap: 6px;
     }
     .layout-controls label { grid-template-columns: 48px 41px; }

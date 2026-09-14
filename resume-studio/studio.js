@@ -101,7 +101,9 @@
             mode: "two",
             fontSize: 10.5,
             density: 1,
-            template: "classic"
+            template: "classic",
+            marginTop: 0,
+            marginSide: 0
         }
     };
 
@@ -117,6 +119,10 @@
         fontSizeValue: document.querySelector("[data-font-size-value]"),
         density: document.querySelector("[data-density]"),
         densityValue: document.querySelector("[data-density-value]"),
+        marginTop: document.querySelector("[data-margin-top]"),
+        marginTopValue: document.querySelector("[data-margin-top-value]"),
+        marginSide: document.querySelector("[data-margin-side]"),
+        marginSideValue: document.querySelector("[data-margin-side-value]"),
         fitStatus: document.querySelector("[data-fit-status]"),
         templateDialog: document.querySelector("[data-template-dialog]"),
         templateCurrent: document.querySelector("[data-template-current]"),
@@ -144,6 +150,8 @@
             state.layout.fontSize = Math.min(11, Math.max(9, Number(saved.fontSize) || 10.5));
             state.layout.density = Math.min(1.15, Math.max(0.65, Number(saved.density) || 1));
             state.layout.template = templateNames[saved.template] ? saved.template : "classic";
+            state.layout.marginTop = Math.min(15, Math.max(-10, Number(saved.marginTop) || 0));
+            state.layout.marginSide = Math.min(12, Math.max(-10, Number(saved.marginSide) || 0));
         } catch (error) {}
     }
 
@@ -159,6 +167,10 @@
         refs.fontSizeValue.value = `${state.layout.fontSize.toFixed(2).replace(/0$/, "")} pt`;
         refs.density.value = String(state.layout.density);
         refs.densityValue.value = `${Math.round(state.layout.density * 100)}%`;
+        refs.marginTop.value = String(state.layout.marginTop);
+        refs.marginTopValue.value = `${state.layout.marginTop} mm`;
+        refs.marginSide.value = String(state.layout.marginSide);
+        refs.marginSideValue.value = `${state.layout.marginSide} mm`;
         refs.templateCurrent.textContent = templateNames[state.layout.template][state.language];
         document.querySelectorAll("[data-template-option]").forEach((button) => {
             button.setAttribute("aria-pressed", String(button.dataset.templateOption === state.layout.template));
@@ -294,7 +306,8 @@
                     ${cardHeader(localized(item.name), "skills", index)}
                     <div class="field-grid">
                         ${input(state.language === "zh" ? "技能组名称" : "Group name", `${base}.name`, { localized: true })}
-                        ${input(state.language === "zh" ? "关键词（逗号分隔）" : "Keywords (comma separated)", `${base}.keywords`, { textarea: true, csv: true, full: true })}
+                        ${input(state.language === "zh" ? "描述（优先于关键词显示）" : "Description (shown instead of keywords)", `${base}.description`, { localized: true, textarea: true, full: true })}
+                        ${input(state.language === "zh" ? "关键词（逗号分隔，无描述时显示）" : "Keywords (comma separated, used if no description)", `${base}.keywords`, { textarea: true, csv: true, full: true })}
                     </div>
                 </article>`;
         }).join("");
@@ -634,6 +647,20 @@
 
         refs.density.addEventListener("input", () => {
             state.layout.density = Number(refs.density.value);
+            updateLayoutControls();
+            saveLayout();
+            postPreview();
+        });
+
+        refs.marginTop.addEventListener("input", () => {
+            state.layout.marginTop = Number(refs.marginTop.value);
+            updateLayoutControls();
+            saveLayout();
+            postPreview();
+        });
+
+        refs.marginSide.addEventListener("input", () => {
+            state.layout.marginSide = Number(refs.marginSide.value);
             updateLayoutControls();
             saveLayout();
             postPreview();
